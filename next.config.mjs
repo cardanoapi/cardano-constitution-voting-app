@@ -61,6 +61,7 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false, // removes x-powered-by header to restrict sensitive info from attackers
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   async headers() {
     return [
       {
