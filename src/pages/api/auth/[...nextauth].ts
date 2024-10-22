@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) return null;
-        let valid = false;
+        // let valid = false;
 
         // valid = await verifyWallet(
         //   credentials.payload,
@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
 
       return Promise.resolve(session);
     },
-    async signIn({ account, profile }) {
+    async signIn() {
       // https://next-auth.js.org/configuration/callbacks#sign-in-callback
       // TODO: ADD CHECK TO MAKE SURE THE USER HAS BEEN REGISTERED
       return true;

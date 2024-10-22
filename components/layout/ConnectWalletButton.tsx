@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import Image from 'next/image';
 import { CheckRounded } from '@mui/icons-material';
 import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { signOut, useSession } from 'next-auth/react';

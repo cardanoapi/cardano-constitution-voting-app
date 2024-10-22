@@ -1,17 +1,17 @@
 import { connectWallet as connectWalletClarity } from '@claritydao/clarity-backend';
 import { bech32 } from 'bech32';
-import { signIn, SignInResponse } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 export default async function connectWallet(walletName: string): Promise<void> {
   try {
     await connectWalletClarity(walletName).then(async (wallet) => {
-      const stakeAddressHex = (await (wallet as any).getRewardAddresses())[0];
+      // @ts-expect-error getRewardAddresses is actually a proper function
+      const stakeAddressHex = (await wallet.getRewardAddresses())[0];
       const bytes = Buffer.from(stakeAddressHex, 'hex');
       const words = bech32.toWords(bytes);
       const stakeAddress = bech32.encode('stake', words);
-      console.log('stake address connected', stakeAddress);
-      // @ts-expect-error getNetworkId is actually a proper function
+
       // const signature = await wallet.signData(stakeAddrHex, messageHex);
       // const challenge = await generateCardanoChallenge();
 
