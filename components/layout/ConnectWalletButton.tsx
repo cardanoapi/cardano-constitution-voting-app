@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import Image from 'next/image';
+import { CheckRounded } from '@mui/icons-material';
+import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
+import { signOut, useSession } from 'next-auth/react';
 
 import connectWallet from '../../lib/helpers/connectWallet';
 
@@ -11,6 +14,8 @@ const ConnectWalletButton = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [connecting, setConnecting] = useState(false);
+
+  const session = useSession();
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorEl(event.currentTarget);
@@ -46,6 +51,8 @@ const ConnectWalletButton = (): JSX.Element => {
       (wallet) => window.cardano?.[Object.keys(wallet)[0]],
     );
 
+    console.log('session', session);
+
     return (
       <Menu
         id="basic-menu"
@@ -55,25 +62,35 @@ const ConnectWalletButton = (): JSX.Element => {
         MenuListProps={{
           'aria-labelledby': 'basic-button',
         }}
-        sx={{ width: '100%' }}
       >
-        {userWallets.map((wallet) => {
-          const walletName = Object.values(wallet)[0];
-          const walletConnectName = Object.keys(wallet)[0];
-          return (
-            <MenuItem
-              onClick={() => connect(walletConnectName)}
-              disabled={connecting}
-              key={walletName}
-              sx={{ width: '100%' }}
-            >
-              {walletName}
-            </MenuItem>
-          );
-        })}
+        {session.status === 'authenticated' ? (
+          <Box>
+            <Button variant="contained" color="error" onClick={() => signOut()}>
+              Disconnect
+            </Button>
+          </Box>
+        ) : (
+          userWallets.map((wallet) => {
+            const walletName = Object.values(wallet)[0];
+            const walletConnectName = Object.keys(wallet)[0];
+            return (
+              <MenuItem
+                onClick={() => connect(walletConnectName)}
+                disabled={connecting}
+                key={walletName}
+                sx={{
+                  minWidth: '200px',
+                  fontWeight: 500,
+                }}
+              >
+                {walletName}
+              </MenuItem>
+            );
+          })
+        )}
       </Menu>
     );
-  }, [anchorEl, open, connecting]);
+  }, [anchorEl, open, connecting, session]);
 
   return (
     <>
@@ -84,8 +101,22 @@ const ConnectWalletButton = (): JSX.Element => {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
+        startIcon={
+          session.status === 'authenticated' ? <CheckRounded /> : <></>
+        }
       >
-        Connect Wallet
+        <Typography
+          sx={{
+            maxWidth: '150px',
+            textWrap: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+          }}
+        >
+          {session.status === 'authenticated'
+            ? session.data.user.stakeAddress
+            : 'Connect Wallet'}
+        </Typography>
       </Button>
       {wallets}
     </>
