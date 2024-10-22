@@ -14,6 +14,7 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
+        <h1>Home</h1>
         <Button variant="contained">Hello world</Button>
       </main>
       <footer>
