@@ -31,6 +31,8 @@ export default async function connectWallet(walletName: string): Promise<void> {
       }
     });
   } catch (error) {
-    console.log(error.message);
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
   }
 }
