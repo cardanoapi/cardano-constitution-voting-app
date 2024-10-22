@@ -4,7 +4,7 @@ export const getUserErrorHandlers = [
   http.get('/api/getUser', () => {
     return HttpResponse.json(
       {
-        name: 'Could not find user',
+        user: 'Could not find user',
       },
       { status: 404 },
     );
