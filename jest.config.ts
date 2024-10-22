@@ -79,9 +79,7 @@ const config: Config = {
   // maxWorkers: "50%",
 
   // An array of directory names to be searched recursively up from the requiring module's location
-  // moduleDirectories: [
-  //   "node_modules"
-  // ],
+  moduleDirectories: ['node_modules', '<rootDir>/'],
 
   // An array of file extensions your modules use
   // moduleFileExtensions: [
@@ -96,7 +94,12 @@ const config: Config = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
+  // mocks next/link and next/image to remove act(...) warnings from Jest
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    'next/link': require.resolve('./__mocks__/nextLink.js'),
+    'next/image': require.resolve('./__mocks__/nextImage.js'),
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -152,10 +155,11 @@ const config: Config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-fixed-jsdom',
 
   // Options that will be passed to the testEnvironment
-  // testEnvironmentOptions: {},
+  // https://github.com/mswjs/msw/issues/1786#issuecomment-1782559851
+  testEnvironmentOptions: { customExportConditions: [''] },
 
   // Adds a location field to test results
   // testLocationInResults: false,
