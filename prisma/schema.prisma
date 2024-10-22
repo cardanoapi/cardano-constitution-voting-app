@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model poll {
+  id               BigInt             @id @default(autoincrement())
+  name             String             @db.VarChar(255)
+  description      String?            @db.VarChar(10000)
+  status           String             @default("pending") @db.VarChar(100)
+  summary_tx_id    String?            @unique @db.VarChar(255)
+  poll_transaction poll_transaction[]
+  poll_vote        poll_vote[]
+}
+
+model poll_transaction {
+  poll_id        BigInt
+  transaction_id String @unique @db.VarChar(255)
+  poll           poll   @relation(fields: [poll_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([poll_id, transaction_id])
+}
+
+model poll_vote {
+  poll_id             BigInt
+  user_id             BigInt
+  vote                String  @db.VarChar(100)
+  signature           String  @unique @db.VarChar(255)
+  hashed_message      String  @db.VarChar(255)
+  poll_transaction_id BigInt? @unique
+  poll                poll    @relation(fields: [poll_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                user    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([poll_id, user_id])
+}
+
+model user {
+  id                                      BigInt      @id @default(autoincrement())
+  is_convention_organizer                 Boolean     @default(false)
+  is_delegate                             Boolean     @default(false)
+  is_alternate                            Boolean     @default(false)
+  workshop_id                             BigInt
+  name                                    String      @db.VarChar(100)
+  email                                   String      @unique @db.VarChar(100)
+  color                                   String?     @db.VarChar(100)
+  wallet_address                          String      @unique @db.VarChar(100)
+  poll_vote                               poll_vote[]
+  workshop_user_workshop_idToworkshop     workshop    @relation("user_workshop_idToworkshop", fields: [workshop_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  workshop_workshop_active_voter_idTouser workshop?   @relation("workshop_active_voter_idTouser")
+  workshop_workshop_alternate_idTouser    workshop?   @relation("workshop_alternate_idTouser")
+  workshop_workshop_delegate_idTouser     workshop?   @relation("workshop_delegate_idTouser")
+}
+
+model workshop {
+  id                                  BigInt  @id @default(autoincrement())
+  name                                String  @db.VarChar(255)
+  delegate_id                         BigInt? @unique
+  alternate_id                        BigInt? @unique
+  active_voter_id                     BigInt? @unique
+  user_user_workshop_idToworkshop     user[]  @relation("user_workshop_idToworkshop")
+  user_workshop_active_voter_idTouser user?   @relation("workshop_active_voter_idTouser", fields: [active_voter_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_workshop_alternate_idTouser    user?   @relation("workshop_alternate_idTouser", fields: [alternate_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_workshop_delegate_idTouser     user?   @relation("workshop_delegate_idTouser", fields: [delegate_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
