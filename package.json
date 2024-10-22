@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@claritydao/clarity-backend": "^0.4.0-dev-f82487b359ff0d0dc93db2bd24777a1ee7dbf921",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@emurgo/cardano-serialization-lib-nodejs": "^13.1.0",
     "@fontsource/roboto": "^5.1.0",
     "@mui/icons-material": "^6.1.4",
     "@mui/material": "^6.1.4",
     "@prisma/client": "^5.21.1",
+    "bech32": "^2.0.0",
     "next": "14.2.15",
     "react": "^18",
     "react-dom": "^18"

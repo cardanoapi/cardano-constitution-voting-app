@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { CloseRounded, MenuRounded } from '@mui/icons-material';
 import { Box, Button, Drawer, Typography } from '@mui/material';
 
+import ConnectWalletButton from './ConnectWalletButton';
+
 /**
  * Sidebar component with links to governance & explore members pages
  * @returns Sidebar Drawer
@@ -42,6 +44,7 @@ const Sidebar = (): JSX.Element => {
               <CloseRounded />
             </Button>
           </Box>
+          <ConnectWalletButton />
           <Typography variant="h5" fontWeight="bold">
             Browse Polls
           </Typography>
