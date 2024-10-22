@@ -47,7 +47,8 @@ const ConnectWalletButton = (): JSX.Element => {
 
     // filter wallets by the wallets this browser has installed
     const userWallets = walletOptions.filter(
-      (wallet) => window.cardano?.[Object.keys(wallet)[0]],
+      // @ts-expect-error cardano is actually a proper function on windows
+      (wallet) => window?.cardano?.[Object.keys(wallet)[0]],
     );
 
     console.log('session', session);
