@@ -1,7 +1,16 @@
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Button from '@mui/material/Button';
 
 export default function Home(): JSX.Element {
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    fetch('/api/getUser', { headers: { 'X-Custom-Header': 'intersect' } })
+      .then((res) => res.json())
+      .then((data) => setName(data.user));
+  }, []);
+
   return (
     <>
       <Head>
@@ -14,6 +23,8 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
+        <h1>Home</h1>
+        <h2>{name}</h2>
         <Button variant="contained">Hello world</Button>
       </main>
       <footer>
