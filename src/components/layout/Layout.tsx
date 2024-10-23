@@ -1,4 +1,4 @@
-import Sidebar from './Sidebar';
+import { Sidebar } from '@/components/layout/Sidebar';
 
 interface Props {
   children: React.ReactNode;
@@ -16,5 +16,4 @@ export function Layout(props: Props): JSX.Element {
       {children}
     </>
   );
-};
-
+}
