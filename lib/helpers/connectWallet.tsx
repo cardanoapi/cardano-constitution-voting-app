@@ -3,9 +3,9 @@ import { bech32 } from 'bech32';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
-export default async function connectWallet(walletName: string): Promise<void> {
+export async function connectWallet(walletName: string): Promise<boolean> {
   try {
-    await connectWalletClarity(walletName).then(async (wallet) => {
+    const wallet = await connectWalletClarity(walletName)
       // @ts-expect-error getRewardAddresses is actually a proper function
       const stakeAddressHex = (await wallet.getRewardAddresses())[0];
       const bytes = Buffer.from(stakeAddressHex, 'hex');
@@ -21,11 +21,11 @@ export default async function connectWallet(walletName: string): Promise<void> {
       if (!signInResponse || signInResponse.status !== 200) {
         toast.error('Failed to authenticate user');
         return;
-      }
-    });
+    };
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message);
+   // TODO: Add proper error handling
+     if (error instanceof Error) {
+      console.error(error.message);
     }
   }
 }

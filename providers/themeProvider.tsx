@@ -1,24 +1,26 @@
 import { createContext, useMemo, useState } from 'react';
-import { createTheme, PaletteMode } from '@mui/material';
-import { responsiveFontSizes, ThemeProvider } from '@mui/material/styles';
+import type { PaletteMode } from '@mui/material/styles';
+import createTheme from '@mui/material/styles/createTheme';
+import responsiveFontSizes from '@mui/material/styles/responsiveFontSizes';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
 
 import styles from '../styles/Layout.module.css';
 
 export const ColorModeContext = createContext({
-  toggleColorMode: (): void => {
+  toggleColorMode(): void {
     console.log('LEAVE ME HERE');
   },
-  setColorMode: (mode: PaletteMode): void => {
+  setColorMode(mode: PaletteMode): void {
     console.log('LEAVE ME HERE', mode);
   },
 });
 
-const ColorModeProvider = ({ children }: any): JSX.Element => {
+export function ColorModeProvider({ children }: { children: ReactNode }): JSX.Element {
   const [mode, setMode] = useState<PaletteMode>('light');
 
   const colorMode = useMemo(
     () => ({
-      toggleColorMode: (): void => {
+      toggleColorMode(): void {
         setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
         localStorage.setItem('theme', mode === 'light' ? 'dark' : 'light');
       },
@@ -209,4 +211,3 @@ const ColorModeProvider = ({ children }: any): JSX.Element => {
   );
 };
 
-export default ColorModeProvider;

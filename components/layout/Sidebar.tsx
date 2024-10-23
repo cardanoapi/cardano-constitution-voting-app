@@ -8,7 +8,7 @@ import ConnectWalletButton from './ConnectWalletButton';
  * Sidebar component with links to governance & explore members pages
  * @returns Sidebar Drawer
  */
-const Sidebar = (): JSX.Element => {
+export function Sidebar(): JSX.Element {
   const [open, setOpen] = useState(false);
 
   function openDrawer(): void {
@@ -57,4 +57,3 @@ const Sidebar = (): JSX.Element => {
   );
 };
 
-export default Sidebar;

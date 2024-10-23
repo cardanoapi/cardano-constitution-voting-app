@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react';
 import { CheckRounded } from '@mui/icons-material';
-import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 
 import connectWallet from '../../lib/helpers/connectWallet';
@@ -9,7 +13,7 @@ import connectWallet from '../../lib/helpers/connectWallet';
  * A button to connect a wallet to a variety of cip-30 compatible wallets
  * @returns Sidebar Drawer
  */
-const ConnectWalletButton = (): JSX.Element => {
+function ConnectWalletButton(): JSX.Element {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [connecting, setConnecting] = useState(false);

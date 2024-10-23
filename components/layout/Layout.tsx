@@ -8,7 +8,7 @@ interface Props {
  * Describes the Layout of the App UI. Renders app content with Sidebar
  * @returns Layout Component
  */
-const Layout = (props: Props): JSX.Element => {
+export function Layout(props: Props): JSX.Element {
   const { children } = props;
   return (
     <>
@@ -18,4 +18,3 @@ const Layout = (props: Props): JSX.Element => {
   );
 };
 
-export default Layout;
