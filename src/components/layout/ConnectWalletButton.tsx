@@ -7,7 +7,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 
-import connectWallet from '../../lib/helpers/connectWallet';
+import { walletOptions } from '@/lib/constants';
+import { connectWallet } from '@/lib/helpers/connectWallet';
 
 /**
  * A button to connect a wallet to a variety of cip-30 compatible wallets
@@ -31,17 +32,6 @@ function ConnectWalletButton(): JSX.Element {
   }
 
   const wallets = useMemo(() => {
-    const walletOptions = [
-      { vespr: 'Vespr' },
-      { nami: 'Nami' },
-      { lace: 'Lace' },
-      { eternl: 'Eternl' },
-      { yoroi: 'Yoroi' },
-      { gerowallet: 'Gero' },
-      { flint: 'Flint' },
-      { nufi: 'Nufi' },
-      { LodeWallet: 'Lode' },
-    ];
     async function connect(walletName: string): Promise<void> {
       setConnecting(true);
       await connectWallet(walletName);
@@ -123,6 +113,6 @@ function ConnectWalletButton(): JSX.Element {
       {wallets}
     </>
   );
-};
+}
 
 export default ConnectWalletButton;

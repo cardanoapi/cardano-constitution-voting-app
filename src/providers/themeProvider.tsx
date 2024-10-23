@@ -1,34 +1,15 @@
-import { createContext, useMemo, useState } from 'react';
-import type { PaletteMode } from '@mui/material/styles';
+import { ReactNode, useMemo } from 'react';
 import createTheme from '@mui/material/styles/createTheme';
 import responsiveFontSizes from '@mui/material/styles/responsiveFontSizes';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 
-import styles from '../styles/Layout.module.css';
+import styles from '@/styles/Layout.module.css';
 
-export const ColorModeContext = createContext({
-  toggleColorMode(): void {
-    console.log('LEAVE ME HERE');
-  },
-  setColorMode(mode: PaletteMode): void {
-    console.log('LEAVE ME HERE', mode);
-  },
-});
-
-export function ColorModeProvider({ children }: { children: ReactNode }): JSX.Element {
-  const [mode, setMode] = useState<PaletteMode>('light');
-
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode(): void {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-        localStorage.setItem('theme', mode === 'light' ? 'dark' : 'light');
-      },
-      setColorMode: (mode: PaletteMode): void => setMode(mode),
-    }),
-    [mode],
-  );
-
+export function ColorModeProvider({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
   const theme = useMemo(
     () =>
       createTheme({
@@ -204,10 +185,7 @@ export function ColorModeProvider({ children }: { children: ReactNode }): JSX.El
   return (
     <>
       <div style={lightBackgroundStyles} className={styles.background} />
-      <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={responsiveTheme}>{children}</ThemeProvider>
-      </ColorModeContext.Provider>
+      <ThemeProvider theme={responsiveTheme}>{children}</ThemeProvider>
     </>
   );
-};
-
+}
