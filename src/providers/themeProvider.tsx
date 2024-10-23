@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import createTheme from '@mui/material/styles/createTheme';
+import { createTheme } from '@mui/material';
 import responsiveFontSizes from '@mui/material/styles/responsiveFontSizes';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 
