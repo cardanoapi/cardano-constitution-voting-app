@@ -11,6 +11,21 @@ export default function Home(): JSX.Element {
       .then((data) => setName(data.user));
   }, []);
 
+  async function handleCreatePoll(): Promise<void> {
+    const newPoll = await fetch('/api/newPoll', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'New Poll',
+        description: 'This is a new poll',
+      }),
+    });
+    const data = await newPoll.json();
+    console.log(data);
+  }
+
   return (
     <>
       <Head>
@@ -26,6 +41,9 @@ export default function Home(): JSX.Element {
         <h1>Home</h1>
         <h2>{name}</h2>
         <Button variant="contained">Hello world</Button>
+        <Button onClick={handleCreatePoll} variant="contained">
+          Create Poll
+        </Button>
       </main>
       <footer>
         <a
