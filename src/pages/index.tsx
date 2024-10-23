@@ -21,7 +21,7 @@ export default function Home(): JSX.Element {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>Home page</main>
+      <main>Home page {name}</main>
     </>
   );
 }
