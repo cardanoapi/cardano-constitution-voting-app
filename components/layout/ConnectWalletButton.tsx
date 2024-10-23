@@ -51,8 +51,6 @@ const ConnectWalletButton = (): JSX.Element => {
       (wallet) => window?.cardano?.[Object.keys(wallet)[0]],
     );
 
-    console.log('session', session);
-
     return (
       <Menu
         id="basic-menu"
