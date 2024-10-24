@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 
-import { connectWallet } from '@/lib/helpers/connectWallet';
+import { connectWallet } from '@/lib/connectWallet';
 
 /**
  * A button to connect a wallet to a variety of cip-30 compatible wallets
