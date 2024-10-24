@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import toast from 'react-hot-toast';
 
@@ -7,6 +8,8 @@ export default function NewPoll(): JSX.Element {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const router = useRouter();
 
   // call new poll api with this name & description
   async function handleCreatePoll(): Promise<void> {
@@ -28,10 +31,9 @@ export default function NewPoll(): JSX.Element {
       // successful creation, clear form & redirect to poll
       setName('');
       setDescription('');
-      window.location.href = `/polls/${newPollId}`;
+      router.push(`/polls/${newPollId}`);
     } else {
       // unsuccessful creation, display error message & keep form
-      console.log('data', data);
       toast.error(data.message);
     }
   }
