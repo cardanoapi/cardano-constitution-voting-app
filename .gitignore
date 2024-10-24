@@ -38,3 +38,6 @@ next-env.d.ts
 
 # cloud sql proxy
 cloud-sql-proxy
+
+#npm
+.npmrc
