@@ -8,7 +8,12 @@ type Data = {
   pollId: string;
   message?: string;
 };
-
+/**
+ * Creates a New Poll with status 'pending' in the Database.
+ * @returns PollId - The ID of the newly created poll
+ * @returns Message - An error message if the poll creation failed
+ * @returns Status - 200 if successful, 400 if the poll creation failed from user input, 500 if the poll creation failed from an internal error
+ */
 export default async function newPoll(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
@@ -52,7 +57,7 @@ export default async function newPoll(
     return res.status(200).json({ pollId: createdPoll?.id.toString() });
   } catch (error) {
     console.error('error', error);
-    return res.status(400).json({
+    return res.status(500).json({
       pollId: BigInt(-1).toString(),
       message: 'Error creating new Poll.',
     });
