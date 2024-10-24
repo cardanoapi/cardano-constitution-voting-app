@@ -45,6 +45,24 @@ export function ConnectWalletButton(): JSX.Element {
       (wallet) => window?.cardano?.[Object.keys(wallet)[0]],
     );
 
+    const userWalletButtons = userWallets.map((wallet) => {
+      const walletName = Object.values(wallet)[0];
+      const walletConnectName = Object.keys(wallet)[0];
+      return (
+        <MenuItem
+          onClick={() => connect(walletConnectName)}
+          disabled={connecting}
+          key={walletName}
+          sx={{
+            minWidth: '200px',
+            fontWeight: 500,
+          }}
+        >
+          {walletName}
+        </MenuItem>
+      );
+    });
+
     return (
       <Menu
         id="basic-menu"
@@ -62,23 +80,7 @@ export function ConnectWalletButton(): JSX.Element {
             </Button>
           </Box>
         ) : (
-          userWallets.map((wallet) => {
-            const walletName = Object.values(wallet)[0];
-            const walletConnectName = Object.keys(wallet)[0];
-            return (
-              <MenuItem
-                onClick={() => connect(walletConnectName)}
-                disabled={connecting}
-                key={walletName}
-                sx={{
-                  minWidth: '200px',
-                  fontWeight: 500,
-                }}
-              >
-                {walletName}
-              </MenuItem>
-            );
-          })
+          userWalletButtons
         )}
       </Menu>
     );
