@@ -14,7 +14,7 @@ import { connectWallet } from '@/lib/connectWallet';
  * A button to connect a wallet to a variety of cip-30 compatible wallets
  * @returns Sidebar Drawer
  */
-function ConnectWalletButton(): JSX.Element {
+export function ConnectWalletButton(): JSX.Element {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [connecting, setConnecting] = useState(false);
@@ -114,5 +114,3 @@ function ConnectWalletButton(): JSX.Element {
     </>
   );
 }
-
-export default ConnectWalletButton;
