@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { CloseRounded, MenuRounded } from '@mui/icons-material';
 import { Box, Button, Drawer, Typography } from '@mui/material';
 
-import { ConnectWalletButton } from '@/components/layout/connectWalletButton';
+import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 
 /**
  * Sidebar component with links to governance & explore members pages
