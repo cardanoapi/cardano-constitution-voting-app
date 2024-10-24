@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { walletOptions } from '@/constants/walletOptions';
 import { CheckRounded } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,7 +8,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 
-import { walletOptions } from '@/lib/constants';
 import { connectWallet } from '@/lib/helpers/connectWallet';
 
 /**
