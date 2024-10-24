@@ -40,8 +40,11 @@ export default function Home(): JSX.Element {
       <main>
         <h1>Home</h1>
         <h2>{name}</h2>
-        <Button variant="contained">Hello world</Button>
-        <Button onClick={handleCreatePoll} variant="contained">
+        <Button
+          onClick={handleCreatePoll}
+          variant="contained"
+          href="/polls/new"
+        >
           Create Poll
         </Button>
       </main>
