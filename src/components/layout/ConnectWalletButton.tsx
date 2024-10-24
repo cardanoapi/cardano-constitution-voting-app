@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { walletOptions } from '@/constants/walletOptions';
-import { CheckRounded } from '@mui/icons-material';
+import CheckRounded from '@mui/icons-material/CheckRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
