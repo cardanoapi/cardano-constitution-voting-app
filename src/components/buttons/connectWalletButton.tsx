@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { CheckRounded } from '@mui/icons-material';
+import { walletOptions } from '@/constants/walletOptions';
+import CheckRounded from '@mui/icons-material/CheckRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -7,14 +8,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 
-import { walletOptions } from '@/lib/constants';
-import { connectWallet } from '@/lib/helpers/connectWallet';
+import { connectWallet } from '@/lib/connectWallet';
 
 /**
  * A button to connect a wallet to a variety of cip-30 compatible wallets
  * @returns Sidebar Drawer
  */
-function ConnectWalletButton(): JSX.Element {
+export function ConnectWalletButton(): JSX.Element {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [connecting, setConnecting] = useState(false);
@@ -45,6 +45,24 @@ function ConnectWalletButton(): JSX.Element {
       (wallet) => window?.cardano?.[Object.keys(wallet)[0]],
     );
 
+    const userWalletButtons = userWallets.map((wallet) => {
+      const walletName = Object.values(wallet)[0];
+      const walletConnectName = Object.keys(wallet)[0];
+      return (
+        <MenuItem
+          onClick={() => connect(walletConnectName)}
+          disabled={connecting}
+          key={walletName}
+          sx={{
+            minWidth: '200px',
+            fontWeight: 500,
+          }}
+        >
+          {walletName}
+        </MenuItem>
+      );
+    });
+
     return (
       <Menu
         id="basic-menu"
@@ -62,23 +80,7 @@ function ConnectWalletButton(): JSX.Element {
             </Button>
           </Box>
         ) : (
-          userWallets.map((wallet) => {
-            const walletName = Object.values(wallet)[0];
-            const walletConnectName = Object.keys(wallet)[0];
-            return (
-              <MenuItem
-                onClick={() => connect(walletConnectName)}
-                disabled={connecting}
-                key={walletName}
-                sx={{
-                  minWidth: '200px',
-                  fontWeight: 500,
-                }}
-              >
-                {walletName}
-              </MenuItem>
-            );
-          })
+          userWalletButtons
         )}
       </Menu>
     );
@@ -114,5 +116,3 @@ function ConnectWalletButton(): JSX.Element {
     </>
   );
 }
-
-export default ConnectWalletButton;

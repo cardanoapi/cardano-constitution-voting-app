@@ -5,7 +5,7 @@ import {
   ThemeProvider,
 } from '@mui/material/styles';
 
-import styles from '../styles/Layout.module.css';
+import styles from '@/styles/Layout.module.css';
 
 export function ColorModeProvider({
   children,
