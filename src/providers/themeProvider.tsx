@@ -1,4 +1,6 @@
 import { ReactNode } from 'react';
+import gradient from '@/img/constitution-gradient.png';
+import { Box } from '@mui/material';
 import {
   createTheme,
   responsiveFontSizes,
@@ -173,16 +175,18 @@ export function ColorModeProvider({
     },
   });
 
-  const lightBackgroundStyles = {
-    background:
-      'linear-gradient(30.22deg, rgba(177, 179, 252, 0.67) 0%, #FFFFFF 40%, rgba(255, 170, 0, 0.1) 80%, rgba(255, 116, 241, 0.36) 100%), #ffffff',
-  };
-
   const responsiveTheme = responsiveFontSizes(theme);
 
   return (
     <>
-      <div style={lightBackgroundStyles} className={styles.background} />
+      <Box
+        sx={{
+          backgroundImage: `url(${gradient.src})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+        }}
+        className={styles.background}
+      />
       <ThemeProvider theme={responsiveTheme}>{children}</ThemeProvider>
     </>
   );
