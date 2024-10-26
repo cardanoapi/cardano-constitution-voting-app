@@ -1,7 +1,5 @@
 import toast from 'react-hot-toast';
 
-import { Poll } from '@/types';
-
 /**
  * Creates a new Poll
  * @param name - The name of the poll
