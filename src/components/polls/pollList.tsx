@@ -60,7 +60,12 @@ export function PollList(): JSX.Element {
                   }}
                 >
                   <WidgetContainer>
-                    <Box display="flex" flexDirection="column" gap={1}>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      gap={1}
+                      height="100%"
+                    >
                       <Box
                         display="flex"
                         flexDirection={{ xs: 'column', xl: 'row' }}
@@ -75,6 +80,7 @@ export function PollList(): JSX.Element {
                       <Typography variant="body1">
                         {poll.description}
                       </Typography>
+                      <Box flexGrow={1} />
                       <Box
                         display="flex"
                         flexDirection="row"
