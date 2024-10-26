@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { paths } from '@/paths';
 import Button from '@mui/material/Button';
+
+import { paths } from '@/paths';
 
 export default function Home(): JSX.Element {
   const [name, setName] = useState('');
@@ -12,7 +13,6 @@ export default function Home(): JSX.Element {
       .then((res) => res.json())
       .then((data) => setName(data.user));
   }, []);
-
 
   return (
     <>
@@ -28,7 +28,7 @@ export default function Home(): JSX.Element {
       <main>
         <h1>Home</h1>
         <h2>{name}</h2>
-         <Link href={paths.polls.new} passHref>
+        <Link href={paths.polls.new} passHref>
           <Button variant="contained">Create Poll</Button>
         </Link>
       </main>
