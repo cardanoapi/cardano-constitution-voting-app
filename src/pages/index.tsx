@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid2';
 import { useSession } from 'next-auth/react';
 
 import { Poll } from '@/types';
+import { getPolls } from '@/lib/getPolls';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { WidgetContainer } from '@/components/widgetContainer';
@@ -19,13 +20,13 @@ export default function Home(): JSX.Element {
   const session = useSession();
 
   useEffect(() => {
-    setLoadingPolls(true);
-    fetch('/api/getPolls', { headers: { 'X-Custom-Header': 'intersect' } })
-      .then((res) => res.json())
-      .then((data) => {
-        setPolls(data);
-        setLoadingPolls(false);
-      });
+    async function fetchPolls() {
+      setLoadingPolls(true);
+      const polls = await getPolls();
+      setPolls(polls);
+      setLoadingPolls(false);
+    }
+    fetchPolls();
   }, []);
 
   const pollList = useMemo(() => {
