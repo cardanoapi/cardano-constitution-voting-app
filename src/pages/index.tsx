@@ -4,6 +4,7 @@ import Link from 'next/link';
 import LaunchRounded from '@mui/icons-material/LaunchRounded';
 import { Box, Typography, useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import { useSession } from 'next-auth/react';
 
 import { Poll } from '@/types';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
@@ -11,14 +12,20 @@ import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { WidgetContainer } from '@/components/widgetContainer';
 
 export default function Home(): JSX.Element {
+  const [loadingPolls, setLoadingPolls] = useState(true);
   const [polls, setPolls] = useState<Poll[]>([]);
 
   const theme = useTheme();
+  const session = useSession();
 
   useEffect(() => {
+    setLoadingPolls(true);
     fetch('/api/getPolls', { headers: { 'X-Custom-Header': 'intersect' } })
       .then((res) => res.json())
-      .then((data) => setPolls(data));
+      .then((data) => {
+        setPolls(data);
+        setLoadingPolls(false);
+      });
   }, []);
 
   const pollList = useMemo(() => {
@@ -85,7 +92,11 @@ export default function Home(): JSX.Element {
         </Box>
       );
     } else {
-      return <>No polls found</>;
+      return (
+        <Typography variant="h4" textAlign="center">
+          No polls yet.
+        </Typography>
+      );
     }
   }, [polls]);
 
@@ -120,22 +131,26 @@ export default function Home(): JSX.Element {
             display="flex"
             flexDirection="column"
             alignItems="center"
-            gap={2}
+            gap={3}
           >
             <Typography variant="h3" fontWeight="bold" textAlign="center">
               Welcome to the Constitutional Convention Voting Tool
             </Typography>
-            <Box display="flex" flexDirection="column">
+            <Box
+              display={session.status == 'authenticated' ? 'none' : 'flex'}
+              flexDirection="column"
+              gap={1}
+            >
               <Typography variant="h5" fontWeight="500" textAlign="center">
                 Are you a delegate?
               </Typography>
               <Typography variant="h6" textAlign="center">
                 Connect a wallet to cast your vote:
               </Typography>
-              {/* <ConnectWalletButton /> */}
+              <ConnectWalletButton />
             </Box>
           </Box>
-          {pollList}
+          {!loadingPolls && pollList}
         </Box>
       </main>
     </>

@@ -25,7 +25,7 @@ export function ColorModeProvider({
         main: 'rgb(77,107,179)',
       },
       secondary: {
-        main: '#A8ACFF',
+        main: 'rgba(192,221,255)',
       },
       success: {
         main: 'rgb(77,166,77)',
@@ -69,9 +69,13 @@ export function ColorModeProvider({
           root: {
             textTransform: 'unset',
             fontFamily: 'Inter',
-            borderRadius: '4px',
+            borderRadius: '24px',
             padding: '10px 30px',
             fontWeight: 600,
+          },
+          containedSecondary: {
+            backgroundColor: 'rgba(192,221,255)',
+            color: 'rgb(0,33,112,1) !important',
           },
         },
       },
