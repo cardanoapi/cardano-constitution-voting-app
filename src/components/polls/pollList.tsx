@@ -17,7 +17,7 @@ export function PollList(): JSX.Element {
   const [polls, setPolls] = useState<Poll[]>([]);
 
   useEffect(() => {
-    async function fetchPolls() {
+    async function fetchPolls(): Promise<void> {
       setLoadingPolls(true);
       const polls = await getPolls();
       setPolls(polls);

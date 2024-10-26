@@ -5,8 +5,7 @@ import { Poll } from '@/types';
  * @returns Array of Polls
  */
 export async function getPolls(): Promise<Poll[]> {
-  let response: Response;
-  response = await fetch('/api/getPolls', {
+  const response = await fetch('/api/getPolls', {
     headers: { 'X-Custom-Header': 'intersect' },
   });
 

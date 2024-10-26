@@ -13,7 +13,6 @@ interface Props {
  */
 export function PollStatusChip(props: Props): JSX.Element {
   const { status } = props;
-  const theme = useTheme();
 
   if (!pollPhases.includes(status)) {
     return <></>;

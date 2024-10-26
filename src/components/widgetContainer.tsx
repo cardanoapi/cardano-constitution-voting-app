@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 
 interface Props {
   children: React.ReactNode;
-  alternateColor?: boolean;
 }
 
 /**
@@ -11,7 +10,7 @@ interface Props {
  * @returns Widget Container
  */
 export function WidgetContainer(props: Props): JSX.Element {
-  const { children, alternateColor } = props;
+  const { children } = props;
   const theme = useTheme();
   return (
     <Box
