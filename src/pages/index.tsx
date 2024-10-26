@@ -32,10 +32,12 @@ export default function Home(): JSX.Element {
     if (polls.length > 0) {
       return (
         <Box display="flex" flexDirection="column" gap={2}>
-          <Typography textAlign="center">
-            Anyone can browse the polls and view results without connecting a
-            wallet:
-          </Typography>
+          {session.status !== 'authenticated' && (
+            <Typography textAlign="center">
+              Anyone can browse the polls and view results without connecting a
+              wallet:
+            </Typography>
+          )}
           <Grid container spacing={2}>
             {polls.map((poll) => {
               return (
