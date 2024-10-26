@@ -28,9 +28,9 @@ export default function Home(): JSX.Element {
       <main>
         <h1>Home</h1>
         <h2>{name}</h2>
-        <Button onClick={handleCreatePoll} variant="contained">
-          Create Poll
-        </Button>
+         <Link href={paths.polls.new} passHref>
+          <Button variant="contained">Create Poll</Button>
+        </Link>
       </main>
     </>
   );
