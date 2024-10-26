@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { poll, PrismaClient } from '@prisma/client';
 
 import { Poll } from '@/types';
+import { parseJsonData } from '@/lib/parseJsonData';
 
 const prisma = new PrismaClient();
 
@@ -12,14 +13,7 @@ export default async function getPolls(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
-  const polls = await prisma.poll.findMany({});
-  const pollJson = polls.map((poll) => ({
-    id: poll.id.toString(),
-    name: poll.name,
-    description: poll.description || '',
-    status: poll.status,
-    summary_tx_id: poll.summary_tx_id || undefined,
-  }));
-
-  return res.status(200).json(pollJson);
+  const pollsJson = await prisma.poll.findMany({});
+  const polls = parseJsonData(pollsJson);
+  return res.status(200).json(polls);
 }
