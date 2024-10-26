@@ -1,6 +1,6 @@
 import { pollPhases } from '@/constants/pollPhases';
 import { CircleRounded } from '@mui/icons-material';
-import { Chip, Typography, useTheme } from '@mui/material';
+import { Chip, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 
 interface Props {
