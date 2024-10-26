@@ -24,7 +24,7 @@ export function Layout(props: Props): JSX.Element {
             lg: 16,
             xl: 24,
           },
-          pb: 4,
+          py: 4,
         }}
       >
         {children}

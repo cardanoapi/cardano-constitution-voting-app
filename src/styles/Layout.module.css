@@ -6,3 +6,12 @@
   left: 0;
   top: 0;
 }
+
+.backgroundTexture {
+  width: 100%;
+  height: 20%;
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+}

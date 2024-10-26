@@ -18,11 +18,9 @@ export function WidgetContainer(props: Props): JSX.Element {
       sx={{
         p: 2,
         borderRadius: `${theme.shape.borderRadius}px`,
-        backgroundColor:
-          alternateColor === true
-            ? theme.palette.background.paper
-            : theme.palette.background.default,
-        boxShadow: theme.shadows[5],
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        border: `1px solid ${theme.palette.divider}`,
+        height: '100%',
       }}
     >
       {children}
