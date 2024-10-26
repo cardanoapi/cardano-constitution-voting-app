@@ -1,32 +1,12 @@
 import { ChangeEvent, useState } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { Box, Button, TextField, Typography } from '@mui/material';
-import toast from 'react-hot-toast';
+import { Box, TextField, Typography } from '@mui/material';
 
-import { paths } from '@/paths';
-import { newPoll } from '@/lib/helpers/newPoll';
+import { CreatePollButton } from '@/components/buttons/createPollButton';
 
 export default function NewPoll(): JSX.Element {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const router = useRouter();
-
-  // call new poll api with this name & description
-  async function handleCreatePoll(): Promise<void> {
-    setIsSubmitting(true);
-    const newPollId = await newPoll(name, description);
-    setIsSubmitting(false);
-
-    if (newPollId !== '-1') {
-      // successful creation, clear form & redirect to poll
-      setName('');
-      setDescription('');
-      router.push(paths.polls.poll + newPollId);
-    }
-  }
 
   return (
     <>
@@ -64,13 +44,12 @@ export default function NewPoll(): JSX.Element {
             multiline={true}
             rows={4}
           ></TextField>
-          <Button
-            onClick={handleCreatePoll}
-            variant="contained"
-            disabled={isSubmitting}
-          >
-            Submit
-          </Button>
+          <CreatePollButton
+            name={name}
+            description={description}
+            setName={setName}
+            setDescription={setDescription}
+          />
         </Box>
       </main>
     </>
