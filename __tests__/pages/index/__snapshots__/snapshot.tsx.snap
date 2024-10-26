@@ -7,13 +7,13 @@ exports[`renders homepage unchanged 1`] = `
       Home
     </h1>
     <h2 />
-    <button
+    <a
       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-1abvrni-MuiButtonBase-root-MuiButton-root"
+      href="/polls/new"
       tabindex="0"
-      type="button"
     >
       Create Poll
-    </button>
+    </a>
   </main>
 </div>
 `;

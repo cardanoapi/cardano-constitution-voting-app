@@ -11,7 +11,7 @@ export async function getUser(stakeAddress: string): Promise<User | null> {
     response = await fetch(`/api/getUser/${stakeAddress}`, {
       method: 'GET',
       headers: {
-        'X-Custom-Header': 'reindeer',
+        'X-Custom-Header': 'intersect',
       },
     });
     if (response.status === 200) {

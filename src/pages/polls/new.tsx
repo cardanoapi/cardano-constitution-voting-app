@@ -5,6 +5,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import toast from 'react-hot-toast';
 
 import { paths } from '@/paths';
+import { newPoll } from '@/lib/helpers/newPoll';
 
 export default function NewPoll(): JSX.Element {
   const [name, setName] = useState('');
@@ -16,27 +17,14 @@ export default function NewPoll(): JSX.Element {
   // call new poll api with this name & description
   async function handleCreatePoll(): Promise<void> {
     setIsSubmitting(true);
-    const newPoll = await fetch('/api/newPoll', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: name,
-        description: description,
-      }),
-    });
+    const newPollId = await newPoll(name, description);
     setIsSubmitting(false);
-    const data = await newPoll.json();
-    const newPollId = data.pollId;
+
     if (newPollId !== '-1') {
       // successful creation, clear form & redirect to poll
       setName('');
       setDescription('');
       router.push(paths.polls.poll + newPollId);
-    } else {
-      // unsuccessful creation, display error message & keep form
-      toast.error(data.message);
     }
   }
 
