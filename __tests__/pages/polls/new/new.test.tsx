@@ -145,12 +145,10 @@ describe('NewPoll Component', () => {
     const submitButton = screen.getByRole('button', { name: /Submit/i });
     await user.click(submitButton);
 
-    // Wait for the error toast to appear
-    await waitFor(() => {
-      expect(
-        screen.getByText(/Description must be provided./i),
-      ).toBeInTheDocument();
-    });
+    const errorToast = await screen.findByText(
+      /Description must be provided./i,
+    );
+    expect(errorToast).toBeInTheDocument();
 
     // Ensure the form is not cleared since the submission failed
     expect(screen.getByLabelText('Name')).toHaveValue('testName');
@@ -176,12 +174,10 @@ describe('NewPoll Component', () => {
     const submitButton = screen.getByRole('button', { name: /Submit/i });
     await user.click(submitButton);
 
-    // Wait for the error toast to appear
-    await waitFor(() => {
-      expect(
-        screen.getByText(/Description must be less than 10,000 characters./i),
-      ).toBeInTheDocument();
-    });
+    const errorToast = await screen.findByText(
+      /Description must be less than 10,000 characters./i,
+    );
+    expect(errorToast).toBeInTheDocument();
 
     // Ensure the form is not cleared since the submission failed
     expect(screen.getByLabelText('Name')).toHaveValue('testName');

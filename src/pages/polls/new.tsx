@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import toast from 'react-hot-toast';
 
+import { paths } from '@/paths';
+
 export default function NewPoll(): JSX.Element {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -31,7 +33,7 @@ export default function NewPoll(): JSX.Element {
       // successful creation, clear form & redirect to poll
       setName('');
       setDescription('');
-      router.push(`/polls/${newPollId}`);
+      router.push(paths.polls.poll + newPollId);
     } else {
       // unsuccessful creation, display error message & keep form
       toast.error(data.message);

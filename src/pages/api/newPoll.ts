@@ -19,7 +19,9 @@ export default async function newPoll(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   const { name, description } = req.body;
+  // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before creating poll?
   try {
+    // TODO: Add data sanitization check. If fails sanitization return a message to the user.
     // validate name
     if (!name) {
       return res.status(400).json({
@@ -54,8 +56,9 @@ export default async function newPoll(
         status: 'pending',
       },
     });
-    return res.status(200).json({ pollId: createdPoll?.id.toString() });
+    return res.status(200).json({ pollId: createdPoll.id.toString() });
   } catch (error) {
+    // TODO: Add sentry instead of console.error
     console.error('error', error);
     return res.status(500).json({
       pollId: BigInt(-1).toString(),

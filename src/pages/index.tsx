@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { paths } from '@/paths';
 import Button from '@mui/material/Button';
 
 export default function Home(): JSX.Element {
   const [name, setName] = useState('');
-  const router = useRouter();
 
   useEffect(() => {
     fetch('/api/getUser', { headers: { 'X-Custom-Header': 'intersect' } })
@@ -13,9 +13,6 @@ export default function Home(): JSX.Element {
       .then((data) => setName(data.user));
   }, []);
 
-  async function handleCreatePoll(): Promise<void> {
-    router.push('/polls/new');
-  }
 
   return (
     <>
