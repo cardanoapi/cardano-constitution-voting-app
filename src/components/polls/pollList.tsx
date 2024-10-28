@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import LaunchRounded from '@mui/icons-material/LaunchRounded';
 import { useTheme } from '@mui/material';
@@ -32,7 +32,7 @@ export function PollList(): JSX.Element {
 
   const session = useSession();
   const theme = useTheme();
-  
+
   const pollCards = useMemo(() => {
     return polls.map((poll) => {
       return (
@@ -87,7 +87,7 @@ export function PollList(): JSX.Element {
   }, [polls, theme.palette.text.primary]);
 
   if (loadingPolls) {
-  return <></>;
+    return <></>;
   } else if (polls.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={2}>
@@ -98,6 +98,7 @@ export function PollList(): JSX.Element {
           </Typography>
         )}
         <Grid container spacing={2}>
+          {pollCards}
         </Grid>
       </Box>
     );
