@@ -13,7 +13,7 @@ import { connectWallet } from '@/lib/connectWallet';
 
 /**
  * A button to connect a wallet to a variety of cip-30 compatible wallets
- * @returns Sidebar Drawer
+ * @returns Connect Wallet Button
  */
 export function ConnectWalletButton(): JSX.Element {
   const [open, setOpen] = useState(false);
@@ -33,6 +33,7 @@ export function ConnectWalletButton(): JSX.Element {
     setOpen(false);
   }
 
+  // dropdown menu to select Cardano wallet from available wallets in browser
   const wallets = useMemo(() => {
     async function connect(walletName: string): Promise<void> {
       setConnecting(true);

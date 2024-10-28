@@ -12,6 +12,10 @@ import { getPolls } from '@/lib/getPolls';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { WidgetContainer } from '@/components/widgetContainer';
 
+/**
+ * A grid of all polls with their status and a link to view the poll, to be shown on the homepage
+ * @returns Poll List
+ */
 export function PollList(): JSX.Element {
   const [loadingPolls, setLoadingPolls] = useState(true);
   const [polls, setPolls] = useState<Poll[]>([]);
