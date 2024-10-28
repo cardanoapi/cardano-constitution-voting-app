@@ -14,6 +14,7 @@ export async function newPoll(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-Custom-Header': 'intersect',
     },
     body: JSON.stringify({
       name: name,
