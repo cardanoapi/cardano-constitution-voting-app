@@ -65,8 +65,14 @@ export default async function newPollVote(
     }
 
     // create poll vote
-    await prisma.poll_vote.create({
-      data: {
+    await prisma.poll_vote.upsert({
+      where: {
+        poll_id_user_id: {
+          poll_id: BigInt(pollId),
+          user_id: BigInt(1),
+        },
+      },
+      create: {
         // TODO: ADD USER ID, SIGNATURE, AND HASH OF MESSAGE
         poll_id: BigInt(pollId),
         user_id: BigInt(1),
@@ -74,7 +80,15 @@ export default async function newPollVote(
         signature: 'signature',
         hashed_message: 'hashed_message',
       },
+      update: {
+        // TODO: ADD SIGNATURE, AND HASH OF MESSAGE
+        vote: vote,
+        signature: 'signature',
+        hashed_message: 'hashed_message',
+      },
     });
+
+    return res.status(200).json({ success: true });
   } catch (error) {
     // TODO: Add sentry instead of console.error
     console.error('error', error);
