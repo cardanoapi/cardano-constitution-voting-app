@@ -6,22 +6,26 @@ import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
+import { useSession } from 'next-auth/react';
 
 import { Poll } from '@/types';
 import { paths } from '@/paths';
 import { getPoll } from '@/lib/getPoll';
+import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
+import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 
 export default function ViewPoll(): JSX.Element {
-  const router = useRouter();
-  const { pollId } = router.query;
-
   const [poll, setPoll] = useState<Poll | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingPoll, setLoadingPoll] = useState(true);
 
+  const session = useSession();
   const theme = useTheme();
+  const router = useRouter();
+  const { pollId } = router.query;
 
   useEffect(() => {
     async function fetchPoll(): Promise<void> {
@@ -81,11 +85,32 @@ export default function ViewPoll(): JSX.Element {
                   gap={3}
                   alignItems="center"
                 >
+                  {/* Coordinator Buttons */}
+                  <Box>
+                    <Typography>Manage Poll:</Typography>
+                    {poll.status === 'pending' &&
+                      pollId &&
+                      typeof pollId === 'string' && (
+                        <BeginVoteButton
+                          pollId={pollId}
+                          isSubmitting={false}
+                          setIsSubmitting={setIsSubmitting}
+                        />
+                      )}
+                    {poll.status === 'voting' &&
+                      pollId &&
+                      typeof pollId === 'string' && (
+                        <EndVoteButton
+                          pollId={pollId}
+                          isSubmitting={false}
+                          setIsSubmitting={setIsSubmitting}
+                        />
+                      )}
+                  </Box>
+                  {/* Delegate Voting Buttons */}
                   <Box>
                     <Typography>Cast your vote:</Typography>
                   </Box>
-                  {/* Advance Poll Button */}
-                  {/* Voting Buttons */}
                   <VoteOnPollButtons poll={poll} />
                 </Box>
               </Grid>
