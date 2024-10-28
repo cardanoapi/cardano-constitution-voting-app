@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { Poll } from '@/types';
 import { paths } from '@/paths';
 import { getPoll } from '@/lib/getPoll';
+import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 
@@ -33,7 +34,7 @@ export default function ViewPoll(): JSX.Element {
       setLoadingPoll(false);
     }
     fetchPoll();
-  }, []);
+  }, [pollId]);
 
   return (
     <>
@@ -74,12 +75,18 @@ export default function ViewPoll(): JSX.Element {
             )}
             {poll && (
               <Grid size={{ xs: 12, lg: 6 }}>
-                <Box display="flex" flexDirection="column" gap={3}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={3}
+                  alignItems="center"
+                >
                   <Box>
                     <Typography>Cast your vote:</Typography>
                   </Box>
                   {/* Advance Poll Button */}
                   {/* Voting Buttons */}
+                  <VoteOnPollButtons poll={poll} />
                 </Box>
               </Grid>
             )}
