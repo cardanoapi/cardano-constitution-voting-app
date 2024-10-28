@@ -33,8 +33,12 @@ export function middleware(request: NextRequest): Response {
 
   const requestHeaders = new Headers(request.headers);
 
+  // Need to exclude NextAuth paths from X-Custom-Header Check
+  const excludedPaths = ['/api/auth'];
+
   if (
     request.nextUrl.pathname.startsWith('/api') &&
+    !excludedPaths.some((path) => request.nextUrl.pathname.startsWith(path)) &&
     (!requestHeaders.has('X-Custom-Header') ||
       requestHeaders.get('X-Custom-Header') !== 'intersect')
   ) {
