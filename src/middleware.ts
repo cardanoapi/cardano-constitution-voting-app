@@ -33,6 +33,17 @@ export function middleware(request: NextRequest): Response {
 
   const requestHeaders = new Headers(request.headers);
 
+  if (
+    request.nextUrl.pathname.startsWith('/api') &&
+    (!requestHeaders.has('X-Custom-Header') ||
+      requestHeaders.get('X-Custom-Header') !== 'intersect')
+  ) {
+    return Response.json(
+      { success: false, message: 'Unauthorized' },
+      { status: 401 },
+    );
+  }
+
   requestHeaders.set(
     'Content-Security-Policy',
     contentSecurityPolicyHeaderValue,
