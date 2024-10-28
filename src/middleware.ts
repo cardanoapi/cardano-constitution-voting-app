@@ -3,9 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 // unsafe-inline required for style-src due to Next/Image inline style
 // https://github.com/vercel/next.js/issues/45184
 
-export function middleware(request: NextRequest): NextResponse<unknown> {
+export function middleware(request: NextRequest): Response {
   const isProd = process.env.NODE_ENV === 'production';
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const cspHeader = `
   default-src 'self';
   base-uri 'self';
@@ -14,15 +13,16 @@ export function middleware(request: NextRequest): NextResponse<unknown> {
   font-src 'self';
   form-action 'self';
   frame-ancestors 'none';
-  frame-src 'self';
+  frame-src 'self' https://vercel.live/;
   img-src 'self';
   object-src 'none';
   script-src 
     'self' 
     ${isProd ? '' : "'unsafe-eval'"}  
-    https://va.vercel-scripts.com/v1/script.debug.js;
+    https://va.vercel-scripts.com/v1/script.debug.js 
+    https://vercel.live/_next-live/feedback/;
   script-src-attr 'none';
-  style-src 'self' ${isProd ? '' : "'unsafe-inline'"};
+  style-src 'self' 'unsafe-inline';
   upgrade-insecure-requests; 
   worker-src 'self';
 `;
@@ -32,7 +32,6 @@ export function middleware(request: NextRequest): NextResponse<unknown> {
     .trim();
 
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-nonce', nonce);
 
   requestHeaders.set(
     'Content-Security-Policy',
