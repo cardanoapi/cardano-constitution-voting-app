@@ -7,36 +7,13 @@ exports[`renders homepage unchanged 1`] = `
       Home
     </h1>
     <h2 />
-    <button
+    <a
       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-1abvrni-MuiButtonBase-root-MuiButton-root"
+      href="/polls/new"
       tabindex="0"
-      type="button"
     >
-      Hello world
-    </button>
+      Create Poll
+    </a>
   </main>
-  <footer>
-    <a
-      href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      Learn
-    </a>
-    <a
-      href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      Examples
-    </a>
-    <a
-      href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      Go to nextjs.org →
-    </a>
-  </footer>
 </div>
 `;
