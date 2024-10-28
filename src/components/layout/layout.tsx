@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material';
+import Box from '@mui/material/Box';
 import { Toaster } from 'react-hot-toast';
 
 import { Sidebar } from '@/components/layout/mobileSidebar';
@@ -44,7 +45,20 @@ export function Layout(props: Props): JSX.Element {
         }}
       />
       <Sidebar />
-      {children}
+      <Box
+        sx={{
+          px: {
+            xs: 2,
+            sm: 4,
+            md: 10,
+            lg: 16,
+            xl: 24,
+          },
+          py: 4,
+        }}
+      >
+        {children}
+      </Box>
     </>
   );
 }

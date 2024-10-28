@@ -1,18 +1,15 @@
-import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { Box, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
+import { useSession } from 'next-auth/react';
 
 import { paths } from '@/paths';
+import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
+import { PollList } from '@/components/polls/pollList';
 
 export default function Home(): JSX.Element {
-  const [name, setName] = useState('');
-
-  useEffect(() => {
-    fetch('/api/getUser', { headers: { 'X-Custom-Header': 'intersect' } })
-      .then((res) => res.json())
-      .then((data) => setName(data.user));
-  }, []);
+  const session = useSession();
 
   return (
     <>
@@ -26,8 +23,47 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={4}
+          alignItems="center"
+          sx={{
+            mt: {
+              xs: 4,
+              sm: 8,
+              md: 12,
+              lg: 16,
+              xl: 24,
+            },
+          }}
+        >
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            gap={3}
+          >
+            <Typography variant="h3" fontWeight="bold" textAlign="center">
+              Welcome to the Constitutional Convention Voting Tool
+            </Typography>
+            <Box
+              display={session.status == 'authenticated' ? 'none' : 'flex'}
+              flexDirection="column"
+              gap={1}
+            >
+              <Typography variant="h5" fontWeight="500" textAlign="center">
+                Are you a delegate?
+              </Typography>
+              <Typography variant="h6" textAlign="center">
+                Connect a wallet to cast your vote:
+              </Typography>
+              <ConnectWalletButton />
+            </Box>
+          </Box>
+          <PollList />
+        </Box>
         <h1>Home</h1>
-        <h2>{name}</h2>
         <Link href={paths.polls.new} passHref>
           <Button variant="contained">Create Poll</Button>
         </Link>

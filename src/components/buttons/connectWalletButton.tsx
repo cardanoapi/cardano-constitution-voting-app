@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { walletOptions } from '@/constants/walletOptions';
 import CheckRounded from '@mui/icons-material/CheckRounded';
+import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -12,7 +13,7 @@ import { connectWallet } from '@/lib/connectWallet';
 
 /**
  * A button to connect a wallet to a variety of cip-30 compatible wallets
- * @returns Sidebar Drawer
+ * @returns Connect Wallet Button
  */
 export function ConnectWalletButton(): JSX.Element {
   const [open, setOpen] = useState(false);
@@ -20,6 +21,7 @@ export function ConnectWalletButton(): JSX.Element {
   const [connecting, setConnecting] = useState(false);
 
   const session = useSession();
+  const theme = useTheme();
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorEl(event.currentTarget);
@@ -31,6 +33,7 @@ export function ConnectWalletButton(): JSX.Element {
     setOpen(false);
   }
 
+  // dropdown menu to select Cardano wallet from available wallets in browser
   const wallets = useMemo(() => {
     async function connect(walletName: string): Promise<void> {
       setConnecting(true);
@@ -40,17 +43,25 @@ export function ConnectWalletButton(): JSX.Element {
     }
 
     // filter wallets by the wallets this browser has installed
-    const userWallets = walletOptions.filter(
-      // @ts-expect-error cardano is actually a proper function on windows
-      (wallet) => window?.cardano?.[Object.keys(wallet)[0]],
-    );
+    let userWallets;
+    if (typeof window !== 'undefined') {
+      userWallets = walletOptions.filter(
+        // @ts-expect-error cardano is actually a proper function on windows
+        (wallet) => window?.cardano?.[Object.keys(wallet)[0]],
+      );
+    } else {
+      userWallets = walletOptions;
+    }
 
     const userWalletButtons = userWallets.map((wallet) => {
       const walletName = Object.values(wallet)[0];
       const walletConnectName = Object.keys(wallet)[0];
       return (
         <MenuItem
-          onClick={() => connect(walletConnectName)}
+          onClick={() => {
+            handleClose();
+            connect(walletConnectName);
+          }}
           disabled={connecting}
           key={walletName}
           sx={{
@@ -74,7 +85,11 @@ export function ConnectWalletButton(): JSX.Element {
         }}
       >
         {session.status === 'authenticated' ? (
-          <Box>
+          <Box
+            sx={{
+              minWidth: '200px',
+            }}
+          >
             <Button variant="contained" color="error" onClick={() => signOut()}>
               Disconnect
             </Button>
@@ -90,6 +105,7 @@ export function ConnectWalletButton(): JSX.Element {
     <>
       <Button
         variant="contained"
+        color="secondary"
         id="connect-wallet"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
@@ -106,6 +122,8 @@ export function ConnectWalletButton(): JSX.Element {
             textOverflow: 'ellipsis',
             overflow: 'hidden',
           }}
+          color={theme.palette.text.secondary}
+          fontWeight="500"
         >
           {session.status === 'authenticated'
             ? session.data.user.stakeAddress
