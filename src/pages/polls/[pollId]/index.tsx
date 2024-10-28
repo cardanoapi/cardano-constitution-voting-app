@@ -86,7 +86,12 @@ export default function ViewPoll(): JSX.Element {
                   alignItems="center"
                 >
                   {/* Coordinator Buttons */}
-                  <Box>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    gap={1}
+                    alignItems="center"
+                  >
                     <Typography>Manage Poll:</Typography>
                     {poll.status === 'pending' &&
                       pollId &&
@@ -108,10 +113,15 @@ export default function ViewPoll(): JSX.Element {
                       )}
                   </Box>
                   {/* Delegate Voting Buttons */}
-                  <Box>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    gap={1}
+                    alignItems="center"
+                  >
                     <Typography>Cast your vote:</Typography>
+                    <VoteOnPollButtons poll={poll} />
                   </Box>
-                  <VoteOnPollButtons poll={poll} />
                 </Box>
               </Grid>
             )}

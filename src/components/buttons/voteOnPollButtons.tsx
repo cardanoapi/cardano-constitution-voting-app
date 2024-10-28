@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 import { Poll } from '@/types';
+import { castVote } from '@/lib/helpers/castVote';
 
 interface Props {
   poll: Poll;
@@ -17,6 +18,10 @@ interface Props {
 export function VoteOnPollButtons(props: Props): JSX.Element {
   const { poll } = props;
 
+  function handleVote(vote: string): void {
+    castVote(poll.id, vote);
+  }
+
   return (
     <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2}>
       <Button
@@ -27,6 +32,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         }}
         endIcon={<ThumbUpRounded />}
         size="large"
+        onClick={() => handleVote('yes')}
       >
         Yes
       </Button>
@@ -38,6 +44,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         }}
         endIcon={<ThumbDownRounded />}
         size="large"
+        onClick={() => handleVote('no')}
       >
         No
       </Button>
@@ -48,6 +55,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         }}
         endIcon={<DoDisturbRounded />}
         size="large"
+        onClick={() => handleVote('abstain')}
       >
         Abstain
       </Button>
