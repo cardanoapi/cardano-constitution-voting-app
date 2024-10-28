@@ -1,7 +1,10 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { Box, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 
+import { paths } from '@/paths';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 import { PollList } from '@/components/polls/pollList';
 
@@ -60,6 +63,10 @@ export default function Home(): JSX.Element {
           </Box>
           <PollList />
         </Box>
+        <h1>Home</h1>
+        <Link href={paths.polls.new} passHref>
+          <Button variant="contained">Create Poll</Button>
+        </Link>
       </main>
     </>
   );
