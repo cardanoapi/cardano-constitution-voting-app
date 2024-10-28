@@ -12,6 +12,8 @@ import { getPolls } from '@/lib/getPolls';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { WidgetContainer } from '@/components/widgetContainer';
 
+import { PollCard } from './pollCard';
+
 /**
  * A grid of all polls with their status and a link to view the poll, to be shown on the homepage
  * @returns Poll List
@@ -45,42 +47,7 @@ export function PollList(): JSX.Element {
           }}
           alignSelf="stretch"
         >
-          <Link
-            href={`/polls/${poll.id}`}
-            style={{
-              textDecoration: 'none',
-              color: theme.palette.text.primary,
-              height: '100%',
-            }}
-          >
-            <WidgetContainer>
-              <Box display="flex" flexDirection="column" gap={1} height="100%">
-                <Box
-                  display="flex"
-                  flexDirection={{ xs: 'column', xl: 'row' }}
-                  alignItems="center"
-                  gap={1}
-                >
-                  <Typography variant="h5" fontWeight="bold">
-                    {poll.name}
-                  </Typography>
-                  <PollStatusChip status={poll.status} />
-                </Box>
-                <Typography variant="body1">{poll.description}</Typography>
-                <Box flexGrow={1} />
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  mt={2}
-                >
-                  <Typography>View</Typography>
-                  <LaunchRounded fontSize="small" />
-                </Box>
-              </Box>
-            </WidgetContainer>
-          </Link>
+          <PollCard poll={poll} />
         </Grid>
       );
     });
