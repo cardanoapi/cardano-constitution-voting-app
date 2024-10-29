@@ -35,3 +35,27 @@ export const endVotingInternalErrorHandler = [
     );
   }),
 ];
+
+export const endVotingInvalidSessionHandler = [
+  http.post('/api/endVoting', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'You must be signed in as an Organizer to end voting.',
+      },
+      { status: 401 },
+    );
+  }),
+];
+
+export const endVotingNotOrganizerHandler = [
+  http.post('/api/endVoting', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'You must be an Organizer to end voting.',
+      },
+      { status: 401 },
+    );
+  }),
+];

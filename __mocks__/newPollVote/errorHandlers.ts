@@ -59,3 +59,27 @@ export const newPollVoteNotVotingHandler = [
     );
   }),
 ];
+
+export const newPollVoteInvalidSessionHandler = [
+  http.post('/api/newPollVote', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'You must be signed in as a Representative to vote.',
+      },
+      { status: 401 },
+    );
+  }),
+];
+
+export const newPollVoteNotRepresentativeHandler = [
+  http.post('/api/newPollVote', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'You must be a Representative to vote.',
+      },
+      { status: 401 },
+    );
+  }),
+];
