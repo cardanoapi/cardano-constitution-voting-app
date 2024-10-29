@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
-export const newPollVoteHandlers = [
-  http.post('/api/newPollVote', () => {
+export const startVotingHandlers = [
+  http.post('/api/startVoting', () => {
     return HttpResponse.json(
       {
         success: true,
