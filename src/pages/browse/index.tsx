@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
 import { paths } from '@/paths';
+import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -70,6 +71,7 @@ export default function Home(): JSX.Element {
             }}
           />
         </Tabs>
+        {value === 0 ? <></> : <RepresentativesTable />}
       </main>
     </>
   );
