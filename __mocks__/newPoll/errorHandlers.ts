@@ -47,3 +47,15 @@ export const newPollTooLongDescriptionHandler = [
     );
   }),
 ];
+
+export const newPollInternalErrorHandler = [
+  http.post('/api/newPoll', async () => {
+    return HttpResponse.json(
+      {
+        pollId: BigInt(-1).toString(),
+        message: 'Error creating new Poll.',
+      },
+      { status: 500 },
+    );
+  }),
+];

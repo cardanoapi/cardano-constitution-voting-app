@@ -56,7 +56,7 @@ export default async function endVoting(
     console.error('error', error);
     return res.status(500).json({
       success: false,
-      message: 'Error starting voting for Poll.',
+      message: 'Error ending voting for Poll.',
     });
   }
 }
