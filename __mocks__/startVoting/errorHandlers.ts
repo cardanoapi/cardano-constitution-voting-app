@@ -17,7 +17,7 @@ export const startVotingNotVotingHandler = [
     return HttpResponse.json(
       {
         success: false,
-        message: 'Poll is not voting',
+        message: 'Poll is not pending',
       },
       { status: 400 },
     );
