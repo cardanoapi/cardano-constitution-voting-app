@@ -5,7 +5,7 @@ import { startVoting } from '@/lib/helpers/startVoting';
 interface Props {
   pollId: string;
   isSubmitting: boolean;
-  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsSubmitting: (value: boolean) => void;
 }
 
 /**
