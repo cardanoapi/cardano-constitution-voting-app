@@ -11,3 +11,14 @@ export const getPollVoteCountInvalidIdHandler = [
     );
   }),
 ];
+
+export const getPollVoteCountInternalErrorHandler = [
+  http.get('/api/getPoll/*', () => {
+    return HttpResponse.json(
+      {
+        message: 'Error getting Poll Vote Count.',
+      },
+      { status: 500 },
+    );
+  }),
+];

@@ -21,3 +21,14 @@ export const getPollNotFoundHandler = [
     );
   }),
 ];
+
+export const getPollInternalErrorHandler = [
+  http.get('/api/getPoll/*', () => {
+    return HttpResponse.json(
+      {
+        message: 'Error getting Poll.',
+      },
+      { status: 500 },
+    );
+  }),
+];
