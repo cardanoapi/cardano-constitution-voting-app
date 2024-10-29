@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import { Toaster } from 'react-hot-toast';
 
-import { Sidebar } from '@/components/layout/mobileSidebar';
+import { Navbar } from '@/components/layout/navbar';
 
 interface Props {
   children: React.ReactNode;
@@ -44,7 +44,7 @@ export function Layout(props: Props): JSX.Element {
           right: 20,
         }}
       />
-      <Sidebar />
+      <Navbar />
       <Box
         sx={{
           px: {
