@@ -7,7 +7,7 @@ import { parseJsonData } from '@/lib/parseJsonData';
 
 const prisma = new PrismaClient();
 
-type Data = { poll?: Poll; message?: string };
+type Data = { poll: Poll | null; message: string };
 
 /**
  * Gets all data for a poll
@@ -24,6 +24,7 @@ export default async function getPoll(
   try {
     if (typeof pollId !== 'string') {
       return res.status(400).json({
+        poll: null,
         message: 'Invalid pollId',
       });
     }
@@ -34,10 +35,11 @@ export default async function getPoll(
     });
     if (poll === null) {
       return res.status(404).json({
+        poll: null,
         message: 'Poll not found',
       });
     }
-    const pollJson = parseJsonData(poll);
+    const pollJson = {poll: parseJsonData(poll), message: 'Poll found' };
     return res.status(200).json(pollJson);
   } catch (error) {
     // TODO: Add sentry instead of console.error

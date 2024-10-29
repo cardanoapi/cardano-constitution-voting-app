@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 type Data = {
   success: boolean;
-  message?: string;
+  message: string;
 };
 /**
  * Records a Poll Vote in the Database
@@ -23,6 +23,7 @@ export default async function newPollVote(
 ): Promise<void> {
   const { pollId, vote } = req.body;
   // TODO: Add session check to verify it is delegator/alternate. Also additional security step of verifying delegator/alternate's signature before casting vote
+  // TODO: Add check that the delegate/alternate is the active voter for the convention location
   try {
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
     // validate poll id
@@ -71,7 +72,7 @@ export default async function newPollVote(
       where: {
         poll_id_user_id: {
           poll_id: BigInt(pollId),
-          user_id: BigInt(1),
+          user_id: BigInt(1), // TODO: Replace with actual user ID
         },
       },
       create: {
@@ -90,7 +91,7 @@ export default async function newPollVote(
       },
     });
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, message: 'Vote recorded' });
   } catch (error) {
     // TODO: Add sentry instead of console.error
     console.error('error', error);

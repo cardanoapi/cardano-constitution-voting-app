@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 type Data = {
   success: boolean;
-  message?: string;
+  message: string;
 };
 /**
  * Moves a poll from pending to voting
@@ -49,7 +49,7 @@ export default async function startVoting(
       },
     });
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, message: 'Poll voting has begun' });
   } catch (error) {
     // TODO: Add sentry instead of console.error
     console.error('error', error);

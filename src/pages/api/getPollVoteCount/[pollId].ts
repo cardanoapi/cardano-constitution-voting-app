@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-type Data = { count: number; message?: string };
+type Data = { count: number; message: string };
 
 /**
  * Gets the number of votes for a poll
@@ -30,7 +30,7 @@ export default async function getPollVoteCount(
         poll_id: BigInt(pollId),
       },
     });
-    return res.status(200).json({ count: votes.length });
+    return res.status(200).json({ count: votes.length, message: 'Poll vote count retrieved' });
   } catch (error) {
     // TODO: Add sentry instead of console.error
     console.error('error', error);

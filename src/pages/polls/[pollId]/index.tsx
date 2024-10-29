@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -40,6 +40,10 @@ export default function ViewPoll(): JSX.Element {
     fetchPoll();
   }, [pollId]);
 
+const updateIsSubmitting = useCallback((value: boolean) => {
+    setIsSubmitting(value);
+  }, []);
+  
   return (
     <>
       <Head>
@@ -99,14 +103,14 @@ export default function ViewPoll(): JSX.Element {
                         <BeginVoteButton
                           pollId={pollId}
                           isSubmitting={isSubmitting}
-                          setIsSubmitting={setIsSubmitting}
+                          setIsSubmitting={updateIsSubmitting}
                         />
                       )}
                     {poll.status === 'voting' && typeof pollId === 'string' && (
                       <EndVoteButton
                         pollId={pollId}
                         isSubmitting={isSubmitting}
-                        setIsSubmitting={setIsSubmitting}
+                        setIsSubmitting={updateIsSubmitting}
                       />
                     )}
                   </Box>
@@ -121,7 +125,7 @@ export default function ViewPoll(): JSX.Element {
                     <VoteOnPollButtons
                       poll={poll}
                       disabled={isSubmitting}
-                      setDisabled={setIsSubmitting}
+                      setDisabled={updateIsSubmitting}
                     />
                   </Box>
                 </Box>

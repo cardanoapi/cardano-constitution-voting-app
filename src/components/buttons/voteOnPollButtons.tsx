@@ -10,7 +10,7 @@ import { castVote } from '@/lib/helpers/castVote';
 interface Props {
   poll: Poll;
   disabled: boolean;
-  setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setDisabled: (value: boolean) => void;
 }
 
 /**
