@@ -1,13 +1,12 @@
-import toast from 'react-hot-toast';
-
 /**
  * Gets all votes for a poll
  * @param stakeAddress - The user's stake address
- * @returns User - The user's information
+ * @returns Votes - The number of votes for the poll
+ * @returns Message - An error message if the vote count fetch failed
  */
 export async function getPollVoteCount(
   pollId: string,
-): Promise<{ votes: number; error?: string }> {
+): Promise<{ votes: number; message: string }> {
   let response: Response;
   if (pollId) {
     response = await fetch(`/api/getPollVoteCount/${pollId}`, {
@@ -19,11 +18,11 @@ export async function getPollVoteCount(
     const data = await response.json();
 
     if (response.status === 200) {
-      return data.count;
+      return { votes: data.votes, message: 'Vote count found' };
     } else {
-      return { votes: 0, error: data.message };
+      return { votes: -1, message: data.message };
     }
   } else {
-    return { votes: 0, error: 'Error getting vote count' };
+    return { votes: -1, message: 'Error getting vote count' };
   }
 }

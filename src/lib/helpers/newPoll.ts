@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 export async function newPoll(
   name: string,
   description: string,
-): Promise<string> {
+): Promise<{ pollId: string; message: string }> {
   const response = await fetch('/api/newPoll', {
     method: 'POST',
     headers: {
@@ -23,9 +23,8 @@ export async function newPoll(
   });
   const data = await response.json();
   if (response.status === 200) {
-    return data.pollId;
+    return { pollId: data.pollId, message: 'Poll created' };
   } else {
-    toast.error(data.message);
-    return '-1';
+    return { pollId: '-1', message: data.message };
   }
 }
