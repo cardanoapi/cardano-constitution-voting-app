@@ -72,22 +72,22 @@ export default async function newPollVote(
       where: {
         poll_id_user_id: {
           poll_id: BigInt(pollId),
-          user_id: BigInt(1), // TODO: Replace with actual user ID
+          user_id: BigInt(9), // TODO: Replace with actual user ID
         },
       },
       create: {
         // TODO: ADD USER ID, SIGNATURE, AND HASH OF MESSAGE
         poll_id: BigInt(pollId),
-        user_id: BigInt(1),
+        user_id: BigInt(9),
         vote: vote,
-        signature: 'signature',
-        hashed_message: 'hashed_message',
+        signature: Date.now().toString(),
+        hashed_message: Date.now().toString(),
       },
       update: {
         // TODO: ADD SIGNATURE, AND HASH OF MESSAGE
         vote: vote,
-        signature: 'signature',
-        hashed_message: 'hashed_message',
+        signature: Date.now().toString(),
+        hashed_message: Date.now().toString(),
       },
     });
 

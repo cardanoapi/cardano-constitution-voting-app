@@ -26,17 +26,19 @@ export function PollVoteCount(props: Props): JSX.Element {
   useEffect(() => {
     async function lookupVoteCount(): Promise<void> {
       setIsLoading(true);
-      const votes = await getPollVoteCount(pollId);
-      if (votes.votes === -1) {
-        toast.error(votes.message);
+      const data = await getPollVoteCount(pollId);
+      if (data.votes === -1) {
+        toast.error(data.message);
         setCount(0);
       } else {
-        setCount(votes.votes);
+        setCount(data.votes);
       }
 
       setIsLoading(false);
     }
-    lookupVoteCount();
+    if (pollId && typeof pollId === 'string') {
+      lookupVoteCount();
+    }
   }, [pollId]);
 
   return (

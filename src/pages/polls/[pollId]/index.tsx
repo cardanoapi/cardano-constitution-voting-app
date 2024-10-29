@@ -8,6 +8,7 @@ import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
+import toast from 'react-hot-toast';
 
 import { Poll } from '@/types';
 import { paths } from '@/paths';
@@ -30,12 +31,17 @@ export default function ViewPoll(): JSX.Element {
 
   useEffect(() => {
     async function fetchPoll(): Promise<void> {
+      console.log('pollId', pollId);
       if (typeof pollId !== 'string') {
         return;
       }
       setLoadingPoll(true);
-      const poll = await getPoll(pollId);
-      setPoll(poll);
+      const data = await getPoll(pollId);
+      if (data.poll) {
+        setPoll(data.poll);
+      } else {
+        toast.error(data.message);
+      }
       setLoadingPoll(false);
     }
     fetchPoll();
@@ -70,7 +76,7 @@ export default function ViewPoll(): JSX.Element {
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
-          <PollVoteCount pollId={poll?.id.toString() || ''} />
+          <PollVoteCount pollId={poll?.id?.toString() || ''} />
           <Grid container>
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>

@@ -16,9 +16,8 @@ export async function getPollVoteCount(
       },
     });
     const data = await response.json();
-
     if (response.status === 200) {
-      return { votes: data.votes, message: 'Vote count found' };
+      return { votes: data.count, message: 'Vote count found' };
     } else {
       return { votes: -1, message: data.message };
     }
