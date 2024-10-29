@@ -1,5 +1,3 @@
-import '@testing-library/jest-dom';
-
 import { getUserErrorHandlers } from '@/../__mocks__/getUser/errorHandlers';
 import { server } from '@/../__mocks__/server';
 import Home from '@/pages/index';

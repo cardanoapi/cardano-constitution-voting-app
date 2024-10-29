@@ -9,9 +9,6 @@ import NewPoll from '@/pages/polls/new';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import mockRouter from 'next-router-mock';
-
-import '@testing-library/jest-dom';
-
 import { Toaster } from 'react-hot-toast';
 
 describe('NewPoll Component', () => {
