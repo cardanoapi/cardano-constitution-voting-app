@@ -1,1 +1,5 @@
-export const pollPhases = ['pending', 'voting', 'concluded'];
+export const pollPhases = {
+  pending: 'pending',
+  voting: 'voting',
+  concluded: 'concluded',
+};

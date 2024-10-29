@@ -7,9 +7,8 @@ import Typography from '@mui/material/Typography';
 
 import type { Poll } from '@/types';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
+import { PollVoteCount } from '@/components/polls/pollVoteCount';
 import { WidgetContainer } from '@/components/widgetContainer';
-
-import { PollVoteCount } from './pollVoteCount';
 
 interface Props {
   poll: Poll;
@@ -47,7 +46,7 @@ export function PollCard(props: Props): JSX.Element {
             gap={1}
           >
             <PollStatusChip status={poll.status} />
-            {poll.status !== pollPhases[0] && (
+            {poll.status !== pollPhases.pending && (
               <PollVoteCount pollId={poll.id} />
             )}
           </Box>

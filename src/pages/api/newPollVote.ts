@@ -60,7 +60,7 @@ export default async function newPollVote(
       });
     }
     // ensure poll is voting
-    if (findPoll.status !== pollPhases[1]) {
+    if (findPoll.status !== pollPhases.voting) {
       return res.status(400).json({
         success: false,
         message: 'Poll is not voting',

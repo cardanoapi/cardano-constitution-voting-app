@@ -7,8 +7,7 @@ import { useSession } from 'next-auth/react';
 
 import type { Poll } from '@/types';
 import { getPolls } from '@/lib/getPolls';
-
-import { PollCard } from './pollCard';
+import { PollCard } from '@/components/polls/pollCard';
 
 /**
  * A grid of all polls with their status and a link to view the poll, to be shown on the homepage

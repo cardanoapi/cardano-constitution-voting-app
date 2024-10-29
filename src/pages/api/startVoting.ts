@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { pollPhases } from '@/constants/pollPhases';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -32,7 +33,7 @@ export default async function startVoting(
       });
     }
 
-    if (findPoll.status !== 'pending') {
+    if (findPoll.status !== pollPhases.pending) {
       return res.status(400).json({
         success: false,
         message: 'Poll is not pending',
@@ -49,7 +50,9 @@ export default async function startVoting(
       },
     });
 
-    return res.status(200).json({ success: true, message: 'Poll voting has begun' });
+    return res
+      .status(200)
+      .json({ success: true, message: 'Poll voting has begun' });
   } catch (error) {
     // TODO: Add sentry instead of console.error
     console.error('error', error);

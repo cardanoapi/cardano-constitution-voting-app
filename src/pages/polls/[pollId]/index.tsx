@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { pollPhases } from '@/constants/pollPhases';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
@@ -40,10 +41,10 @@ export default function ViewPoll(): JSX.Element {
     fetchPoll();
   }, [pollId]);
 
-const updateIsSubmitting = useCallback((value: boolean) => {
+  const updateIsSubmitting = useCallback((value: boolean) => {
     setIsSubmitting(value);
   }, []);
-  
+
   return (
     <>
       <Head>
@@ -98,7 +99,7 @@ const updateIsSubmitting = useCallback((value: boolean) => {
                     alignItems="center"
                   >
                     <Typography>Manage Poll:</Typography>
-                    {poll.status === 'pending' &&
+                    {poll.status === pollPhases.pending &&
                       typeof pollId === 'string' && (
                         <BeginVoteButton
                           pollId={pollId}
@@ -106,13 +107,14 @@ const updateIsSubmitting = useCallback((value: boolean) => {
                           setIsSubmitting={updateIsSubmitting}
                         />
                       )}
-                    {poll.status === 'voting' && typeof pollId === 'string' && (
-                      <EndVoteButton
-                        pollId={pollId}
-                        isSubmitting={isSubmitting}
-                        setIsSubmitting={updateIsSubmitting}
-                      />
-                    )}
+                    {poll.status === pollPhases.voting &&
+                      typeof pollId === 'string' && (
+                        <EndVoteButton
+                          pollId={pollId}
+                          isSubmitting={isSubmitting}
+                          setIsSubmitting={updateIsSubmitting}
+                        />
+                      )}
                   </Box>
                   {/* Delegate Voting Buttons */}
                   <Box

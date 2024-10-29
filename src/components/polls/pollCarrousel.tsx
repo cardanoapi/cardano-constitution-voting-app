@@ -8,8 +8,7 @@ import Carousel from 'react-material-ui-carousel';
 
 import type { Poll } from '@/types';
 import { getPolls } from '@/lib/getPolls';
-
-import { PollCard } from './pollCard';
+import { PollCard } from '@/components/polls/pollCard';
 
 /**
  * A Carrousel of poll cards

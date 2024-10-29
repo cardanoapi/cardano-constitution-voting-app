@@ -33,24 +33,26 @@ export default async function endVoting(
       });
     }
 
-    if (findPoll.status !== pollPhases[1]) {
+    if (findPoll.status !== pollPhases.voting) {
       return res.status(400).json({
         success: false,
         message: 'Poll is not voting',
       });
     }
 
-    // update poll status to voting
+    // update poll status to concluded
     await prisma.poll.update({
       where: {
         id: BigInt(pollId),
       },
       data: {
-        status: pollPhases[2],
+        status: pollPhases.concluded,
       },
     });
 
-    return res.status(200).json({ success: true, message: 'Voting ended for poll' });
+    return res
+      .status(200)
+      .json({ success: true, message: 'Voting ended for poll' });
   } catch (error) {
     // TODO: Add sentry instead of console.error
     console.error('error', error);
