@@ -14,7 +14,7 @@ interface Props {
  */
 export function BeginVoteButton(props: Props): JSX.Element {
   const { pollId, isSubmitting, setIsSubmitting } = props;
-  // call new poll api with this name & description
+
   async function handleBeginVote(): Promise<void> {
     setIsSubmitting(true);
     // Begin Vote

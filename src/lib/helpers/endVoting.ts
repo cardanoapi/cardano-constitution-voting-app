@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 /**
  * Moves a poll from voting to concluded
  * @param pollId - The ID of the poll to end voting on
- * @returns Boolean - True if the poll was successfully ended voting, false otherwise
+ * @returns Boolean - True if the poll voting was successfully ended, false otherwise
  */
 export async function endVoting(pollId: string): Promise<boolean> {
   const response = await fetch('/api/endVoting', {

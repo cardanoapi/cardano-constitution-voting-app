@@ -11,9 +11,11 @@ type Data = {
 };
 /**
  * Records a Poll Vote in the Database
- * @returns PollId - The ID of the newly created poll
- * @returns Vote - The vote to cast
- * @returns Status - 200 if successful, 400 if the poll creation failed from user input, 500 if the poll creation failed from an internal error
+ * @param pollId - The ID of the poll
+ * @param vote - The vote to cast
+ * @returns status - 200 if successful, 400 if the poll creation failed from user input, 500 if the poll creation failed from an internal error
+ * @returns message - An error message if the poll creation failed from an internal error
+ * @returns success - False if the poll creation failed from an internal error
  */
 export default async function newPollVote(
   req: NextApiRequest,
