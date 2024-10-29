@@ -74,6 +74,7 @@ export function PollCarrousel(): JSX.Element {
                     xs: 6,
                     xl: 3,
                   }}
+                  key={poll.id}
                 >
                   <PollCard poll={poll} />
                 </Grid>

@@ -94,7 +94,6 @@ export default function ViewPoll(): JSX.Element {
                   >
                     <Typography>Manage Poll:</Typography>
                     {poll.status === 'pending' &&
-                      pollId &&
                       typeof pollId === 'string' && (
                         <BeginVoteButton
                           pollId={pollId}
