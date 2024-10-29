@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
@@ -46,34 +47,50 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          TabIndicatorProps={{
-            style: { display: 'none' },
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={4}
+          sx={{
+            mt: {
+              xs: 4,
+              sm: 8,
+              md: 12,
+              lg: 16,
+              xl: 24,
+            },
           }}
-          textColor="inherit"
-          variant="fullWidth"
-          aria-label="full width tabs example"
         >
-          <Tab
-            label="Polls"
-            {...a11yProps(0)}
-            sx={{
-              mx: 2,
-              py: 2,
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            TabIndicatorProps={{
+              style: { display: 'none' },
             }}
-          />
-          <Tab
-            label="Representatives"
-            {...a11yProps(1)}
-            sx={{
-              mx: 2,
-              py: 2,
-            }}
-          />
-        </Tabs>
-        {value === 0 ? <></> : <RepresentativesTable />}
+            textColor="inherit"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab
+              label="Polls"
+              {...a11yProps(0)}
+              sx={{
+                mx: 2,
+                py: 2,
+              }}
+            />
+            <Tab
+              label="Representatives"
+              {...a11yProps(1)}
+              sx={{
+                mx: 2,
+                py: 2,
+              }}
+            />
+          </Tabs>
+
+          {value === 0 ? <></> : <RepresentativesTable />}
+        </Box>
       </main>
     </>
   );

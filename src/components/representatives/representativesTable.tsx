@@ -131,23 +131,21 @@ export function RepresentativesTable(): JSX.Element {
     return <></>;
   } else if (representatives.length > 0) {
     return (
-      <Box display="flex" flexDirection="column" gap={2}>
-        <DataGrid
-          rows={workshops}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 100,
-              },
+      <DataGrid
+        rows={workshops}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 100,
             },
-          }}
-          pageSizeOptions={[25, 50, 100]}
-          columnVisibilityModel={{
-            id: false,
-          }}
-        />
-      </Box>
+          },
+        }}
+        pageSizeOptions={[25, 50, 100]}
+        columnVisibilityModel={{
+          id: false,
+        }}
+      />
     );
   } else {
     return (
