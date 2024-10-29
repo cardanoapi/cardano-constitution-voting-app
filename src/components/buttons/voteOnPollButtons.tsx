@@ -9,6 +9,8 @@ import { castVote } from '@/lib/helpers/castVote';
 
 interface Props {
   poll: Poll;
+  disabled: boolean;
+  setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -16,10 +18,12 @@ interface Props {
  * @returns Vote on Poll Buttons
  */
 export function VoteOnPollButtons(props: Props): JSX.Element {
-  const { poll } = props;
+  const { poll, disabled, setDisabled } = props;
 
-  function handleVote(vote: string): void {
-    castVote(poll.id, vote);
+  async function handleVote(vote: string): Promise<void> {
+    setDisabled(true);
+    await castVote(poll.id, vote);
+    setDisabled(false);
   }
 
   return (
@@ -33,6 +37,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         endIcon={<ThumbUpRounded />}
         size="large"
         onClick={() => handleVote('yes')}
+        disabled={disabled}
       >
         Yes
       </Button>
@@ -45,6 +50,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         endIcon={<ThumbDownRounded />}
         size="large"
         onClick={() => handleVote('no')}
+        disabled={disabled}
       >
         No
       </Button>
@@ -56,6 +62,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         endIcon={<DoDisturbRounded />}
         size="large"
         onClick={() => handleVote('abstain')}
+        disabled={disabled}
       >
         Abstain
       </Button>

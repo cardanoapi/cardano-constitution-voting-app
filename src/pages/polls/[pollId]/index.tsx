@@ -6,7 +6,6 @@ import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
-import { useSession } from 'next-auth/react';
 
 import { Poll } from '@/types';
 import { paths } from '@/paths';
@@ -23,7 +22,6 @@ export default function ViewPoll(): JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingPoll, setLoadingPoll] = useState(true);
 
-  const session = useSession();
   const theme = useTheme();
   const router = useRouter();
   const { pollId } = router.query;
@@ -100,7 +98,7 @@ export default function ViewPoll(): JSX.Element {
                       typeof pollId === 'string' && (
                         <BeginVoteButton
                           pollId={pollId}
-                          isSubmitting={false}
+                          isSubmitting={isSubmitting}
                           setIsSubmitting={setIsSubmitting}
                         />
                       )}
@@ -109,7 +107,7 @@ export default function ViewPoll(): JSX.Element {
                       typeof pollId === 'string' && (
                         <EndVoteButton
                           pollId={pollId}
-                          isSubmitting={false}
+                          isSubmitting={isSubmitting}
                           setIsSubmitting={setIsSubmitting}
                         />
                       )}
@@ -122,7 +120,11 @@ export default function ViewPoll(): JSX.Element {
                     alignItems="center"
                   >
                     <Typography>Cast your vote:</Typography>
-                    <VoteOnPollButtons poll={poll} />
+                    <VoteOnPollButtons
+                      poll={poll}
+                      disabled={isSubmitting}
+                      setDisabled={setIsSubmitting}
+                    />
                   </Box>
                 </Box>
               </Grid>

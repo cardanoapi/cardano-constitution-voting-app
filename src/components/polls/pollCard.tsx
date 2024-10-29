@@ -1,15 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { pollPhases } from '@/constants/pollPhases';
 import LaunchRounded from '@mui/icons-material/LaunchRounded';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
-import { useSession } from 'next-auth/react';
 
 import type { Poll } from '@/types';
-import { getPolls } from '@/lib/getPolls';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { WidgetContainer } from '@/components/widgetContainer';
 

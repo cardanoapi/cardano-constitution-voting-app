@@ -49,7 +49,11 @@ export function PollCarrousel(): JSX.Element {
         >
           <Carousel autoPlay={false}>
             {polls.map((poll) => {
-              return <PollCard poll={poll} />;
+              return (
+                <Box key={poll.id}>
+                  <PollCard poll={poll} />
+                </Box>
+              );
             })}
           </Carousel>
         </Box>

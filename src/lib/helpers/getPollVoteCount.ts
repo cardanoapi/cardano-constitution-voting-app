@@ -1,4 +1,3 @@
-import { User } from '@claritydao/clarity-backend';
 import toast from 'react-hot-toast';
 
 /**
