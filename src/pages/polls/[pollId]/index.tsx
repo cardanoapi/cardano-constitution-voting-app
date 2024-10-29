@@ -101,15 +101,13 @@ export default function ViewPoll(): JSX.Element {
                           setIsSubmitting={setIsSubmitting}
                         />
                       )}
-                    {poll.status === 'voting' &&
-                      pollId &&
-                      typeof pollId === 'string' && (
-                        <EndVoteButton
-                          pollId={pollId}
-                          isSubmitting={isSubmitting}
-                          setIsSubmitting={setIsSubmitting}
-                        />
-                      )}
+                    {poll.status === 'voting' && typeof pollId === 'string' && (
+                      <EndVoteButton
+                        pollId={pollId}
+                        isSubmitting={isSubmitting}
+                        setIsSubmitting={setIsSubmitting}
+                      />
+                    )}
                   </Box>
                   {/* Delegate Voting Buttons */}
                   <Box
