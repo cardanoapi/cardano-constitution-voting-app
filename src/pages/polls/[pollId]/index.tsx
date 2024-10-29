@@ -16,6 +16,7 @@ import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
+import { PollVoteCount } from '@/components/polls/pollVoteCount';
 
 export default function ViewPoll(): JSX.Element {
   const [poll, setPoll] = useState<Poll | null>(null);
@@ -65,6 +66,7 @@ export default function ViewPoll(): JSX.Element {
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
+          <PollVoteCount pollId={poll?.id.toString() || ''} />
           <Grid container>
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>
