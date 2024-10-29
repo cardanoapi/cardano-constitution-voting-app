@@ -141,6 +141,14 @@ export function ColorModeProvider({
             textTransform: 'unset',
             fontSize: '1.25rem',
             fontWeight: '500',
+            border: '1px solid #FFFFFF',
+            color: '#FFFFFF',
+            borderRadius: '25px',
+
+            '&.Mui-selected': {
+              backgroundColor: '#FFFFFF',
+              color: 'rgb(0,33,112,1)',
+            },
           },
         },
       },
