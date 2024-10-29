@@ -1,12 +1,13 @@
-import toast from 'react-hot-toast';
-
 /**
  * Casts a vote on a poll
  * @param pollId - The ID of the poll to cast a vote on
  * @param vote - The vote to cast
  * @returns PollId - The ID of the newly created poll
  */
-export async function castVote(pollId: string, vote: string): Promise<string> {
+export async function castVote(
+  pollId: string,
+  vote: string,
+): Promise<string | undefined> {
   const response = await fetch('/api/newPollVote', {
     method: 'POST',
     headers: {
@@ -20,9 +21,8 @@ export async function castVote(pollId: string, vote: string): Promise<string> {
   });
   const data = await response.json();
   if (response.status === 200) {
-    return data.pollId;
+    return;
   } else {
-    toast.error(data.message);
-    return '-1';
+    return data.message;
   }
 }

@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import toast from 'react-hot-toast';
 
 import { startVoting } from '@/lib/helpers/startVoting';
 
@@ -18,7 +19,12 @@ export function BeginVoteButton(props: Props): JSX.Element {
   async function handleBeginVote(): Promise<void> {
     setIsSubmitting(true);
     // Begin Vote
-    await startVoting(pollId);
+    const errorMessage = await startVoting(pollId);
+    if (errorMessage) {
+      toast.error(errorMessage);
+    } else {
+      toast.success('Poll voting is open!');
+    }
     setIsSubmitting(false);
   }
 

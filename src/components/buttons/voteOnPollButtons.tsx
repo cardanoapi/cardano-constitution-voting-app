@@ -3,6 +3,7 @@ import ThumbDownRounded from '@mui/icons-material/ThumbDownRounded';
 import ThumbUpRounded from '@mui/icons-material/ThumbUpRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import toast from 'react-hot-toast';
 
 import { Poll } from '@/types';
 import { castVote } from '@/lib/helpers/castVote';
@@ -22,7 +23,12 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
 
   async function handleVote(vote: string): Promise<void> {
     setDisabled(true);
-    await castVote(poll.id, vote);
+    const errorMessage = await castVote(poll.id, vote);
+    if (errorMessage) {
+      toast.error(errorMessage);
+    } else {
+      toast.success('Vote recorded!');
+    }
     setDisabled(false);
   }
 

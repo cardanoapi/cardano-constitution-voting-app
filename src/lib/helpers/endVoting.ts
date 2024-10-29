@@ -1,11 +1,9 @@
-import toast from 'react-hot-toast';
-
 /**
  * Moves a poll from voting to concluded
  * @param pollId - The ID of the poll to end voting on
  * @returns Boolean - True if the poll voting was successfully ended, false otherwise
  */
-export async function endVoting(pollId: string): Promise<boolean> {
+export async function endVoting(pollId: string): Promise<string | undefined> {
   const response = await fetch('/api/endVoting', {
     method: 'POST',
     headers: {
@@ -18,10 +16,8 @@ export async function endVoting(pollId: string): Promise<boolean> {
   });
   const data = await response.json();
   if (response.status === 200) {
-    toast.success('Poll voting is closed!');
-    return data.pollId;
+    return;
   } else {
-    toast.error(data.message);
-    return false;
+    return data.message;
   }
 }

@@ -3,6 +3,7 @@ import { HowToVoteRounded } from '@mui/icons-material';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import toast from 'react-hot-toast';
 
 import { getPollVoteCount } from '@/lib/helpers/getPollVoteCount';
 
@@ -26,7 +27,13 @@ export function PollVoteCount(props: Props): JSX.Element {
     async function lookupVoteCount(): Promise<void> {
       setIsLoading(true);
       const votes = await getPollVoteCount(pollId);
-      setCount(votes);
+      if (votes.error) {
+        toast.error(votes.error);
+        setCount(0);
+      } else {
+        setCount(votes.votes);
+      }
+
       setIsLoading(false);
     }
     lookupVoteCount();

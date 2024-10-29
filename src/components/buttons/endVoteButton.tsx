@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import toast from 'react-hot-toast';
 
 import { endVoting } from '@/lib/helpers/endVoting';
 
@@ -18,7 +19,12 @@ export function EndVoteButton(props: Props): JSX.Element {
   async function handleEndVote(): Promise<void> {
     setIsSubmitting(true);
     // End Vote
-    await endVoting(pollId);
+    const errorMessage = await endVoting(pollId);
+    if (errorMessage) {
+      toast.error(errorMessage);
+    } else {
+      toast.success('Voting ended!');
+    }
     setIsSubmitting(false);
   }
 

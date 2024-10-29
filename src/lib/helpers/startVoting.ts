@@ -1,11 +1,9 @@
-import toast from 'react-hot-toast';
-
 /**
  * Moves a poll from pending to voting
  * @param pollId - The ID of the poll to start voting on
  * @returns Boolean - True if the poll started voting successfully, false otherwise
  */
-export async function startVoting(pollId: string): Promise<boolean> {
+export async function startVoting(pollId: string): Promise<string | undefined> {
   const response = await fetch('/api/startVoting', {
     method: 'POST',
     headers: {
@@ -18,10 +16,8 @@ export async function startVoting(pollId: string): Promise<boolean> {
   });
   const data = await response.json();
   if (response.status === 200) {
-    toast.success('Poll voting is open!');
-    return data.pollId;
+    return;
   } else {
-    toast.error(data.message);
-    return false;
+    return data.message;
   }
 }
