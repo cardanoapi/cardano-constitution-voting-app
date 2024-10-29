@@ -17,3 +17,11 @@ export interface User {
   color: string;
   wallet_address: string;
 }
+
+export interface Workshop {
+  id: string;
+  name: string;
+  delegate_id: string;
+  alternate_id: string;
+  active_voter_id: string;
+}

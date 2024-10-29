@@ -19,6 +19,7 @@
     "@fontsource/roboto": "^5.1.0",
     "@mui/icons-material": "^6.1.4",
     "@mui/material": "^6.1.4",
+    "@mui/x-data-grid": "^7.22.0",
     "@prisma/client": "^5.21.1",
     "bech32": "^2.0.0",
     "jest-fixed-jsdom": "^0.0.6",
