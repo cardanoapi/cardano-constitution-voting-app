@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-export const getPollVoteCountHandler = [
+export const getPollVoteCountHandlers = [
   http.get('/api/getPollVoteCount/*', () => {
     return HttpResponse.json({
       count: 1,

@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-export const getPollHandler = [
+export const getPollHandlers = [
   http.get('/api/getPoll/*', () => {
     return HttpResponse.json({
       id: BigInt(1).toString(),
