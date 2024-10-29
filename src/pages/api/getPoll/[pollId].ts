@@ -39,13 +39,14 @@ export default async function getPoll(
         message: 'Poll not found',
       });
     }
-    const pollJson = {poll: parseJsonData(poll), message: 'Poll found' };
+    const pollJson = { poll: parseJsonData(poll), message: 'Poll found' };
     return res.status(200).json(pollJson);
   } catch (error) {
     // TODO: Add sentry instead of console.error
     console.error('error', error);
     return res.status(500).json({
       message: 'Error getting Poll.',
+      poll: null,
     });
   }
 }
