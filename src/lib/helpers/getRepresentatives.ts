@@ -8,13 +8,10 @@ export async function getRepresentatives(): Promise<User[]> {
   const response = await fetch('/api/getRepresentatives', {
     headers: { 'X-Custom-Header': 'intersect' },
   });
+
   if (response.status === 200) {
-    const users = await response.json();
-    // only return delegates & alternates
-    const reps = users.filter(
-      (rep: User) => rep.is_delegate || rep.is_alternate,
-    );
-    return reps;
+    const polls = await response.json();
+    return polls;
   } else {
     return [];
   }

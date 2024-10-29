@@ -13,7 +13,9 @@ export default function Home(): JSX.Element {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    setValue(Number(tab));
+    if (tab) {
+      setValue(Number(tab));
+    }
   }, [tab]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
