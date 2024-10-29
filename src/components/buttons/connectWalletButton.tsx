@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { walletOptions } from '@/constants/walletOptions';
-import CheckRounded from '@mui/icons-material/CheckRounded';
 import CircleRounded from '@mui/icons-material/CircleRounded';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';

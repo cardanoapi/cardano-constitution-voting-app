@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import Link from 'next/link';
-import { Box, Button, Drawer, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { paths } from '@/paths';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
