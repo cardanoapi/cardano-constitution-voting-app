@@ -26,21 +26,7 @@ export default function Home(): JSX.Element {
         <Link href={paths.polls.new} passHref>
           <Button variant="contained">Create Poll</Button>
         </Link>
-        <Box
-          display="flex"
-          flexDirection="column"
-          gap={4}
-          alignItems="center"
-          sx={{
-            mt: {
-              xs: 4,
-              sm: 8,
-              md: 12,
-              lg: 16,
-              xl: 24,
-            },
-          }}
-        >
+        <Box display="flex" flexDirection="column" gap={4} alignItems="center">
           <Box
             display="flex"
             flexDirection="column"
