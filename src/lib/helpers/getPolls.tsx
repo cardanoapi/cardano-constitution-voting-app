@@ -11,6 +11,10 @@ export async function getPolls(): Promise<Poll[]> {
 
   if (response.status === 200) {
     const polls = await response.json();
+    // sort polls by id
+    polls.sort((a: Poll, b: Poll) => {
+      return Number(a.id) - Number(b.id);
+    });
     return polls;
   } else {
     return [];

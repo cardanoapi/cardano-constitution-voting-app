@@ -43,8 +43,12 @@ export default async function getUserVotes(
       return res.status(404).json({ votes: [], message: 'Votes not found' });
     }
     const votesJson = parseJsonData(votes);
-    return res.status(200).json({ votes: votesJson, message: 'Found user' });
+    return res
+      .status(200)
+      .json({ votes: votesJson, message: 'Found user votes' });
   } catch (error) {
-    return res.status(500).json({ votes: [], message: 'Error fetching user' });
+    return res
+      .status(500)
+      .json({ votes: [], message: 'Error fetching user votes' });
   }
 }
