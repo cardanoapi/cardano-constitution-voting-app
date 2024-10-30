@@ -1,13 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import LaunchRounded from '@mui/icons-material/LaunchRounded';
 import { useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useSession } from 'next-auth/react';
 
 import type { User, Workshop } from '@/types';
+import { paths } from '@/paths';
 import { getRepresentatives } from '@/lib/helpers/getRepresentatives';
 import { getWorkshops } from '@/lib/helpers/getWorkshops';
 
@@ -52,7 +51,7 @@ export function RepresentativesTable(): JSX.Element {
         const delegate = representatives.find((rep) => rep.id === delegateId);
         return (
           <Link
-            href={`/browse/representatives/${delegateId}`}
+            href={paths.representatives + delegateId}
             style={{
               textDecoration: 'none',
               color: theme.palette.text.primary,
@@ -79,7 +78,7 @@ export function RepresentativesTable(): JSX.Element {
         const alternate = representatives.find((rep) => rep.id === alternateId);
         return (
           <Link
-            href={`/browse/representatives/${alternateId}`}
+            href={paths.representatives + alternateId}
             style={{
               textDecoration: 'none',
               color: theme.palette.text.primary,
@@ -108,7 +107,7 @@ export function RepresentativesTable(): JSX.Element {
         );
         return (
           <Link
-            href={`/browse/representatives/${activeVoterId}`}
+            href={paths.representatives + activeVoterId}
             style={{
               textDecoration: 'none',
               color: theme.palette.text.primary,
