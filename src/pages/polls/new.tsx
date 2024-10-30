@@ -32,7 +32,7 @@ export default function NewPoll(): JSX.Element {
             }}
             label="Name"
             value={name}
-          ></TextField>
+          />
           <TextField
             variant="filled"
             type="text"
@@ -43,7 +43,7 @@ export default function NewPoll(): JSX.Element {
             value={description}
             multiline={true}
             rows={4}
-          ></TextField>
+          />
           <CreatePollButton
             name={name}
             description={description}

@@ -14,7 +14,7 @@ interface Props {
 export function PollStatusChip(props: Props): JSX.Element {
   const { status } = props;
 
-  if (!pollPhases.includes(status)) {
+  if (!Object.values(pollPhases).includes(status)) {
     return <></>;
   } else {
     return (
@@ -33,9 +33,9 @@ export function PollStatusChip(props: Props): JSX.Element {
                 <CircleRounded
                   fontSize="inherit"
                   color={
-                    status === pollPhases[0]
+                    status === pollPhases.pending
                       ? 'warning'
-                      : status === pollPhases[1]
+                      : status === pollPhases.voting
                         ? 'success'
                         : 'primary'
                   }
@@ -45,9 +45,9 @@ export function PollStatusChip(props: Props): JSX.Element {
           }
           variant="filled"
           color={
-            status === pollPhases[0]
+            status === pollPhases.pending
               ? 'warning'
-              : status === pollPhases[1]
+              : status === pollPhases.voting
                 ? 'success'
                 : 'primary'
           }

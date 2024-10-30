@@ -43,7 +43,7 @@ export default async function newPoll(
       });
     }
     if (description.length > 255) {
-      return res.status(10000).json({
+      return res.status(400).json({
         pollId: BigInt(-1).toString(),
         message: 'Description must be less than 10,000 characters.',
       });

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
+import toast from 'react-hot-toast';
 
 import { paths } from '@/paths';
 import { newPoll } from '@/lib/helpers/newPoll';
@@ -23,14 +24,18 @@ export function CreatePollButton(props: Props): JSX.Element {
   // call new poll api with this name & description
   async function handleCreatePoll(): Promise<void> {
     setIsSubmitting(true);
-    const newPollId = await newPoll(name, description);
+    const createdPoll = await newPoll(name, description);
     setIsSubmitting(false);
+
+    const newPollId = createdPoll.pollId;
 
     if (newPollId !== '-1') {
       // successful creation, clear form & redirect to poll
       setName('');
       setDescription('');
       router.push(paths.polls.poll + newPollId);
+    } else {
+      toast.error(createdPoll.message);
     }
   }
 

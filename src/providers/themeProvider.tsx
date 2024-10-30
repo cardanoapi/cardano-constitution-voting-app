@@ -77,6 +77,19 @@ export function ColorModeProvider({
             backgroundColor: 'rgba(192,221,255)',
             color: 'rgb(0,33,112,1) !important',
           },
+          outlinedSuccess: {
+            border: '1px solid rgba(77,166,77, 1)',
+            backgroundColor: 'rgba(77,166,77, 0.1)',
+          },
+          outlinedWarning: {
+            border: '1px solid rgb(245, 148, 77)',
+            backgroundColor: 'rgba(245, 148, 77, 0.1)',
+          },
+          outlinedPrimary: {
+            border: '1px solid rgba(255,255,255, .75)',
+            backgroundColor: 'rgba(255,255,255, .05)',
+            color: '#FFFFFF',
+          },
         },
       },
       MuiChip: {
@@ -238,6 +251,7 @@ export function ColorModeProvider({
           backgroundPosition: 'center',
         }}
         className={styles.backgroundTexture}
+        mt="75px"
       />
       <ThemeProvider theme={responsiveTheme}>{children}</ThemeProvider>
     </>
