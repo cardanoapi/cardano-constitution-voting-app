@@ -1,10 +1,10 @@
-describe('View Poll Page', () => {
-  it('renders name, description, and status', async () => {});
-  it('renders link to view poll', async () => {});
-  it('renders vote count when poll is voting', async () => {});
-  it('renders results when poll is concluded', async () => {});
-  it('renders link to browse representatives', async () => {});
-  it('renders link to browse all polls', async () => {});
-  it('renders poll carrousel', async () => {});
-  it('renders vote buttons', async () => {});
-});
+import { test } from 'vitest';
+
+test('renders name, description, and status', async () => {});
+test('renders link to view poll', async () => {});
+test('renders vote count when poll is voting', async () => {});
+test('renders results when poll is concluded', async () => {});
+test('renders link to browse representatives', async () => {});
+test('renders link to browse all polls', async () => {});
+test('renders poll carrousel', async () => {});
+test('renders vote buttons', async () => {});

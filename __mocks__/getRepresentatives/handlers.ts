@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-export const getRepresentativesHandler = [
+export const getRepresentativesHandlers = [
   http.get('/api/getRepresentatives', () => {
     return HttpResponse.json([
       {

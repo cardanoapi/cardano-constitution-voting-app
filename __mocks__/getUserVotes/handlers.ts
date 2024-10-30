@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-export const getPollHandlers = [
+export const getUserVotesHandlers = [
   http.get('/api/getUserVotes/*', () => {
     return HttpResponse.json({
       votes: [
