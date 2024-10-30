@@ -47,6 +47,10 @@ export default async function getUser(
     const userJson = parseJsonData(user);
     return res.status(200).json({ user: userJson, message: 'Found user' });
   } catch (error) {
+    // TODO: Add proper error handling
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
     return res.status(500).json({ user: null, message: 'Error fetching user' });
   }
 }
