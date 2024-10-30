@@ -43,6 +43,6 @@ export default async function getWorkshopName(
   } catch (error) {
     return res
       .status(500)
-      .json({ name: '', message: 'Error fetching workshop' });
+      .json({ name: '', message: 'Error fetching workshop name' });
   }
 }
