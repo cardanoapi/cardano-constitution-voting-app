@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -28,7 +27,6 @@ export function PollList(): JSX.Element {
   }, []);
 
   const session = useSession();
-  const theme = useTheme();
 
   const pollCards = useMemo(() => {
     return polls.map((poll) => {
@@ -46,7 +44,7 @@ export function PollList(): JSX.Element {
         </Grid>
       );
     });
-  }, [polls, theme.palette.text.primary]);
+  }, [polls]);
 
   if (loadingPolls) {
     return <></>;

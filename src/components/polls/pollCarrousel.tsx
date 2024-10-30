@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -11,7 +10,7 @@ import { getPolls } from '@/lib/getPolls';
 import { PollCard } from '@/components/polls/pollCard';
 
 interface Props {
-  currentPollId?: string;
+  currentPollId: string | string[] | undefined;
 }
 
 /**
@@ -28,7 +27,7 @@ export function PollCarrousel(props: Props): JSX.Element {
       setLoadingPolls(true);
       let polls = await getPolls();
       // don't show the current poll
-      if (currentPollId) {
+      if (typeof currentPollId === 'string') {
         polls = polls.filter((poll) => poll.id !== currentPollId);
       }
 
@@ -39,10 +38,9 @@ export function PollCarrousel(props: Props): JSX.Element {
       setLoadingPolls(false);
     }
     fetchPolls();
-  }, []);
+  }, [currentPollId]);
 
   const session = useSession();
-  const theme = useTheme();
 
   const pollCards = useMemo(() => {
     return (
@@ -93,7 +91,7 @@ export function PollCarrousel(props: Props): JSX.Element {
         </Box>
       </>
     );
-  }, [polls, theme.palette.text.primary]);
+  }, [polls]);
 
   if (loadingPolls) {
     return <></>;

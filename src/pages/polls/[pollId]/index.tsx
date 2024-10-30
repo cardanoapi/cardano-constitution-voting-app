@@ -31,7 +31,6 @@ export default function ViewPoll(): JSX.Element {
 
   useEffect(() => {
     async function fetchPoll(): Promise<void> {
-      console.log('pollId', pollId);
       if (typeof pollId !== 'string') {
         return;
       }
@@ -147,7 +146,7 @@ export default function ViewPoll(): JSX.Element {
             alignItems="center"
           >
             {/* Browse Other Polls Carrousel */}
-            <PollCarrousel currentPollId={pollId as string} />
+            <PollCarrousel currentPollId={pollId} />
             <Box display="flex" flexDirection="row" gap={3}>
               {/* Link all polls */}
               <Link
