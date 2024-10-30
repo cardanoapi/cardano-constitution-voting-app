@@ -43,6 +43,7 @@ export function PollCarrousel(): JSX.Element {
           }}
           flexDirection="column"
           width="100%"
+          data-testid="poll-carousel"
         >
           <Carousel autoPlay={false}>
             {polls.map((poll) => {

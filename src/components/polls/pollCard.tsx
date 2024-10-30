@@ -32,6 +32,7 @@ export function PollCard(props: Props): JSX.Element {
         color: theme.palette.text.primary,
         height: '100%',
       }}
+      data-testid={`poll-card-${poll.id}`}
     >
       <WidgetContainer>
         <Box display="flex" flexDirection="column" gap={1} height="100%">

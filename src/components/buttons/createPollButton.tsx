@@ -44,6 +44,7 @@ export function CreatePollButton(props: Props): JSX.Element {
       onClick={handleCreatePoll}
       variant="contained"
       disabled={isSubmitting}
+      data-testid="create-poll-button"
     >
       Submit
     </Button>

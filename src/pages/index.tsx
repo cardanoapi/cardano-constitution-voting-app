@@ -23,7 +23,7 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Link href={paths.polls.new}>
+        <Link href={paths.polls.new} data-testid="create-poll-button">
           <Button variant="contained">Create Poll</Button>
         </Link>
         <Box
