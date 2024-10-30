@@ -1,9 +1,11 @@
 /**
  * Moves a poll from pending to voting
  * @param pollId - The ID of the poll to start voting on
- * @returns Boolean - True if the poll started voting successfully, false otherwise
+ * @returns { succeeded: boolean, message: string } - True if the poll voting was successfully started, false otherwise with a message
  */
-export async function startVoting(pollId: string): Promise<string | undefined> {
+export async function startVoting(
+  pollId: string,
+): Promise<{ succeeded: boolean; message: string }> {
   const response = await fetch('/api/startVoting', {
     method: 'POST',
     headers: {
@@ -16,8 +18,8 @@ export async function startVoting(pollId: string): Promise<string | undefined> {
   });
   const data = await response.json();
   if (response.status === 200) {
-    return;
+    return { succeeded: true, message: 'Voting started' };
   } else {
-    return data.message;
+    return { succeeded: false, message: data.message };
   }
 }
