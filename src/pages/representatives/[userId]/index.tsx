@@ -7,6 +7,7 @@ import { Box, Typography, useTheme } from '@mui/material';
 import { PollVote, User } from '@/types';
 import { getUser } from '@/lib/helpers/getUser';
 import { getUserVotes } from '@/lib/helpers/getUserVotes';
+import { getWorkshopName } from '@/lib/helpers/getWorkshopName';
 
 export default function Representative(): JSX.Element {
   const [user, setUser] = useState<User | null>(null);
@@ -42,8 +43,21 @@ export default function Representative(): JSX.Element {
     fetchUserData();
   }, [userId]);
 
-  // get user votes & the name of the workshop they attended
-  useEffect(() => {}, [user]);
+  // get the name of the workshop they attended
+  useEffect(() => {
+    async function fetchWorkshop(): Promise<void> {
+      if (user) {
+        // get user data
+        setLoadingWorkshop(true);
+        const workshopName = await getWorkshopName(user.workshop_id.toString());
+        if (workshopName) {
+          setWorkshopName(workshopName);
+        }
+        setLoadingWorkshop(false);
+      }
+    }
+    fetchWorkshop();
+  }, [user]);
 
   return (
     <>
@@ -85,6 +99,11 @@ export default function Representative(): JSX.Element {
                   {votes.length} vote{votes.length === 1 ? '' : 's'}
                 </Typography>
               </Box>
+            )}
+            {workshopName && (
+              <Typography variant="h5" fontWeight="500">
+                {workshopName}
+              </Typography>
             )}
           </Box>
         ) : (
