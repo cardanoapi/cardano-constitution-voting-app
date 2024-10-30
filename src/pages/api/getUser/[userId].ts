@@ -12,6 +12,13 @@ type Data = {
   message: string;
 };
 
+/**
+ * Gets user data by UserId
+ * @param userId - The ID of the user
+ * @returns status - 200 if successful, 400 if userId is invalid, 404 if user is not found, 500 if user fetching failed from an internal error
+ * @returns message - An error message if getting the user data failed
+ * @returns user - The user data, null if error encountered
+ */
 export default async function getUser(
   req: NextApiRequest,
   res: NextApiResponse<Data>,

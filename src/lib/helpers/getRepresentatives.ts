@@ -2,7 +2,7 @@ import { User } from '@/types';
 
 /**
  * Fetches all delegates and alternates from the database
- * @returns User[] - The delegates & alternates
+ * @returns users: User[] - The delegates & alternates
  */
 export async function getRepresentatives(): Promise<User[]> {
   const response = await fetch('/api/getRepresentatives', {
@@ -10,8 +10,8 @@ export async function getRepresentatives(): Promise<User[]> {
   });
 
   if (response.status === 200) {
-    const polls = await response.json();
-    return polls;
+    const data = await response.json();
+    return data;
   } else {
     return [];
   }

@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import Carousel from 'react-material-ui-carousel';
 
 import type { Poll } from '@/types';
-import { getPolls } from '@/lib/getPolls';
+import { getPolls } from '@/lib/helpers/getPolls';
 import { PollCard } from '@/components/polls/pollCard';
 
 /**

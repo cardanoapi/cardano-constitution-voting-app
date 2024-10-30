@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { HowToVoteRounded } from '@mui/icons-material';
 import { Box, Typography, useTheme } from '@mui/material';
+import toast from 'react-hot-toast';
 
 import { PollVote, User } from '@/types';
 import { getUser } from '@/lib/helpers/getUser';
@@ -28,9 +29,11 @@ export default function Representative(): JSX.Element {
     async function fetchUserData(): Promise<void> {
       // get user data
       setLoadingUser(true);
-      const user = await getUser(userId as string);
-      if (user) {
-        setUser(user);
+      const data = await getUser(userId as string);
+      if (data.user) {
+        setUser(data.user);
+      } else {
+        toast.error(data.message);
       }
       setLoadingUser(false);
 
@@ -38,11 +41,14 @@ export default function Representative(): JSX.Element {
       setLoadingVotes(true);
       const votes = await getUserVotes(userId as string);
       if (votes) {
-        setUser(user);
+        setVotes(votes.votes);
       }
       setLoadingVotes(false);
     }
-    fetchUserData();
+
+    if (userId) {
+      fetchUserData();
+    }
   }, [userId]);
 
   // get the name of the workshop they attended
@@ -52,8 +58,10 @@ export default function Representative(): JSX.Element {
         // get user data
         setLoadingWorkshop(true);
         const workshopName = await getWorkshopName(user.workshop_id.toString());
-        if (workshopName) {
-          setWorkshopName(workshopName);
+        if (workshopName.name) {
+          setWorkshopName(workshopName.name);
+        } else {
+          toast.error(workshopName.message);
         }
         setLoadingWorkshop(false);
       }

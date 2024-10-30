@@ -5,7 +5,10 @@ import { User } from '@/types';
  * @param workshopId - The workshop's id
  * @returns Name - The workshop's name
  */
-export async function getWorkshopName(workshopId: string): Promise<string> {
+export async function getWorkshopName(workshopId: string): Promise<{
+  name: string;
+  message: string;
+}> {
   let response: Response;
   if (workshopId && typeof workshopId === 'string') {
     response = await fetch(`/api/getWorkshopName/${workshopId}`, {
@@ -14,17 +17,17 @@ export async function getWorkshopName(workshopId: string): Promise<string> {
         'X-Custom-Header': 'intersect',
       },
     });
+    const data = await response.json();
     if (response.status === 200) {
-      const data = await response.json();
       if (data.name) {
-        return data.name;
+        return { name: data.name, message: 'Name found' };
       } else {
-        return '';
+        return { name: '', message: data.message };
       }
     } else {
-      return '';
+      return { name: '', message: data.message };
     }
   } else {
-    return '';
+    return { name: '', message: 'Invalid workshopId' };
   }
 }

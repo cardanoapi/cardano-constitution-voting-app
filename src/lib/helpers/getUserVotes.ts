@@ -5,7 +5,9 @@ import { PollVote, User } from '@/types';
  * @param userId - The user's id
  * @returns User - The user's votes
  */
-export async function getUserVotes(userId: string): Promise<PollVote[]> {
+export async function getUserVotes(
+  userId: string,
+): Promise<{ votes: PollVote[]; message: string }> {
   let response: Response;
   if (userId && typeof userId === 'string') {
     response = await fetch(`/api/getUserVotes/${userId}`, {
@@ -14,17 +16,17 @@ export async function getUserVotes(userId: string): Promise<PollVote[]> {
         'X-Custom-Header': 'intersect',
       },
     });
+    const data = await response.json();
     if (response.status === 200) {
-      const data = await response.json();
       if (data.votes) {
-        return data.votes;
+        return { votes: data.votes, message: 'User votes found' };
       } else {
-        return [];
+        return { votes: [], message: data.message };
       }
     } else {
-      return [];
+      return { votes: [], message: data.message };
     }
   } else {
-    return [];
+    return { votes: [], message: 'Invalid userId' };
   }
 }

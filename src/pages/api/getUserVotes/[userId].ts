@@ -12,6 +12,13 @@ type Data = {
   message: string;
 };
 
+/**
+ * Gets all of a users votes
+ * @param userId - The ID of the user
+ * @returns status - 200 if successful, 400 if userId is invalid, 404 if user votes not found, 500 if user votes fetching failed from an internal error
+ * @returns message - An error message if getting the user votes failed
+ * @returns votes - The array of poll votes with this user's user_id, empty array if error encountered
+ */
 export default async function getUserVotes(
   req: NextApiRequest,
   res: NextApiResponse<Data>,

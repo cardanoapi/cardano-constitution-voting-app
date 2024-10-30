@@ -5,7 +5,10 @@ import { User } from '@/types';
  * @param userId - The user's id
  * @returns User - The user's information
  */
-export async function getUser(userId: string): Promise<User | null> {
+export async function getUser(userId: string): Promise<{
+  user: User | null;
+  message: string;
+}> {
   let response: Response;
   if (userId && typeof userId === 'string') {
     response = await fetch(`/api/getUser/${userId}`, {
@@ -14,17 +17,29 @@ export async function getUser(userId: string): Promise<User | null> {
         'X-Custom-Header': 'intersect',
       },
     });
+    const data = await response.json();
     if (response.status === 200) {
-      const data = await response.json();
       if (data.user) {
-        return data.user;
+        return {
+          user: data.user,
+          message: 'User found',
+        };
       } else {
-        return null;
+        return {
+          user: null,
+          message: data.message,
+        };
       }
     } else {
-      return null;
+      return {
+        user: null,
+        message: data.message,
+      };
     }
   } else {
-    return null;
+    return {
+      user: null,
+      message: 'Invalid userId',
+    };
   }
 }

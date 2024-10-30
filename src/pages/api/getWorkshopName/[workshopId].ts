@@ -12,6 +12,13 @@ type Data = {
   message: string;
 };
 
+/**
+ * Gets the name of a workshop by id
+ * @param workshopId - The ID of the workshop
+ * @returns status - 200 if successful, 400 if workshopId is invalid, 404 if workshop is not found, 500 if workshop fetching failed from an internal error
+ * @returns message - An error message if getting the workshop name failed
+ * @returns name - The workshop name, empty string if error encountered
+ */
 export default async function getWorkshopName(
   req: NextApiRequest,
   res: NextApiResponse<Data>,

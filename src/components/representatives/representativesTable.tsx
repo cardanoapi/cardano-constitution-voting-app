@@ -12,7 +12,7 @@ import { getWorkshops } from '@/lib/helpers/getWorkshops';
 
 /**
  * A Table with all Representatives grouped by their Workshop
- * @returns Poll List
+ * @returns Representatives Table
  */
 export function RepresentativesTable(): JSX.Element {
   const [loadingReps, setLoadingReps] = useState(true);
