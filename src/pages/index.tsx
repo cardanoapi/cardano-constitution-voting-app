@@ -23,6 +23,9 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
+        <Link href={paths.polls.new} passHref>
+          <Button variant="contained">Create Poll</Button>
+        </Link>
         <Box
           display="flex"
           flexDirection="column"
@@ -63,10 +66,6 @@ export default function Home(): JSX.Element {
           </Box>
           <PollList />
         </Box>
-        <h1>Home</h1>
-        <Link href={paths.polls.new} passHref>
-          <Button variant="contained">Create Poll</Button>
-        </Link>
       </main>
     </>
   );
