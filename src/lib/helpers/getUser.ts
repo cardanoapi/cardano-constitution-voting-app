@@ -1,22 +1,26 @@
-import { User } from '@claritydao/clarity-backend';
+import { User } from '@/types';
 
 /**
- * Fetches data for a user by Stake Address
- * @param stakeAddress - The user's stake address
+ * Fetches data for a user by user id
+ * @param userId - The user's id
  * @returns User - The user's information
  */
-export async function getUser(stakeAddress: string): Promise<User | null> {
+export async function getUser(userId: string): Promise<User | null> {
   let response: Response;
-  if (stakeAddress) {
-    response = await fetch(`/api/getUser/${stakeAddress}`, {
+  if (userId && typeof userId === 'string') {
+    response = await fetch(`/api/getUser/${userId}`, {
       method: 'GET',
       headers: {
         'X-Custom-Header': 'intersect',
       },
     });
     if (response.status === 200) {
-      const user = await response.json();
-      return user;
+      const data = await response.json();
+      if (data.user) {
+        return data.user;
+      } else {
+        return null;
+      }
     } else {
       return null;
     }
