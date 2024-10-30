@@ -31,7 +31,6 @@ export default function ViewPoll(): JSX.Element {
 
   useEffect(() => {
     async function fetchPoll(): Promise<void> {
-      console.log('pollId', pollId);
       if (typeof pollId !== 'string') {
         return;
       }
