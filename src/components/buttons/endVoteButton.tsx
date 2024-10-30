@@ -19,9 +19,9 @@ export function EndVoteButton(props: Props): JSX.Element {
   async function handleEndVote(): Promise<void> {
     setIsSubmitting(true);
     // End Vote
-    const errorMessage = await endVoting(pollId);
-    if (errorMessage) {
-      toast.error(errorMessage);
+    const result = await endVoting(pollId);
+    if (result.succeeded === false) {
+      toast.error(result.message);
     } else {
       toast.success('Voting ended!');
     }

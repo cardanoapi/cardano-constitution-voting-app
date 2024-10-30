@@ -19,9 +19,9 @@ export function BeginVoteButton(props: Props): JSX.Element {
   async function handleBeginVote(): Promise<void> {
     setIsSubmitting(true);
     // Begin Vote
-    const errorMessage = await startVoting(pollId);
-    if (errorMessage) {
-      toast.error(errorMessage);
+    const result = await startVoting(pollId);
+    if (result.succeeded === false) {
+      toast.error(result.message);
     } else {
       toast.success('Poll voting is open!');
     }

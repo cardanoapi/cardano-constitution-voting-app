@@ -23,9 +23,9 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
 
   async function handleVote(vote: string): Promise<void> {
     setDisabled(true);
-    const errorMessage = await castVote(poll.id, vote);
-    if (errorMessage) {
-      toast.error(errorMessage);
+    const result = await castVote(poll.id, vote);
+    if (result.succeeded === false) {
+      toast.error(result.message);
     } else {
       toast.success('Vote recorded!');
     }

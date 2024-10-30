@@ -2,12 +2,12 @@
  * Casts a vote on a poll
  * @param pollId - The ID of the poll to cast a vote on
  * @param vote - The vote to cast
- * @returns PollId - The ID of the newly created poll
+ * @returns { succeeded: boolean, message: string } - True if the poll voting was successfully started, false otherwise with a message
  */
 export async function castVote(
   pollId: string,
   vote: string,
-): Promise<string | undefined> {
+): Promise<{ succeeded: boolean; message: string }> {
   const response = await fetch('/api/newPollVote', {
     method: 'POST',
     headers: {
@@ -21,8 +21,8 @@ export async function castVote(
   });
   const data = await response.json();
   if (response.status === 200) {
-    return;
+    return { succeeded: true, message: 'Vote cast' };
   } else {
-    return data.message;
+    return { succeeded: false, message: data.message };
   }
 }
