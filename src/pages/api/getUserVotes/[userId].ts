@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
 
-import { PollVote, User } from '@/types';
+import { PollVote } from '@/types';
 import { parseJsonData } from '@/lib/parseJsonData';
 
 const prisma = new PrismaClient();
@@ -47,6 +47,10 @@ export default async function getUserVotes(
       .status(200)
       .json({ votes: votesJson, message: 'Found user votes' });
   } catch (error) {
+    // TODO: Add proper error handling
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
     return res
       .status(500)
       .json({ votes: [], message: 'Error fetching user votes' });
