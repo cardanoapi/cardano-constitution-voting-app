@@ -52,7 +52,7 @@ export function RepresentativesTable(): JSX.Element {
         const delegate = representatives.find((rep) => rep.id === delegateId);
         return (
           <Link
-            href={`/browse/representatives/${params.value}`}
+            href={`/browse/representatives/${delegateId}`}
             style={{
               textDecoration: 'none',
               color: theme.palette.text.primary,
@@ -79,7 +79,7 @@ export function RepresentativesTable(): JSX.Element {
         const alternate = representatives.find((rep) => rep.id === alternateId);
         return (
           <Link
-            href={`/browse/representatives/${params.value}`}
+            href={`/browse/representatives/${alternateId}`}
             style={{
               textDecoration: 'none',
               color: theme.palette.text.primary,
@@ -108,7 +108,7 @@ export function RepresentativesTable(): JSX.Element {
         );
         return (
           <Link
-            href={`/browse/representatives/${params.value}`}
+            href={`/browse/representatives/${activeVoterId}`}
             style={{
               textDecoration: 'none',
               color: theme.palette.text.primary,
