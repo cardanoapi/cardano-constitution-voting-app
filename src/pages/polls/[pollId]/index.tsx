@@ -147,7 +147,7 @@ export default function ViewPoll(): JSX.Element {
             alignItems="center"
           >
             {/* Browse Other Polls Carrousel */}
-            <PollCarrousel />
+            <PollCarrousel currentPollId={pollId as string} />
             <Box display="flex" flexDirection="row" gap={3}>
               {/* Link all polls */}
               <Link

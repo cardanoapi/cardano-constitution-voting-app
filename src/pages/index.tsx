@@ -40,6 +40,7 @@ export default function Home(): JSX.Element {
               display={session.status == 'authenticated' ? 'none' : 'flex'}
               flexDirection="column"
               gap={1}
+              alignItems="center"
             >
               <Typography variant="h5" fontWeight="500" textAlign="center">
                 Are you a delegate?
