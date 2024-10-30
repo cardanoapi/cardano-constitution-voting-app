@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import LaunchRounded from '@mui/icons-material/LaunchRounded';
-import { useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
@@ -130,21 +130,26 @@ export function RepresentativesTable(): JSX.Element {
     return <></>;
   } else if (representatives.length > 0) {
     return (
-      <DataGrid
-        rows={workshops}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 100,
+      <Box display="flex" flexDirection="column" gap={1}>
+        <Typography variant="h6" fontWeight="600" textAlign="center">
+          Representatives
+        </Typography>
+        <DataGrid
+          rows={workshops}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 100,
+              },
             },
-          },
-        }}
-        pageSizeOptions={[25, 50, 100]}
-        columnVisibilityModel={{
-          id: false,
-        }}
-      />
+          }}
+          pageSizeOptions={[25, 50, 100]}
+          columnVisibilityModel={{
+            id: false,
+          }}
+        />
+      </Box>
     );
   } else {
     return (

@@ -97,7 +97,9 @@ export function PollCarrousel(): JSX.Element {
         alignItems="center"
       >
         {session.status !== 'authenticated' && (
-          <Typography textAlign="center">Browse other polls</Typography>
+          <Typography textAlign="center" variant="h6" fontWeight="600">
+            Browse other polls
+          </Typography>
         )}
         {pollCards}
       </Box>
