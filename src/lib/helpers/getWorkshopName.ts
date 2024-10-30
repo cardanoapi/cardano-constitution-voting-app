@@ -1,5 +1,3 @@
-import { User } from '@/types';
-
 /**
  * Get's the name of a workshop by id
  * @param workshopId - The workshop's id

@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
 
-import { User } from '@/types';
 import { parseJsonData } from '@/lib/parseJsonData';
 
 const prisma = new PrismaClient();
@@ -48,6 +47,10 @@ export default async function getWorkshopName(
       .status(200)
       .json({ name: workshopName, message: 'Found workshop' });
   } catch (error) {
+    // TODO: Add proper error handling
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
     return res
       .status(500)
       .json({ name: '', message: 'Error fetching workshop name' });

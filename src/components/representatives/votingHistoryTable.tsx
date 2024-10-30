@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DoDisturbRounded from '@mui/icons-material/DoDisturbRounded';
 import ThumbDownRounded from '@mui/icons-material/ThumbDownRounded';
 import ThumbUpRounded from '@mui/icons-material/ThumbUpRounded';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
@@ -24,8 +24,6 @@ export function VotingHistoryTable(props: Props): JSX.Element {
   const [votes, setVotes] = useState<PollVote[]>([]);
   const [polls, setPolls] = useState<Poll[]>([]);
 
-  const theme = useTheme();
-
   useEffect(() => {
     async function fetchData(): Promise<void> {
       setLoading(true);
@@ -41,7 +39,7 @@ export function VotingHistoryTable(props: Props): JSX.Element {
       setLoading(false);
     }
     fetchData();
-  }, []);
+  }, [userId]);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: '#' },

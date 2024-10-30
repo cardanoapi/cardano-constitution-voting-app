@@ -1,4 +1,4 @@
-import { PollVote, User } from '@/types';
+import { PollVote } from '@/types';
 
 /**
  * Gets all of a user's votes by their id
