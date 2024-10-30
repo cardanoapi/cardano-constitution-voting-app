@@ -243,6 +243,7 @@ export function ColorModeProvider({
           backgroundPosition: 'center',
         }}
         className={styles.backgroundTexture}
+        mt="75px"
       />
       <ThemeProvider theme={responsiveTheme}>{children}</ThemeProvider>
     </>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { walletOptions } from '@/constants/walletOptions';
-import CheckRounded from '@mui/icons-material/CheckRounded';
+import CircleRounded from '@mui/icons-material/CircleRounded';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -85,15 +85,20 @@ export function ConnectWalletButton(): JSX.Element {
         }}
       >
         {session.status === 'authenticated' ? (
-          <Box
+          <MenuItem
             sx={{
               minWidth: '200px',
             }}
           >
-            <Button variant="contained" color="error" onClick={() => signOut()}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => signOut()}
+              fullWidth
+            >
               Disconnect
             </Button>
-          </Box>
+          </MenuItem>
         ) : (
           userWalletButtons
         )}
@@ -102,17 +107,40 @@ export function ConnectWalletButton(): JSX.Element {
   }, [anchorEl, open, connecting, session]);
 
   return (
-    <>
+    <Box display="flex" flexDirection="row" gap={1} alignItems="center">
+      {session.status === 'authenticated' && (
+        <Typography
+          fontWeight="500"
+          display={{
+            xs: 'none',
+            md: 'flex',
+          }}
+        >
+          Welcome
+        </Typography>
+      )}
       <Button
-        variant="contained"
-        color="secondary"
+        variant={session.status === 'authenticated' ? 'outlined' : 'contained'}
+        color={session.status === 'authenticated' ? 'success' : 'secondary'}
         id="connect-wallet"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        startIcon={
-          session.status === 'authenticated' ? <CheckRounded /> : <></>
+        endIcon={
+          session.status === 'authenticated' ? (
+            <Box
+              sx={{
+                fontSize: '0.85rem !important',
+              }}
+              justifyContent="center"
+              display="flex"
+            >
+              <CircleRounded fontSize="inherit" />
+            </Box>
+          ) : (
+            <></>
+          )
         }
       >
         <Typography
@@ -121,16 +149,23 @@ export function ConnectWalletButton(): JSX.Element {
             textWrap: 'nowrap',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
+            color:
+              session.status === 'authenticated'
+                ? theme.palette.success.main
+                : theme.palette.text.secondary,
           }}
-          color={theme.palette.text.secondary}
-          fontWeight="500"
         >
           {session.status === 'authenticated'
             ? session.data.user.stakeAddress
             : 'Connect Wallet'}
         </Typography>
       </Button>
+      {session.status === 'authenticated' && (
+        <Typography color="success" fontWeight="500">
+          Wallet connected
+        </Typography>
+      )}
       {wallets}
-    </>
+    </Box>
   );
 }
