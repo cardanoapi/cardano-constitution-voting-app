@@ -31,7 +31,6 @@ export default function ViewPoll(): JSX.Element {
 
   useEffect(() => {
     async function fetchPoll(): Promise<void> {
-      console.log('pollId', pollId);
       if (typeof pollId !== 'string') {
         return;
       }
@@ -77,7 +76,7 @@ export default function ViewPoll(): JSX.Element {
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
           <PollVoteCount pollId={poll?.id?.toString() || ''} />
-          <Grid container>
+          <Grid container data-testid="poll-description">
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>
                 <Box display="flex" flexDirection="column" gap={3}>

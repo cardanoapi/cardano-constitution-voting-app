@@ -25,7 +25,11 @@ export function Navbar(): JSX.Element {
         height: '75px',
       }}
     >
-      <Link href={paths.home} passHref style={{ textDecoration: 'none' }}>
+      <Link
+        href={paths.home}
+        style={{ textDecoration: 'none' }}
+        data-testid="home-link"
+      >
         <Typography variant="h6" fontWeight="bold">
           Voting Tool
         </Typography>

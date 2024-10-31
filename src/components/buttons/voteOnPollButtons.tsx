@@ -44,6 +44,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         size="large"
         onClick={() => handleVote('yes')}
         disabled={disabled}
+        data-testid="vote-yes-button"
       >
         Yes
       </Button>
@@ -57,6 +58,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         size="large"
         onClick={() => handleVote('no')}
         disabled={disabled}
+        data-testid="vote-no-button"
       >
         No
       </Button>
@@ -69,6 +71,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
         size="large"
         onClick={() => handleVote('abstain')}
         disabled={disabled}
+        data-testid="vote-abstain-button"
       >
         Abstain
       </Button>

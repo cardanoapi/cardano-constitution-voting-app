@@ -50,6 +50,7 @@ export function PollVoteCount(props: Props): JSX.Element {
           gap={1}
           alignItems="center"
           color={theme.palette.text.primary}
+          data-testid="poll-vote-count"
         >
           <HowToVoteRounded />
           <Typography variant="body1">

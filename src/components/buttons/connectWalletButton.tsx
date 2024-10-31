@@ -68,6 +68,7 @@ export function ConnectWalletButton(): JSX.Element {
             minWidth: '200px',
             fontWeight: 500,
           }}
+          data-testid={`connect-wallet-${walletName}`}
         >
           {walletName}
         </MenuItem>
@@ -95,6 +96,7 @@ export function ConnectWalletButton(): JSX.Element {
               color="error"
               onClick={() => signOut()}
               fullWidth
+              data-testid="disconnect-wallet"
             >
               Disconnect
             </Button>
@@ -142,6 +144,7 @@ export function ConnectWalletButton(): JSX.Element {
             <></>
           )
         }
+        data-testid="connect-wallet-button"
       >
         <Typography
           sx={{
