@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 /**
  * Gets all votes for a poll
  * @param stakeAddress - The user's stake address
@@ -7,21 +9,27 @@
 export async function getPollVoteCount(
   pollId: string,
 ): Promise<{ votes: number; message: string }> {
-  let response: Response;
-  if (pollId) {
-    response = await fetch(`/api/getPollVoteCount/${pollId}`, {
-      method: 'GET',
-      headers: {
-        'X-Custom-Header': 'intersect',
-      },
-    });
-    const data = await response.json();
-    if (response.status === 200) {
-      return { votes: data.count, message: 'Vote count found' };
+  try {
+    if (pollId) {
+      const response = await axios.get(`/api/getPollVoteCount/${pollId}`, {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      });
+      const data = await response.data;
+      if (response.status === 200) {
+        return { votes: data.count, message: 'Vote count found' };
+      } else {
+        return { votes: -1, message: data.message };
+      }
     } else {
-      return { votes: -1, message: data.message };
+      return { votes: -1, message: 'Error getting vote count' };
     }
-  } else {
-    return { votes: -1, message: 'Error getting vote count' };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { votes: -1, message: error.response.data.message };
+    } else {
+      return { votes: -1, message: 'Error getting vote count' };
+    }
   }
 }

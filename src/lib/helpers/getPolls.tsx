@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { Poll } from '@/types';
 
 /**
@@ -5,18 +7,26 @@ import { Poll } from '@/types';
  * @returns Array of Polls
  */
 export async function getPolls(): Promise<Poll[]> {
-  const response = await fetch('/api/getPolls', {
-    headers: { 'X-Custom-Header': 'intersect' },
-  });
-
-  if (response.status === 200) {
-    const polls = await response.json();
-    // sort polls by id
-    polls.sort((a: Poll, b: Poll) => {
-      return Number(a.id) - Number(b.id);
+  try {
+    const response = await axios.get('/api/getPolls', {
+      headers: { 'X-Custom-Header': 'intersect' },
     });
-    return polls;
-  } else {
-    return [];
+
+    if (response.status === 200) {
+      const polls = await response.data;
+      // sort polls by id
+      polls.sort((a: Poll, b: Poll) => {
+        return Number(a.id) - Number(b.id);
+      });
+      return polls;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return [];
+    } else {
+      return [];
+    }
   }
 }

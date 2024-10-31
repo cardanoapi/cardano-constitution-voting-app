@@ -1,4 +1,6 @@
-import { PollVote, User } from '@/types';
+import axios from 'axios';
+
+import { PollVote } from '@/types';
 
 /**
  * Gets all of a user's votes by their id
@@ -8,25 +10,31 @@ import { PollVote, User } from '@/types';
 export async function getUserVotes(
   userId: string,
 ): Promise<{ votes: PollVote[]; message: string }> {
-  let response: Response;
-  if (userId && typeof userId === 'string') {
-    response = await fetch(`/api/getUserVotes/${userId}`, {
-      method: 'GET',
-      headers: {
-        'X-Custom-Header': 'intersect',
-      },
-    });
-    const data = await response.json();
-    if (response.status === 200) {
-      if (data.votes) {
-        return { votes: data.votes, message: 'User votes found' };
+  try {
+    if (userId && typeof userId === 'string') {
+      const response = await axios.get(`/api/getUserVotes/${userId}`, {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      });
+      const data = await response.data;
+      if (response.status === 200) {
+        if (data.votes) {
+          return { votes: data.votes, message: 'User votes found' };
+        } else {
+          return { votes: [], message: data.message };
+        }
       } else {
         return { votes: [], message: data.message };
       }
     } else {
-      return { votes: [], message: data.message };
+      return { votes: [], message: 'Invalid userId' };
     }
-  } else {
-    return { votes: [], message: 'Invalid userId' };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { votes: [], message: error.response.data.message };
+    } else {
+      return { votes: [], message: "An error occurred getting user's vote" };
+    }
   }
 }

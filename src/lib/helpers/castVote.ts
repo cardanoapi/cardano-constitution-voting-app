@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 /**
  * Casts a vote on a poll
  * @param pollId - The ID of the poll to cast a vote on
@@ -8,21 +10,30 @@ export async function castVote(
   pollId: string,
   vote: string,
 ): Promise<{ succeeded: boolean; message: string }> {
-  const response = await fetch('/api/newPollVote', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Custom-Header': 'intersect',
-    },
-    body: JSON.stringify({
-      pollId: pollId,
-      vote: vote,
-    }),
-  });
-  const data = await response.json();
-  if (response.status === 200) {
-    return { succeeded: true, message: 'Vote cast' };
-  } else {
-    return { succeeded: false, message: data.message };
+  try {
+    const response = await axios.post(
+      '/api/newPollVote',
+      {
+        pollId: pollId,
+        vote: vote,
+      },
+      {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      },
+    );
+    const data = await response.data;
+    if (response.status === 200) {
+      return { succeeded: true, message: 'Vote cast' };
+    } else {
+      return { succeeded: false, message: data.message };
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { succeeded: false, message: error.response.data.message };
+    } else {
+      return { succeeded: false, message: 'An error occurred casting vote' };
+    }
   }
 }

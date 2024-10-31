@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { User } from '@/types';
 
 /**
@@ -5,14 +7,22 @@ import { User } from '@/types';
  * @returns users: User[] - The delegates & alternates
  */
 export async function getRepresentatives(): Promise<User[]> {
-  const response = await fetch('/api/getRepresentatives', {
-    headers: { 'X-Custom-Header': 'intersect' },
-  });
+  try {
+    const response = await axios.get('/api/getRepresentatives', {
+      headers: { 'X-Custom-Header': 'intersect' },
+    });
 
-  if (response.status === 200) {
-    const data = await response.json();
-    return data;
-  } else {
-    return [];
+    if (response.status === 200) {
+      const data = await response.data;
+      return data;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return [];
+    } else {
+      return [];
+    }
   }
 }
