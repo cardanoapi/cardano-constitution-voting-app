@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 const prisma = new PrismaClient();
 
@@ -30,10 +31,11 @@ export default async function getPollVoteCount(
         poll_id: BigInt(pollId),
       },
     });
-    return res.status(200).json({ count: votes.length, message: 'Poll vote count retrieved' });
+    return res
+      .status(200)
+      .json({ count: votes.length, message: 'Poll vote count retrieved' });
   } catch (error) {
-    // TODO: Add sentry instead of console.error
-    console.error('error', error);
+    Sentry.captureException(error);
     return res.status(500).json({
       count: 0,
       message: 'Error getting Poll Vote Count.',

@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pollPhases } from '@/constants/pollPhases';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 const prisma = new PrismaClient();
 
@@ -54,8 +55,7 @@ export default async function endVoting(
       .status(200)
       .json({ success: true, message: 'Voting ended for poll' });
   } catch (error) {
-    // TODO: Add sentry instead of console.error
-    console.error('error', error);
+    Sentry.captureException(error);
     return res.status(500).json({
       success: false,
       message: 'Error ending voting for Poll.',
