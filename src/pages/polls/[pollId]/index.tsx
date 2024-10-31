@@ -122,19 +122,11 @@ export default function ViewPoll(): JSX.Element {
                       )}
                   </Box>
                   {/* Delegate Voting Buttons */}
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    alignItems="center"
-                  >
-                    <Typography>Cast your vote:</Typography>
-                    <VoteOnPollButtons
-                      poll={poll}
-                      disabled={isSubmitting}
-                      setDisabled={updateIsSubmitting}
-                    />
-                  </Box>
+                  <VoteOnPollButtons
+                    poll={poll}
+                    disabled={isSubmitting}
+                    setDisabled={updateIsSubmitting}
+                  />
                 </Box>
               </Grid>
             )}
