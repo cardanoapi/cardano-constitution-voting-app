@@ -40,17 +40,10 @@ export function PollCard(props: Props): JSX.Element {
             {poll.name}
           </Typography>
 
-          <Box
-            display="flex"
-            flexDirection={{ xs: 'column', lg: 'row' }}
-            alignItems="center"
-            gap={1}
-          >
-            <PollStatusChip status={poll.status} />
-            {poll.status !== pollPhases.pending && (
-              <PollVoteCount pollId={poll.id} />
-            )}
-          </Box>
+          <PollStatusChip status={poll.status} />
+          {poll.status !== pollPhases.pending && (
+            <PollVoteCount pollId={poll.id} />
+          )}
           <Typography variant="body1">{poll.description}</Typography>
           <Box flexGrow={1} />
           <Box

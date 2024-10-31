@@ -9,18 +9,28 @@ import type { Poll } from '@/types';
 import { getPolls } from '@/lib/getPolls';
 import { PollCard } from '@/components/polls/pollCard';
 
+interface Props {
+  currentPollId: string | string[] | undefined;
+}
+
 /**
  * A Carrousel of poll cards
  * @returns Poll List
  */
-export function PollCarrousel(): JSX.Element {
+export function PollCarrousel(props: Props): JSX.Element {
+  const { currentPollId } = props;
   const [loadingPolls, setLoadingPolls] = useState(true);
   const [polls, setPolls] = useState<Poll[]>([]);
 
   useEffect(() => {
     async function fetchPolls(): Promise<void> {
       setLoadingPolls(true);
-      const polls = await getPolls();
+      let polls = await getPolls();
+      // don't show the current poll
+      if (typeof currentPollId === 'string') {
+        polls = polls.filter((poll) => poll.id !== currentPollId);
+      }
+
       // only show the last 4 polls in this view
       polls.reverse();
       polls.splice(4);
@@ -28,7 +38,7 @@ export function PollCarrousel(): JSX.Element {
       setLoadingPolls(false);
     }
     fetchPolls();
-  }, []);
+  }, [currentPollId]);
 
   const session = useSession();
 

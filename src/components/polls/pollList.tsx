@@ -50,7 +50,7 @@ export function PollList(): JSX.Element {
     return <></>;
   } else if (polls.length > 0) {
     return (
-      <Box display="flex" flexDirection="column" gap={2}>
+      <Box display="flex" flexDirection="column" gap={2} width="100%">
         {session.status !== 'authenticated' && (
           <Typography textAlign="center">
             Anyone can browse the polls and view results without connecting a
