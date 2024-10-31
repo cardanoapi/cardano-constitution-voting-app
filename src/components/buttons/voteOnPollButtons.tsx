@@ -5,11 +5,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import toast from 'react-hot-toast';
 
-import { Poll } from '@/types';
 import { castVote } from '@/lib/helpers/castVote';
 
 interface Props {
-  poll: Poll;
+  pollId: string;
   disabled: boolean;
   setDisabled: (value: boolean) => void;
 }
@@ -19,11 +18,11 @@ interface Props {
  * @returns Vote on Poll Buttons
  */
 export function VoteOnPollButtons(props: Props): JSX.Element {
-  const { poll, disabled, setDisabled } = props;
+  const { pollId, disabled, setDisabled } = props;
 
   async function handleVote(vote: string): Promise<void> {
     setDisabled(true);
-    const result = await castVote(poll.id, vote);
+    const result = await castVote(pollId, vote);
     if (result.succeeded === false) {
       toast.error(result.message);
     } else {
