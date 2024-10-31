@@ -5,6 +5,7 @@ import ThumbUpRounded from '@mui/icons-material/ThumbUpRounded';
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import toast from 'react-hot-toast';
 
 import type { Poll, PollVote } from '@/types';
 import { getPolls } from '@/lib/helpers/getPolls';
@@ -29,8 +30,10 @@ export function VotingHistoryTable(props: Props): JSX.Element {
       setLoading(true);
       // get votes
       const voteData = await getUserVotes(userId);
-      if (voteData.votes) {
+      if (voteData.votes.length > 0) {
         setVotes(voteData.votes);
+      } else if (voteData.message !== 'User votes found') {
+        toast.error(voteData.message);
       }
       // get polls
       const polls = await getPolls();
@@ -66,10 +69,26 @@ export function VotingHistoryTable(props: Props): JSX.Element {
             height="100%"
             alignItems="center"
           >
-            {userVote === 'yes' && <ThumbUpRounded color="success" />}
-            {userVote === 'no' && <ThumbDownRounded color="warning" />}
-            {userVote === 'abstain' && <DoDisturbRounded />}
-            {!userVote && <Typography>None</Typography>}
+            {userVote === 'yes' && (
+              <ThumbUpRounded
+                color="success"
+                data-testid={`yes-${params.row.id}`}
+              />
+            )}
+            {userVote === 'no' && (
+              <ThumbDownRounded
+                color="warning"
+                data-testid={`no-${params.row.id}`}
+              />
+            )}
+            {userVote === 'abstain' && (
+              <DoDisturbRounded data-testid={`abstain-${params.row.id}`} />
+            )}
+            {!userVote && (
+              <Typography data-testid={`none-${params.row.id}`}>
+                None
+              </Typography>
+            )}
           </Box>
         );
       },
