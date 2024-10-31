@@ -33,6 +33,7 @@ export function BeginVoteButton(props: Props): JSX.Element {
       onClick={handleBeginVote}
       variant="contained"
       disabled={isSubmitting}
+      data-testid="begin-vote-button"
     >
       Begin Voting
     </Button>

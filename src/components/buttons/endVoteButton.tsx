@@ -29,7 +29,12 @@ export function EndVoteButton(props: Props): JSX.Element {
   }
 
   return (
-    <Button onClick={handleEndVote} variant="contained" disabled={isSubmitting}>
+    <Button
+      onClick={handleEndVote}
+      variant="contained"
+      disabled={isSubmitting}
+      data-testid="end-vote-button"
+    >
       End Voting
     </Button>
   );

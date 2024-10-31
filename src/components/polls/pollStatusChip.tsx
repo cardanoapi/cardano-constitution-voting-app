@@ -18,7 +18,7 @@ export function PollStatusChip(props: Props): JSX.Element {
     return <></>;
   } else {
     return (
-      <Box>
+      <Box data-testid="poll-status-chip">
         <Chip
           label={
             <Box display="flex" flexDirection="row" gap={1} alignItems="center">

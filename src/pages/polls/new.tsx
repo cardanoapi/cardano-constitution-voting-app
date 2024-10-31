@@ -32,6 +32,7 @@ export default function NewPoll(): JSX.Element {
             }}
             label="Name"
             value={name}
+            data-testid="poll-name-input"
           />
           <TextField
             variant="filled"
@@ -43,6 +44,7 @@ export default function NewPoll(): JSX.Element {
             value={description}
             multiline={true}
             rows={4}
+            data-testid="poll-description-input"
           />
           <CreatePollButton
             name={name}

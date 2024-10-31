@@ -32,6 +32,7 @@ export function PollCard(props: Props): JSX.Element {
         color: theme.palette.text.primary,
         height: '100%',
       }}
+      data-testid={`poll-card-${poll.id}`}
     >
       <WidgetContainer>
         <Box display="flex" flexDirection="column" gap={1} height="100%">
@@ -39,17 +40,10 @@ export function PollCard(props: Props): JSX.Element {
             {poll.name}
           </Typography>
 
-          <Box
-            display="flex"
-            flexDirection={{ xs: 'column', lg: 'row' }}
-            alignItems="center"
-            gap={1}
-          >
-            <PollStatusChip status={poll.status} />
-            {poll.status !== pollPhases.pending && (
-              <PollVoteCount pollId={poll.id} />
-            )}
-          </Box>
+          <PollStatusChip status={poll.status} />
+          {poll.status !== pollPhases.pending && (
+            <PollVoteCount pollId={poll.id} />
+          )}
           <Typography variant="body1">{poll.description}</Typography>
           <Box flexGrow={1} />
           <Box

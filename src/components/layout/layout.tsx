@@ -47,14 +47,19 @@ export function Layout(props: Props): JSX.Element {
       <Navbar />
       <Box
         sx={{
-          px: {
+          py: {
             xs: 2,
             sm: 4,
             md: 10,
             lg: 16,
             xl: 24,
           },
-          py: 4,
+
+          px: {
+            xs: 2,
+            sm: 4,
+            md: 10,
+          },
         }}
       >
         {children}

@@ -76,7 +76,7 @@ export default function ViewPoll(): JSX.Element {
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
           <PollVoteCount pollId={poll?.id?.toString() || ''} />
-          <Grid container>
+          <Grid container data-testid="poll-description">
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>
                 <Box display="flex" flexDirection="column" gap={3}>
@@ -146,7 +146,7 @@ export default function ViewPoll(): JSX.Element {
             alignItems="center"
           >
             {/* Browse Other Polls Carrousel */}
-            <PollCarrousel />
+            <PollCarrousel currentPollId={pollId} />
             <Box display="flex" flexDirection="row" gap={3}>
               {/* Link all polls */}
               <Link

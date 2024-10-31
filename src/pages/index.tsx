@@ -24,24 +24,10 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Link href={paths.polls.new} passHref>
+        <Link href={paths.polls.new} data-testid="create-poll-button">
           <Button variant="contained">Create Poll</Button>
         </Link>
-        <Box
-          display="flex"
-          flexDirection="column"
-          gap={4}
-          alignItems="center"
-          sx={{
-            mt: {
-              xs: 4,
-              sm: 8,
-              md: 12,
-              lg: 16,
-              xl: 24,
-            },
-          }}
-        >
+        <Box display="flex" flexDirection="column" gap={4} alignItems="center">
           <Box
             display="flex"
             flexDirection="column"
@@ -55,6 +41,7 @@ export default function Home(): JSX.Element {
               display={session.status == 'authenticated' ? 'none' : 'flex'}
               flexDirection="column"
               gap={1}
+              alignItems="center"
             >
               <Typography variant="h5" fontWeight="500" textAlign="center">
                 Are you a delegate?
