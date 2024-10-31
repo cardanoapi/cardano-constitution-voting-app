@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 const prisma = new PrismaClient();
 
@@ -58,8 +59,7 @@ export default async function newPoll(
     });
     return res.status(200).json({ pollId: createdPoll.id.toString() });
   } catch (error) {
-    // TODO: Add sentry instead of console.error
-    console.error('error', error);
+    Sentry.captureException(error);
     return res.status(500).json({
       pollId: BigInt(-1).toString(),
       message: 'Error creating new Poll.',
