@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { pollPhases } from '@/constants/pollPhases';
 import { PrismaClient } from '@prisma/client';
 
 import { PollVote } from '@/types';
@@ -37,6 +38,9 @@ export default async function getUserVotes(
     const votes = await prisma.poll_vote.findMany({
       where: {
         user_id: BigInt(userId),
+        poll: {
+          status: pollPhases.concluded,
+        },
       },
     });
     if (!votes) {
