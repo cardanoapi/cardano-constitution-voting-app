@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { User } from '@/types';
 
 /**
@@ -9,21 +11,26 @@ export async function getUser(userId: string): Promise<{
   user: User | null;
   message: string;
 }> {
-  let response: Response;
-  if (userId && typeof userId === 'string') {
-    response = await fetch(`/api/getUser/${userId}`, {
-      method: 'GET',
-      headers: {
-        'X-Custom-Header': 'intersect',
-      },
-    });
-    const data = await response.json();
-    if (response.status === 200) {
-      if (data.user) {
-        return {
-          user: data.user,
-          message: 'User found',
-        };
+  try {
+    if (userId && typeof userId === 'string') {
+      const response = await axios.get(`/api/getUser/${userId}`, {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      });
+      const data = await response.data;
+      if (response.status === 200) {
+        if (data.user) {
+          return {
+            user: data.user,
+            message: 'User found',
+          };
+        } else {
+          return {
+            user: null,
+            message: data.message,
+          };
+        }
       } else {
         return {
           user: null,
@@ -33,13 +40,14 @@ export async function getUser(userId: string): Promise<{
     } else {
       return {
         user: null,
-        message: data.message,
+        message: 'Invalid userId',
       };
     }
-  } else {
-    return {
-      user: null,
-      message: 'Invalid userId',
-    };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { user: null, message: error.response.data.message };
+    } else {
+      return { user: null, message: 'An error occurred getting user' };
+    }
   }
 }

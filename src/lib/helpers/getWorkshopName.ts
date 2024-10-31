@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 /**
  * Get's the name of a workshop by id
  * @param workshopId - The workshop's id
@@ -7,25 +9,34 @@ export async function getWorkshopName(workshopId: string): Promise<{
   name: string;
   message: string;
 }> {
-  let response: Response;
-  if (workshopId && typeof workshopId === 'string') {
-    response = await fetch(`/api/getWorkshopName/${workshopId}`, {
-      method: 'GET',
-      headers: {
-        'X-Custom-Header': 'intersect',
-      },
-    });
-    const data = await response.json();
-    if (response.status === 200) {
-      if (data.name) {
-        return { name: data.name, message: 'Name found' };
+  try {
+    if (workshopId && typeof workshopId === 'string') {
+      const response = await axios.get(`/api/getWorkshopName/${workshopId}`, {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      });
+      const data = await response.data;
+      if (response.status === 200) {
+        if (data.name) {
+          return { name: data.name, message: 'Name found' };
+        } else {
+          return { name: '', message: data.message };
+        }
       } else {
         return { name: '', message: data.message };
       }
     } else {
-      return { name: '', message: data.message };
+      return { name: '', message: 'Invalid workshopId' };
     }
-  } else {
-    return { name: '', message: 'Invalid workshopId' };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { name: '', message: error.response.data.message };
+    } else {
+      return {
+        name: '',
+        message: 'An error occurred retrieving workshop name',
+      };
+    }
   }
 }

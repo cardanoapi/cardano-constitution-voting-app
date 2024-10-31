@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 /**
  * Moves a poll from pending to voting
  * @param pollId - The ID of the poll to start voting on
@@ -6,20 +8,29 @@
 export async function startVoting(
   pollId: string,
 ): Promise<{ succeeded: boolean; message: string }> {
-  const response = await fetch('/api/startVoting', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Custom-Header': 'intersect',
-    },
-    body: JSON.stringify({
-      pollId: pollId,
-    }),
-  });
-  const data = await response.json();
-  if (response.status === 200) {
-    return { succeeded: true, message: 'Voting started' };
-  } else {
-    return { succeeded: false, message: data.message };
+  try {
+    const response = await axios.post(
+      '/api/startVoting',
+      {
+        pollId: pollId,
+      },
+      {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      },
+    );
+    const data = await response.data;
+    if (response.status === 200) {
+      return { succeeded: true, message: 'Voting started' };
+    } else {
+      return { succeeded: false, message: data.message };
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { succeeded: false, message: error.response.data.message };
+    } else {
+      return { succeeded: false, message: 'An error occurred starting voting' };
+    }
   }
 }

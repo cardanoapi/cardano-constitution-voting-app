@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { Workshop } from '@/types';
 
 /**
@@ -5,14 +7,22 @@ import { Workshop } from '@/types';
  * @returns Workshop[] - The Workshops
  */
 export async function getWorkshops(): Promise<Workshop[]> {
-  const response = await fetch('/api/getWorkshops', {
-    headers: { 'X-Custom-Header': 'intersect' },
-  });
+  try {
+    const response = await axios.get('/api/getWorkshops', {
+      headers: { 'X-Custom-Header': 'intersect' },
+    });
 
-  if (response.status === 200) {
-    const workshops = await response.json();
-    return workshops;
-  } else {
-    return [];
+    if (response.status === 200) {
+      const workshops = await response.data;
+      return workshops;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return [];
+    } else {
+      return [];
+    }
   }
 }
