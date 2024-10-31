@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import DoDisturbRounded from '@mui/icons-material/DoDisturbRounded';
 import ThumbDownRounded from '@mui/icons-material/ThumbDownRounded';
 import ThumbUpRounded from '@mui/icons-material/ThumbUpRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { Poll } from '@/types';
@@ -21,6 +23,8 @@ interface Props {
 export function VoteOnPollButtons(props: Props): JSX.Element {
   const { poll, disabled, setDisabled } = props;
 
+  const session = useSession();
+
   async function handleVote(vote: string): Promise<void> {
     setDisabled(true);
     const result = await castVote(poll.id, vote);
@@ -31,6 +35,12 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
     }
     setDisabled(false);
   }
+
+  // get the user's vote from the db
+  useEffect(() => {
+    console.log('session id', session);
+    // getUserVote(poll.id, session.data?.user.id);
+  }, [session.data?.user.id]);
 
   return (
     <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2}>
