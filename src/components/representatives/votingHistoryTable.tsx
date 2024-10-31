@@ -68,6 +68,7 @@ export function VotingHistoryTable(props: Props): JSX.Element {
             flexDirection="row"
             height="100%"
             alignItems="center"
+            data-testid={`user-votes-${params.row.id}`}
           >
             {userVote === 'yes' && (
               <ThumbUpRounded

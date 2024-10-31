@@ -35,7 +35,7 @@ export default function Representative(): JSX.Element {
       if (data.user) {
         setUser(data.user);
       } else {
-        toast.error(`${data.message}, ${typeof userId}, JUSTIN`);
+        toast.error(data.message);
       }
       setLoadingUser(false);
 
@@ -93,16 +93,28 @@ export default function Representative(): JSX.Element {
             >
               {user ? (
                 <Box display="flex" flexDirection="column" gap={3}>
-                  <Typography variant="h3" fontWeight="bold">
+                  <Typography
+                    variant="h3"
+                    fontWeight="bold"
+                    data-testid="user-name"
+                  >
                     {user.name}
                   </Typography>
                   {user.is_delegate && (
-                    <Typography variant="h4" fontWeight="600">
+                    <Typography
+                      variant="h4"
+                      fontWeight="600"
+                      data-testid="user-delegate"
+                    >
                       DELEGATE
                     </Typography>
                   )}
                   {user.is_alternate && (
-                    <Typography variant="h4" fontWeight="600">
+                    <Typography
+                      variant="h4"
+                      fontWeight="600"
+                      data-testid="user-alternate"
+                    >
                       ALTERNATE
                     </Typography>
                   )}
@@ -115,7 +127,11 @@ export default function Representative(): JSX.Element {
                       color={theme.palette.text.primary}
                     >
                       <HowToVoteRounded />
-                      <Typography variant="h5" fontWeight="500">
+                      <Typography
+                        variant="h5"
+                        fontWeight="500"
+                        data-testid="user-vote-count"
+                      >
                         {votes.length} vote{votes.length === 1 ? '' : 's'}
                       </Typography>
                     </Box>
@@ -127,7 +143,11 @@ export default function Representative(): JSX.Element {
                     )
                   )}
                   {workshopName ? (
-                    <Typography variant="h5" fontWeight="500">
+                    <Typography
+                      variant="h5"
+                      fontWeight="500"
+                      data-testid="workshop-name"
+                    >
                       {workshopName}
                     </Typography>
                   ) : (
