@@ -1,8 +1,8 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { HowToVoteRounded } from '@mui/icons-material';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import toast from 'react-hot-toast';
 
@@ -106,7 +106,7 @@ export default function Representative(): JSX.Element {
                       ALTERNATE
                     </Typography>
                   )}
-                  {votes && (
+                  {votes ? (
                     <Box
                       display="flex"
                       flexDirection="row"
@@ -119,15 +119,38 @@ export default function Representative(): JSX.Element {
                         {votes.length} vote{votes.length === 1 ? '' : 's'}
                       </Typography>
                     </Box>
+                  ) : (
+                    loadingVotes && (
+                      <Box sx={{ display: 'flex' }}>
+                        <CircularProgress />
+                      </Box>
+                    )
                   )}
-                  {workshopName && (
+                  {workshopName ? (
                     <Typography variant="h5" fontWeight="500">
                       {workshopName}
                     </Typography>
+                  ) : (
+                    loadingWorkshop && (
+                      <Box sx={{ display: 'flex' }}>
+                        <CircularProgress />
+                      </Box>
+                    )
                   )}
                 </Box>
               ) : (
-                <></>
+                loadingUser && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      width: '100%',
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                )
               )}
             </Grid>
             <Grid

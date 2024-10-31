@@ -47,8 +47,10 @@ export default async function getUserVotes(
       .status(200)
       .json({ votes: votesJson, message: 'Found user votes' });
   } catch (error) {
-    // TODO: Add sentry
-    console.error(error);
+    // TODO: Add proper error handling
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
     return res
       .status(500)
       .json({ votes: [], message: 'Error fetching user votes' });

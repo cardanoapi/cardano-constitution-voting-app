@@ -47,8 +47,10 @@ export default async function getWorkshopName(
       .status(200)
       .json({ name: workshopName, message: 'Found workshop' });
   } catch (error) {
-    // TODO: Add sentry
-    console.error(error);
+    // TODO: Add proper error handling
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
     return res
       .status(500)
       .json({ name: '', message: 'Error fetching workshop name' });
