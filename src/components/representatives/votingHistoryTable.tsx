@@ -12,7 +12,7 @@ import { getPolls } from '@/lib/helpers/getPolls';
 import { getUserVotes } from '@/lib/helpers/getUserVotes';
 
 interface Props {
-  userId: string;
+  userId: string | string[] | undefined;
 }
 
 /**

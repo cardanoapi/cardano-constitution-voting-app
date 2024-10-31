@@ -31,17 +31,17 @@ export default function Representative(): JSX.Element {
     async function fetchUserData(): Promise<void> {
       // get user data
       setLoadingUser(true);
-      const data = await getUser(userId as string);
+      const data = await getUser(userId);
       if (data.user) {
         setUser(data.user);
       } else {
-        toast.error(data.message);
+        toast.error(`${data.message}, ${typeof userId}, JUSTIN`);
       }
       setLoadingUser(false);
 
       // get vote data
       setLoadingVotes(true);
-      const votes = await getUserVotes(userId as string);
+      const votes = await getUserVotes(userId);
       if (votes) {
         setVotes(votes.votes);
       }
@@ -159,11 +159,11 @@ export default function Representative(): JSX.Element {
                 md: 6,
               }}
             >
-              <VotingHistoryTable userId={userId as string} />
+              <VotingHistoryTable userId={userId} />
             </Grid>
           </Grid>
 
-          <PollCarrousel />
+          <PollCarrousel currentPollId={undefined} />
           <RepresentativesTable />
         </Box>
       </main>

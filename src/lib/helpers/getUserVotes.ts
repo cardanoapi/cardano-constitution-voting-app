@@ -8,7 +8,7 @@ import { PollVote } from '@/types';
  * @returns User - The user's votes
  */
 export async function getUserVotes(
-  userId: string,
+  userId: string | string[] | undefined,
 ): Promise<{ votes: PollVote[]; message: string }> {
   try {
     if (userId && typeof userId === 'string') {

@@ -7,7 +7,7 @@ import { User } from '@/types';
  * @param userId - The user's id
  * @returns User - The user's information
  */
-export async function getUser(userId: string): Promise<{
+export async function getUser(userId: string | string[] | undefined): Promise<{
   user: User | null;
   message: string;
 }> {
