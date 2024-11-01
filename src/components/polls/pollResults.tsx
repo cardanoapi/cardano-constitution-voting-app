@@ -109,9 +109,9 @@ export function PollResults(props: Props): JSX.Element {
   const noCount = votes?.no?.length || 0;
   const abstainCount = votes?.abstain?.length || 0;
 
-  const yesPercentage = Math.round((yesCount / voteCount) * 100);
-  const noPercentage = Math.round((noCount / voteCount) * 100);
-  const abstainPercentage = Math.round((abstainCount / voteCount) * 100);
+  const yesPercentage = Math.round((yesCount / voteCount) * 100) || 0;
+  const noPercentage = Math.round((noCount / voteCount) * 100) || 0;
+  const abstainPercentage = Math.round((abstainCount / voteCount) * 100) || 0;
 
   const yesVoters = useMemo((): JSX.Element => {
     return (
@@ -185,10 +185,14 @@ export function PollResults(props: Props): JSX.Element {
               color={theme.palette.text.primary}
             >
               <HowToVoteOutlined />
-              <Typography>{yesCount}</Typography>
+              <Typography data-testid="yes-count" role="landmark">
+                {yesCount}
+              </Typography>
               <Typography>vote{yesCount === 1 ? '' : 's'}</Typography>
               <Typography>|</Typography>
-              <Typography>{yesPercentage}%</Typography>
+              <Typography data-testid="yes-percentage">
+                {yesPercentage}%
+              </Typography>
               <Typography>|</Typography>
               <Box sx={{ width: '100%' }}>
                 <YesLinearProgress
@@ -222,10 +226,12 @@ export function PollResults(props: Props): JSX.Element {
               color={theme.palette.text.primary}
             >
               <HowToVoteOutlined />
-              <Typography>{noCount}</Typography>
+              <Typography data-testid="no-count">{noCount}</Typography>
               <Typography>vote{noCount === 1 ? '' : 's'}</Typography>
               <Typography>|</Typography>
-              <Typography>{noPercentage}%</Typography>
+              <Typography data-testid="no-percentage">
+                {noPercentage}%
+              </Typography>
               <Typography>|</Typography>
               <Box sx={{ width: '100%' }}>
                 <NoLinearProgress variant="determinate" value={noPercentage} />
@@ -262,10 +268,14 @@ export function PollResults(props: Props): JSX.Element {
               color={theme.palette.text.primary}
             >
               <HowToVoteOutlined />
-              <Typography>{abstainCount}</Typography>
+              <Typography data-testid="abstain-count">
+                {abstainCount}
+              </Typography>
               <Typography>vote{abstainCount === 1 ? '' : 's'}</Typography>
               <Typography>|</Typography>
-              <Typography>{abstainPercentage}%</Typography>
+              <Typography data-testid="abstain-percentage">
+                {abstainPercentage}%
+              </Typography>
               <Typography>|</Typography>
               <Box sx={{ width: '100%' }}>
                 <AbstainLinearProgress

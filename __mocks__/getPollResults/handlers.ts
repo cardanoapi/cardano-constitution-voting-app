@@ -22,12 +22,7 @@ export const getPollResultsHandlers = [
             id: '4',
           },
         ],
-        no: [
-          {
-            name: 'Kyle Kyleson',
-            id: '6',
-          },
-        ],
+        no: [],
         abstain: [
           {
             name: 'Connor Connerson',

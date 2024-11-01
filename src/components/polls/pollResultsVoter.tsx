@@ -43,6 +43,7 @@ export function PollResultsVoter(props: Props): JSX.Element {
         style={{
           textDecoration: 'none',
         }}
+        data-testid={`representative-vote-${id}`}
       >
         <Tooltip
           title={
