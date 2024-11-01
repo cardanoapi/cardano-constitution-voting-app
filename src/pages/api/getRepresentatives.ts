@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 import { User } from '@/types';
 import { parseJsonData } from '@/lib/parseJsonData';
@@ -23,8 +24,7 @@ export default async function getRepresentatives(
     const users = parseJsonData(usersJson);
     return res.status(200).json(users);
   } catch (error) {
-    // TODO: Add sentry instead of console.error
-    console.error('error', error);
+    Sentry.captureException(error);
     return res.status(500).json([]);
   }
 }

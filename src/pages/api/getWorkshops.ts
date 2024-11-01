@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 import { Workshop } from '@/types';
 import { parseJsonData } from '@/lib/parseJsonData';
@@ -23,8 +24,7 @@ export default async function getWorkshops(
     const workshops = parseJsonData(workshopJson);
     return res.status(200).json(workshops);
   } catch (error) {
-    // TODO: Add sentry instead of console.error
-    console.error('error', error);
+    Sentry.captureException(error);
     return res.status(500).json([]);
   }
 }

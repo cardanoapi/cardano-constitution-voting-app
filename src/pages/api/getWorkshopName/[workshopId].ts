@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 import { parseJsonData } from '@/lib/parseJsonData';
 
@@ -47,10 +48,7 @@ export default async function getWorkshopName(
       .status(200)
       .json({ name: workshopName, message: 'Found workshop' });
   } catch (error) {
-    // TODO: Add proper error handling
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
+    Sentry.captureException(error);
     return res
       .status(500)
       .json({ name: '', message: 'Error fetching workshop name' });

@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pollPhases } from '@/constants/pollPhases';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 import { PollVote } from '@/types';
 import { parseJsonData } from '@/lib/parseJsonData';
@@ -51,10 +52,7 @@ export default async function getUserVotes(
       .status(200)
       .json({ votes: votesJson, message: 'Found user votes' });
   } catch (error) {
-    // TODO: Add proper error handling
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
+    Sentry.captureException(error);
     return res
       .status(500)
       .json({ votes: [], message: 'Error fetching user votes' });
