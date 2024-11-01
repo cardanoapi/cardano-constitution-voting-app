@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 /**
  * Gets the results of a poll
  * @param pollId - The ID of the poll to get results for
@@ -21,21 +23,28 @@ export async function getPollResults(pollId: string): Promise<{
   } | null;
   message: string;
 }> {
-  let response: Response;
-  if (pollId) {
-    response = await fetch(`/api/getPollResults/${pollId}`, {
-      method: 'GET',
-      headers: {
-        'X-Custom-Header': 'intersect',
-      },
-    });
-    const data = await response.json();
-    if (response.status === 200) {
-      return { votes: data.votes, message: 'Poll Results found' };
+  try {
+    if (pollId) {
+      const response = await axios.get(`/api/getPollResults/${pollId}`, {
+        method: 'GET',
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      });
+      const data = await response.data;
+      if (response.status === 200) {
+        return { votes: data.votes, message: 'Poll Results found' };
+      } else {
+        return { votes: null, message: data.message };
+      }
     } else {
-      return { votes: null, message: data.message };
+      return { votes: null, message: 'Error getting Poll Results' };
     }
-  } else {
-    return { votes: null, message: 'Error getting Poll Results' };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { votes: null, message: error.response.data.message };
+    } else {
+      return { votes: null, message: 'An error occurred getting poll results' };
+    }
   }
 }
