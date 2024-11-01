@@ -23,11 +23,11 @@ export default async function getPollVoteCount(
   if (Array.isArray(params)) {
     params.forEach((param) => {
       if (typeof param !== 'string') {
-        throw new Error('getPollVoteCount params array not of type string[]');
+        return res.status(400).json({vote: '', message: 'Invalid params'});
       }
     });
   } else {
-    throw new Error('getPollVoteCount params not an array');
+   return res.status(400).json({vote: '', message: 'Invalid params'});
   }
   const userId = params[0];
   const pollId = params[1];
@@ -47,8 +47,7 @@ export default async function getPollVoteCount(
     }
     return res.status(200).json({ vote: vote.vote, message: 'Vote found' });
   } catch (error) {
-    // TODO: Add sentry instead of console.error
-    console.error('error', error);
+    Sentry.captureException(error);
     return res.status(500).json({
       vote: '',
       message: 'Error getting Poll Vote.',

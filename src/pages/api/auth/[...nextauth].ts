@@ -81,10 +81,7 @@ export const authOptions: NextAuthOptions = {
       if (registeredUser) {
         return true;
       } else {
-        // Optionally, you could log or handle this case (e.g., by displaying a message)
-        console.log(
-          `Sign-in attempt with unregistered wallet address: ${credentials.stakeAddress}`,
-        );
+Sentry.captureMessage( `Sign-in attempt with unregistered wallet address: ${credentials.stakeAddress}`);
         return false;
       }
     },
