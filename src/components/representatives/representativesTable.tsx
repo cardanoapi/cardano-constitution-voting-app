@@ -61,13 +61,9 @@ export function RepresentativesTable(): JSX.Element {
               alignItems: 'center',
               gap: 12,
             }}
+            data-testid={`delegate-name-${delegate?.id}`}
           >
-            <Typography
-              variant="body1"
-              data-testid={`delegate-name-${delegate?.name}`}
-            >
-              {delegate?.name}
-            </Typography>
+            <Typography variant="body1">{delegate?.name}</Typography>
             <LaunchRounded fontSize="small" />
           </Link>
         );
@@ -93,13 +89,9 @@ export function RepresentativesTable(): JSX.Element {
               alignItems: 'center',
               gap: 12,
             }}
+            data-testid={`alternate-name-${alternate?.id}`}
           >
-            <Typography
-              variant="body1"
-              data-testid={`alternate-name-${alternate?.name}`}
-            >
-              {alternate?.name}
-            </Typography>
+            <Typography variant="body1">{alternate?.name}</Typography>
             <LaunchRounded fontSize="small" />
           </Link>
         );
@@ -127,13 +119,9 @@ export function RepresentativesTable(): JSX.Element {
               alignItems: 'center',
               gap: 12,
             }}
+            data-testid={`active-voter-name-${activeVoter?.id}`}
           >
-            <Typography
-              variant="body1"
-              data-testid={`active-voter-name-${activeVoter?.name}`}
-            >
-              {activeVoter?.name}
-            </Typography>
+            <Typography variant="body1">{activeVoter?.name}</Typography>
             <LaunchRounded fontSize="small" />
           </Link>
         );
