@@ -1,26 +1,53 @@
-import { User } from '@claritydao/clarity-backend';
+import axios from 'axios';
+
+import { User } from '@/types';
 
 /**
- * Fetches data for a user by Stake Address
- * @param stakeAddress - The user's stake address
+ * Fetches data for a user by user id
+ * @param userId - The user's id
  * @returns User - The user's information
  */
-export async function getUser(stakeAddress: string): Promise<User | null> {
-  let response: Response;
-  if (stakeAddress) {
-    response = await fetch(`/api/getUser/${stakeAddress}`, {
-      method: 'GET',
-      headers: {
-        'X-Custom-Header': 'intersect',
-      },
-    });
-    if (response.status === 200) {
-      const user = await response.json();
-      return user;
+export async function getUser(userId: string | string[] | undefined): Promise<{
+  user: User | null;
+  message: string;
+}> {
+  try {
+    if (userId && typeof userId === 'string') {
+      const response = await axios.get(`/api/getUser/${userId}`, {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      });
+      const data = await response.data;
+      if (response.status === 200) {
+        if (data.user) {
+          return {
+            user: data.user,
+            message: 'User found',
+          };
+        } else {
+          return {
+            user: null,
+            message: data.message,
+          };
+        }
+      } else {
+        return {
+          user: null,
+          message: data.message,
+        };
+      }
     } else {
-      return null;
+      return {
+        user: null,
+        message: 'Invalid userId',
+      };
     }
-  } else {
-    return null;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { user: null, message: error.response.data.message };
+    } else {
+      return { user: null, message: 'An error occurred getting user' };
+    }
   }
 }
