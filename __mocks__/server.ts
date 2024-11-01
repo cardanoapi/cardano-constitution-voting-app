@@ -12,6 +12,8 @@ import { newPollVoteHandlers } from '@/../__mocks__/newPollVote/handlers';
 import { startVotingHandlers } from '@/../__mocks__/startVoting/handlers';
 import { setupServer } from 'msw/node';
 
+import { getPollResultsHandlers } from './getPollResults/handlers';
+
 export const server = setupServer(
   ...newPollHandlers,
   ...getPollsHandlers,
@@ -25,4 +27,5 @@ export const server = setupServer(
   ...getWorkshopNameHandlers,
   ...getWorkshopsHandlers,
   ...getRepresentativesHandlers,
+  ...getPollResultsHandlers,
 );

@@ -131,7 +131,12 @@ export function PollResults(props: Props): JSX.Element {
           <Typography variant="h3" fontWeight="bold">
             Results
           </Typography>
-          <Box display="flex" flexDirection="column" gap={2}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            data-testid="results-yes"
+          >
             <Box display="flex" flexDirection="row" gap={1} alignItems="center">
               <Typography variant="h5" fontWeight="600">
                 Voted:
@@ -162,7 +167,12 @@ export function PollResults(props: Props): JSX.Element {
               </Box>
             </Box>
           </Box>
-          <Box display="flex" flexDirection="column" gap={2}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            data-testid="results-no"
+          >
             <Box display="flex" flexDirection="row" gap={1} alignItems="center">
               <Typography variant="h5" fontWeight="600">
                 Voted:
@@ -191,7 +201,12 @@ export function PollResults(props: Props): JSX.Element {
             </Box>
             {noVoters}
           </Box>
-          <Box display="flex" flexDirection="column" gap={2}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            data-testid="results-abstain"
+          >
             <Box
               display="flex"
               flexDirection="row"

@@ -1,4 +1,7 @@
+import Link from 'next/link';
 import { Box, Tooltip, Typography, useTheme } from '@mui/material';
+
+import { paths } from '@/paths';
 
 interface Props {
   name: string;
@@ -8,8 +11,6 @@ interface Props {
 
 export function PollResultsVoter(props: Props): JSX.Element {
   const { name, id, vote } = props;
-
-  console.log('name', name);
 
   const theme = useTheme();
   return (
@@ -38,18 +39,25 @@ export function PollResultsVoter(props: Props): JSX.Element {
               : 'rgba(77,107,179, .25)',
       }}
     >
-      <Tooltip
-        title={
-          <Box display="flex" flexDirection="column" gap={1}>
-            <Typography>{name}</Typography>
-          </Box>
-        }
+      <Link
+        href={paths.representatives + id}
+        style={{
+          textDecoration: 'none',
+        }}
       >
-        <Typography color="warning" fontWeight="700">
-          {name.split(' ')[0][0]}
-          {name.split(' ')[1][0]}
-        </Typography>
-      </Tooltip>
+        <Tooltip
+          title={
+            <Box display="flex" flexDirection="column" gap={1}>
+              <Typography>{name}</Typography>
+            </Box>
+          }
+        >
+          <Typography color="warning" fontWeight="700">
+            {name.split(' ')[0][0]}
+            {name.split(' ')[1][0]}
+          </Typography>
+        </Tooltip>
+      </Link>
     </Box>
   );
 }
