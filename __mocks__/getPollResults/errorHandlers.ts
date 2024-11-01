@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
-export const getPollVoteCountInvalidIdHandler = [
-  http.get('/api/getPoll/*', () => {
+export const getPollResultsInvalidIdHandler = [
+  http.get('/api/getPollResults/*', () => {
     return HttpResponse.json(
       {
         votes: null,
@@ -12,8 +12,8 @@ export const getPollVoteCountInvalidIdHandler = [
   }),
 ];
 
-export const getPollVoteCountInternalErrorHandler = [
-  http.get('/api/getPoll/*', () => {
+export const getPollResultsInternalErrorHandler = [
+  http.get('/api/getPollResults/*', () => {
     return HttpResponse.json(
       {
         votes: null,
