@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = {
       if (registeredUser) {
         return true;
       } else {
-        Sentry.captureMessage(
+        console.error(
           `Sign-in attempt with unregistered wallet address: ${credentials.stakeAddress}`,
         );
         return false;
