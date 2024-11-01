@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 const prisma = new PrismaClient();
 
@@ -23,11 +24,11 @@ export default async function getPollVoteCount(
   if (Array.isArray(params)) {
     params.forEach((param) => {
       if (typeof param !== 'string') {
-        return res.status(400).json({vote: '', message: 'Invalid params'});
+        return res.status(400).json({ vote: '', message: 'Invalid params' });
       }
     });
   } else {
-   return res.status(400).json({vote: '', message: 'Invalid params'});
+    return res.status(400).json({ vote: '', message: 'Invalid params' });
   }
   const userId = params[0];
   const pollId = params[1];

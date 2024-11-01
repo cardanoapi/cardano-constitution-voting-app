@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -81,7 +82,9 @@ export const authOptions: NextAuthOptions = {
       if (registeredUser) {
         return true;
       } else {
-Sentry.captureMessage( `Sign-in attempt with unregistered wallet address: ${credentials.stakeAddress}`);
+        Sentry.captureMessage(
+          `Sign-in attempt with unregistered wallet address: ${credentials.stakeAddress}`,
+        );
         return false;
       }
     },
