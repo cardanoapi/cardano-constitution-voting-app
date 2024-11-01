@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useSession } from 'next-auth/react';
 
 import type { Poll } from '@/types';
-import { getPolls } from '@/lib/getPolls';
+import { getPolls } from '@/lib/helpers/getPolls';
 import { PollCard } from '@/components/polls/pollCard';
 
 /**

@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 /**
  * Creates a new Poll
  * @param name - The name of the poll
@@ -8,21 +10,30 @@ export async function newPoll(
   name: string,
   description: string,
 ): Promise<{ pollId: string; message: string }> {
-  const response = await fetch('/api/newPoll', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Custom-Header': 'intersect',
-    },
-    body: JSON.stringify({
-      name: name,
-      description: description,
-    }),
-  });
-  const data = await response.json();
-  if (response.status === 200) {
-    return { pollId: data.pollId, message: 'Poll created' };
-  } else {
-    return { pollId: '-1', message: data.message };
+  try {
+    const response = await axios.post(
+      '/api/newPoll',
+      {
+        name: name,
+        description: description,
+      },
+      {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+      },
+    );
+    const data = await response.data;
+    if (response.status === 200) {
+      return { pollId: data.pollId, message: 'Poll created' };
+    } else {
+      return { pollId: '-1', message: data.message };
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return { pollId: '-1', message: error.response.data.message };
+    } else {
+      return { pollId: '-1', message: 'An error occurred' };
+    }
   }
 }

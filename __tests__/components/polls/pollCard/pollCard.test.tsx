@@ -1,6 +1,6 @@
-describe('Poll Card', () => {
-  it('renders name, description, and status', async () => {});
-  it('renders link to view poll', async () => {});
-  it('renders vote count when poll is voting', async () => {});
-  it('renders results when poll is concluded', async () => {});
-});
+import { test } from 'vitest';
+
+test('renders name, description, and status', async () => {});
+test('renders link to view poll', async () => {});
+test('renders vote count when poll is voting', async () => {});
+test('renders results when poll is concluded', async () => {});

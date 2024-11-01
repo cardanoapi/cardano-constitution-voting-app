@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import { paths } from '@/paths';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 import { PollList } from '@/components/polls/pollList';
+import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
 export default function Home(): JSX.Element {
   const session = useSession();
@@ -52,6 +53,7 @@ export default function Home(): JSX.Element {
             </Box>
           </Box>
           <PollList />
+          <RepresentativesTable />
         </Box>
       </main>
     </>

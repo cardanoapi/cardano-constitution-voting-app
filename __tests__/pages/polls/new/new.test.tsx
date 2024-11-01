@@ -115,9 +115,8 @@ test('alerts user when name is longer than 255 characters, maintains form', asyn
 
   // Wait for the error toast to appear
   const errorToast = expect(
-    screen.findByText(/Name must be less than 255 characters./i),
+    await screen.findByText(/Name must be less than 255 characters./i),
   ).toBeDefined();
-  screen.debug();
   expect(errorToast).toBeDefined();
 
   // Ensure the form is not cleared since the submission failed
