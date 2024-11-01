@@ -1,4 +1,5 @@
 import { connectWallet as connectWalletClarity } from '@claritydao/clarity-backend';
+import { Typography } from '@mui/material';
 import * as Sentry from '@sentry/nextjs';
 import { bech32 } from 'bech32';
 import { signIn } from 'next-auth/react';
@@ -28,7 +29,17 @@ export async function connectWallet(walletName: string): Promise<boolean> {
       walletName: walletName,
     });
     if (!signInResponse || signInResponse.status !== 200) {
-      toast.error('Failed to authenticate user');
+      toast.error(
+        <Typography
+          sx={{
+            wordWrap: 'break-word',
+            whiteSpace: 'normal',
+            maxWidth: '300px',
+          }}
+        >
+          {`Only Representatives need to connect their wallet. ${stakeAddress} is not registered. `}
+        </Typography>,
+      );
       return false;
     } else {
       return true;
