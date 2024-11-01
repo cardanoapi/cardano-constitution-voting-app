@@ -39,6 +39,9 @@ export default async function getPollResults(
     const votes = await prisma.poll_vote.findMany({
       where: {
         poll_id: BigInt(pollId),
+        poll: {
+          status: 'concluded',
+        },
       },
       select: {
         user_id: true,
