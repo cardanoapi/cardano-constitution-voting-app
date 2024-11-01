@@ -15,7 +15,6 @@ export function PollResultsVoter(props: Props): JSX.Element {
   const theme = useTheme();
   return (
     <Box
-      key={id}
       sx={{
         borderRadius: '50%',
         borderColor:

@@ -113,11 +113,43 @@ export function PollResults(props: Props): JSX.Element {
   const noPercentage = Math.round((noCount / voteCount) * 100);
   const abstainPercentage = Math.round((abstainCount / voteCount) * 100);
 
+  const yesVoters = useMemo((): JSX.Element => {
+    return (
+      <>
+        {votes?.yes?.map(({ name, id }) => {
+          return (
+            <Box key={id}>
+              <PollResultsVoter name={name} id={id} vote="yes" />
+            </Box>
+          );
+        })}
+      </>
+    );
+  }, [theme, votes]);
+
   const noVoters = useMemo((): JSX.Element => {
     return (
       <>
         {votes?.no?.map(({ name, id }) => {
-          return <PollResultsVoter name={name} id={id} vote="no" />;
+          return (
+            <Box key={id}>
+              <PollResultsVoter name={name} id={id} vote="no" />
+            </Box>
+          );
+        })}
+      </>
+    );
+  }, [theme, votes]);
+
+  const abstainVoters = useMemo((): JSX.Element => {
+    return (
+      <>
+        {votes?.abstain?.map(({ name, id }) => {
+          return (
+            <Box key={id}>
+              <PollResultsVoter name={name} id={id} vote="abstain" />
+            </Box>
+          );
         })}
       </>
     );
@@ -165,6 +197,7 @@ export function PollResults(props: Props): JSX.Element {
                 />
               </Box>
             </Box>
+            {yesVoters}
           </Box>
           <Box
             display="flex"
@@ -241,6 +274,7 @@ export function PollResults(props: Props): JSX.Element {
                 />
               </Box>
             </Box>
+            {abstainVoters}
           </Box>
         </Box>
       )}
