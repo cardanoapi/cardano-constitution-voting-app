@@ -1,4 +1,4 @@
-describe('Poll Carrousel', () => {
-  it('renders polls when they exist', async () => {});
-  it('alerts user when polls cannot be found', async () => {});
-});
+import { test } from 'vitest';
+
+test('renders polls when they exist', async () => {});
+test('alerts user when polls cannot be found', async () => {});

@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import Carousel from 'react-material-ui-carousel';
 
 import type { Poll } from '@/types';
-import { getPolls } from '@/lib/getPolls';
+import { getPolls } from '@/lib/helpers/getPolls';
 import { PollCard } from '@/components/polls/pollCard';
 
 interface Props {
@@ -106,7 +106,9 @@ export function PollCarrousel(props: Props): JSX.Element {
         alignItems="center"
       >
         {session.status !== 'authenticated' && (
-          <Typography textAlign="center">Browse other polls</Typography>
+          <Typography textAlign="center" variant="h6" fontWeight="600">
+            Browse other polls
+          </Typography>
         )}
         {pollCards}
       </Box>

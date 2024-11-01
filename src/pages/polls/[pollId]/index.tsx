@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 
 import { Poll } from '@/types';
 import { paths } from '@/paths';
-import { getPoll } from '@/lib/getPoll';
+import { getPoll } from '@/lib/helpers/getPoll';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
