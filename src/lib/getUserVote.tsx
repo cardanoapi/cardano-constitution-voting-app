@@ -24,6 +24,10 @@ export async function getUserVote(
     }
   } catch (error) {
     Sentry.captureException(error);
+    if (axios.isAxiosError(error) && error.response) {
+       return { vote: '', message: error.response.data.message };
+    } else {
     return { vote: '', message: 'An error occurred getting user vote' };
+    }
   }
 }
