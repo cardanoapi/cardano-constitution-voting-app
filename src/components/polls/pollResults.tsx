@@ -125,7 +125,7 @@ export function PollResults(props: Props): JSX.Element {
         })}
       </>
     );
-  }, [theme, votes]);
+  }, [votes]);
 
   const noVoters = useMemo((): JSX.Element => {
     return (
@@ -139,7 +139,7 @@ export function PollResults(props: Props): JSX.Element {
         })}
       </>
     );
-  }, [theme, votes]);
+  }, [votes]);
 
   const abstainVoters = useMemo((): JSX.Element => {
     return (
@@ -153,7 +153,7 @@ export function PollResults(props: Props): JSX.Element {
         })}
       </>
     );
-  }, [theme, votes]);
+  }, [votes]);
 
   return (
     <>

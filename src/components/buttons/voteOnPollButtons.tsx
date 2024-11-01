@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
-import { Poll } from '@/types';
 import { getPollVote } from '@/lib/getPollVote';
 import { castVote } from '@/lib/helpers/castVote';
 
