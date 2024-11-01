@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { Poll } from '@/types';
-import { getUserVote } from '@/lib/getUserVote';
+import { getPollVote } from '@/lib/getPollVote';
 import { castVote } from '@/lib/helpers/castVote';
 
 interface Props {
@@ -44,7 +44,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
   useEffect(() => {
     async function getVote(): Promise<void> {
       if (session.data?.user.id) {
-        const recordedVote = await getUserVote(session.data?.user.id, poll.id);
+        const recordedVote = await getPollVote(session.data?.user.id, poll.id);
 
         setVote(recordedVote.vote);
       }

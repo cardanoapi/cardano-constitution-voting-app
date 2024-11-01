@@ -7,7 +7,7 @@ import axios from 'axios';
  * @param pollId - The ID of the poll to fetch
  * @returns Vote - yes, no, abstain, or empty string if none or error
  */
-export async function getUserVote(
+export async function getPollVote(
   userId: string,
   pollId: string,
 ): Promise<{ vote: string; message: string }> {
@@ -25,9 +25,9 @@ export async function getUserVote(
   } catch (error) {
     Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
-       return { vote: '', message: error.response.data.message };
+      return { vote: '', message: error.response.data.message };
     } else {
-    return { vote: '', message: 'An error occurred getting user vote' };
+      return { vote: '', message: 'An error occurred getting user vote' };
     }
   }
 }
