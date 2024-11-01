@@ -1,5 +1,3 @@
-import { getRepresentatativesErrorHandlers } from '@/../__mocks__/getRepresentatives/errorHandlers';
-import { server } from '@/../__mocks__/server';
 import { render, screen } from '@testing-library/react';
 import { expect, test } from 'vitest';
 
@@ -20,10 +18,4 @@ test('successfully renders table with all representatives', async () => {
   expect(await screen.findAllByText('Connor Connorson')).toBeDefined();
   // user 6
   expect(await screen.findByText('Kyle Kyleson')).toBeDefined();
-});
-
-test('shows no representatives found message', async () => {
-  server.use(...getRepresentatativesErrorHandlers);
-  render(<RepresentativesTable />);
-  expect(await screen.findByText('No Representatives found.')).toBeDefined();
 });
