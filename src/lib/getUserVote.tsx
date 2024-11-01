@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
@@ -10,14 +11,19 @@ export async function getUserVote(
   userId: string,
   pollId: string,
 ): Promise<{ vote: string; message: string }> {
-  const response = await axios.get(`/api/getPollVote/${userId}/${pollId}`, {
-    headers: { 'X-Custom-Header': 'intersect' },
-  });
-  const data = await response.data;
+  try {
+    const response = await axios.get(`/api/getPollVote/${userId}/${pollId}`, {
+      headers: { 'X-Custom-Header': 'intersect' },
+    });
+    const data = await response.data;
 
-  if (response.status === 200) {
-    return { vote: data.vote, message: 'Vote found' };
-  } else {
-    return { vote: '', message: data.message };
+    if (response.status === 200) {
+      return { vote: data.vote, message: 'Vote found' };
+    } else {
+      return { vote: '', message: data.message };
+    }
+  } catch (error) {
+    Sentry.captureException(error);
+    return { vote: '', message: 'An error occurred getting user vote' };
   }
 }
