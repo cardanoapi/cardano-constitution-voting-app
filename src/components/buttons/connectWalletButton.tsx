@@ -38,8 +38,10 @@ export function ConnectWalletButton(): JSX.Element {
   const wallets = useMemo(() => {
     async function connect(walletName: string): Promise<void> {
       setConnecting(true);
+      console.log('walletName', walletName);
       // @ts-expect-error cardano is actually a proper function on windows
       window?.cardano?.[walletName].enable();
+      console.log('wallet connected', walletName);
       // @ts-expect-error cardano is actually a proper function on windows
       const networkId = await window?.cardano.getNetworkId();
       console.log('networkId', networkId);
