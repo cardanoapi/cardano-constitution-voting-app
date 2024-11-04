@@ -8,7 +8,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
-import toast from 'react-hot-toast';
 
 import { connectWallet } from '@/lib/connectWallet';
 
@@ -38,21 +37,6 @@ export function ConnectWalletButton(): JSX.Element {
   const wallets = useMemo(() => {
     async function connect(walletName: string): Promise<void> {
       setConnecting(true);
-      // @ts-expect-error cardano is actually a proper function on windows
-      const networkId = await window?.cardano.getNetworkId();
-      if (networkId === 1 && process.env.NEXT_PUBLIC_NETWORK !== 'mainnet') {
-        toast.error('Switch to the Preview Network and try again.');
-        setConnecting(false);
-        return;
-      } else if (
-        networkId === 0 &&
-        process.env.NEXT_PUBLIC_NETWORK !== 'testnet'
-      ) {
-        toast.error('Switch to Mainnet and try again.');
-        setConnecting(false);
-        return;
-      }
-
       await connectWallet(walletName);
       setConnecting(false);
       handleClose();
