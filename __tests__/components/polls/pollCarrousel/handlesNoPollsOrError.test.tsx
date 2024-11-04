@@ -1,3 +1,4 @@
+import { server } from '@/../__mocks__/server';
 import { render, screen } from '@testing-library/react';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'react-hot-toast';
@@ -5,7 +6,10 @@ import { expect, test } from 'vitest';
 
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 
-test('renders polls when they exist', async () => {
+import { getPollsErrorHandlers } from '../../../../__mocks__/getPolls/errorHandlers';
+
+test('handles no polls or error', async () => {
+  server.use(...getPollsErrorHandlers);
   render(
     <SessionProvider
       session={{
@@ -22,8 +26,6 @@ test('renders polls when they exist', async () => {
     </SessionProvider>,
   );
 
-  // I think both mobile and desktop are showing since this environment does
-  // not have a window object to determine the screen size.
-  const pollCard = await screen.findAllByText(/Poll #3/i);
-  expect(pollCard).toHaveLength(2);
+  const noPollsYetText = await screen.findByText(/No Polls yet/i);
+  expect(noPollsYetText).toBeDefined();
 });
