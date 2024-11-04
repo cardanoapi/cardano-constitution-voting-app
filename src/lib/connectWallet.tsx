@@ -26,7 +26,7 @@ export async function connectWallet(walletName: string): Promise<boolean> {
     } else {
       stakeAddress = bech32.encode('stake_test', words);
     }
-
+    console.log('signing in with', stakeAddress);
     // Sign in is defined here pages/api/auth/[...nextauth].ts
     const signInResponse = await signIn('credentials', {
       redirect: false,
