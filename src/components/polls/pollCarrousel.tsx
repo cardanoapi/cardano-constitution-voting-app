@@ -15,6 +15,7 @@ interface Props {
 
 /**
  * A Carrousel of poll cards
+ * @param currentPollId - The ID of the current poll
  * @returns Poll List
  */
 export function PollCarrousel(props: Props): JSX.Element {
