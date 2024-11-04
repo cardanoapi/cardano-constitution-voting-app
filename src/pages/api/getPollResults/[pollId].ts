@@ -28,8 +28,8 @@ export default async function getPollResults(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
-  const pollId = req.query.pollId;
   try {
+    const pollId = req.query.pollId;
     if (typeof pollId !== 'string') {
       return res.status(400).json({
         votes: null,

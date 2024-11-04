@@ -19,9 +19,9 @@ export default async function startVoting(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
-  const { pollId } = req.body;
-  // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before updating poll?
   try {
+    const { pollId } = req.body;
+    // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before updating poll?
     const findPoll = await prisma.poll.findFirst({
       where: {
         id: BigInt(pollId),
