@@ -21,7 +21,6 @@ test('alerts user when poll is not pending', async () => {
       ,
     </>,
   );
-  screen.debug();
   const beginVoteButton = screen.getByRole('button', {
     name: /Begin Voting/i,
   });

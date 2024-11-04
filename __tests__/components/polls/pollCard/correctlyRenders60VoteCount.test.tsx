@@ -1,10 +1,13 @@
+import { getPollVoteCount60Handlers } from '@/../__mocks__/getPollVoteCount/handlers';
+import { server } from '@/../__mocks__/server';
 import { render, screen } from '@testing-library/react';
 import { Toaster } from 'react-hot-toast';
 import { expect, test } from 'vitest';
 
 import { PollCard } from '@/components/polls/pollCard';
 
-test('renders link to view poll', async () => {
+test('correctly renders 60 votes', async () => {
+  server.use(...getPollVoteCount60Handlers);
   render(
     <>
       <Toaster />
@@ -18,6 +21,6 @@ test('renders link to view poll', async () => {
       />
     </>,
   );
-  const viewPollLink = screen.getByTestId('poll-card-1');
-  expect(viewPollLink).toBeDefined();
+  const voteCount = await screen.findByText('60 votes');
+  expect(voteCount).toBeDefined();
 });

@@ -1,7 +1,7 @@
 import { endVotingHandlers } from '@/../__mocks__/endVoting/handlers';
 import { getPollHandlers } from '@/../__mocks__/getPoll/handlers';
 import { getPollsHandlers } from '@/../__mocks__/getPolls/handlers';
-import { getPollVoteCountHandlers } from '@/../__mocks__/getPollVoteCount/handlers';
+import { getPollVoteCount1Handlers } from '@/../__mocks__/getPollVoteCount/handlers';
 import { getRepresentativesHandlers } from '@/../__mocks__/getRepresentatives/handlers';
 import { getUserHandlers } from '@/../__mocks__/getUser/handlers';
 import { getUserVotesHandlers } from '@/../__mocks__/getUserVotes/handlers';
@@ -19,7 +19,7 @@ export const server = setupServer(
   ...endVotingHandlers,
   ...newPollVoteHandlers,
   ...getPollHandlers,
-  ...getPollVoteCountHandlers,
+  ...getPollVoteCount1Handlers,
   ...getUserHandlers,
   ...getUserVotesHandlers,
   ...getWorkshopNameHandlers,

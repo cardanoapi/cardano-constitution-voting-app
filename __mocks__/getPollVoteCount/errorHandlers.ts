@@ -16,6 +16,7 @@ export const getPollVoteCountInternalErrorHandler = [
   http.get('/api/getPoll/*', () => {
     return HttpResponse.json(
       {
+        count: 0,
         message: 'Error getting Poll Vote Count.',
       },
       { status: 500 },

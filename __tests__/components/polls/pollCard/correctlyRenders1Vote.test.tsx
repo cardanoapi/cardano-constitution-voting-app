@@ -4,7 +4,7 @@ import { expect, test } from 'vitest';
 
 import { PollCard } from '@/components/polls/pollCard';
 
-test('renders link to view poll', async () => {
+test('correctly renders 1 vote', async () => {
   render(
     <>
       <Toaster />
@@ -18,6 +18,6 @@ test('renders link to view poll', async () => {
       />
     </>,
   );
-  const viewPollLink = screen.getByTestId('poll-card-1');
-  expect(viewPollLink).toBeDefined();
+  const voteCount = await screen.findByText('1 vote');
+  expect(voteCount).toBeDefined();
 });

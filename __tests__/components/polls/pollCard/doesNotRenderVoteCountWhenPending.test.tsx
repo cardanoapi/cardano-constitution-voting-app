@@ -4,7 +4,7 @@ import { expect, test } from 'vitest';
 
 import { PollCard } from '@/components/polls/pollCard';
 
-test('renders link to view poll', async () => {
+test('does not render vote count when pending', async () => {
   render(
     <>
       <Toaster />
@@ -13,11 +13,11 @@ test('renders link to view poll', async () => {
           id: '1',
           name: 'test',
           description: 'test description',
-          status: 'voting',
+          status: 'pending',
         }}
       />
     </>,
   );
-  const viewPollLink = screen.getByTestId('poll-card-1');
-  expect(viewPollLink).toBeDefined();
+  const voteCount = screen.queryByText('1 vote');
+  expect(voteCount).toBeNull();
 });
