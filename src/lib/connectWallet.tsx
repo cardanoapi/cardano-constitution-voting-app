@@ -23,7 +23,6 @@ export async function connectWallet(walletName: string): Promise<boolean> {
 
     // @ts-expect-error getNetworkId exists
     const network = await wallet.getNetworkId();
-    console.log('testing NETWORK', network, process.env.NEXT_PUBLIC_NETWORK);
     if (process.env.NEXT_PUBLIC_NETWORK === 'mainnet' && network !== 1) {
       toast.error('Please switch to Mainnet and try again.');
       return false;
