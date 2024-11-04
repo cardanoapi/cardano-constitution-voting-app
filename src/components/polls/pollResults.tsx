@@ -6,6 +6,7 @@ import {
   ThumbUpOutlined,
 } from '@mui/icons-material';
 import {
+  CircularProgress,
   LinearProgress,
   linearProgressClasses,
   styled,
@@ -156,12 +157,14 @@ export function PollResults(props: Props): JSX.Element {
   }, [votes]);
 
   return (
-    <>
-      {!isLoading && (
+    <Box display="flex" flexDirection="column" gap={6} width="100%">
+      <Typography variant="h3" fontWeight="bold">
+        Results
+      </Typography>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
         <Box display="flex" flexDirection="column" gap={6} width="100%">
-          <Typography variant="h3" fontWeight="bold">
-            Results
-          </Typography>
           <Box
             display="flex"
             flexDirection="column"
@@ -288,6 +291,6 @@ export function PollResults(props: Props): JSX.Element {
           </Box>
         </Box>
       )}
-    </>
+    </Box>
   );
 }

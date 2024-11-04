@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
-import { useTheme } from '@mui/material';
+import { CircularProgress, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -72,7 +72,13 @@ export default function ViewPoll(): JSX.Element {
             alignItems="center"
           >
             <Typography variant="h1" fontWeight="bold">
-              {poll ? poll.name : 'View Poll'}
+              {poll ? (
+                poll.name
+              ) : loadingPoll ? (
+                <CircularProgress />
+              ) : (
+                'View Poll'
+              )}
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
