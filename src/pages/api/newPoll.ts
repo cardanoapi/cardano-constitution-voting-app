@@ -19,9 +19,9 @@ export default async function newPoll(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
-  const { name, description } = req.body;
-  // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before creating poll?
   try {
+    const { name, description } = req.body;
+    // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before creating poll?
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
     // validate name
     if (!name) {

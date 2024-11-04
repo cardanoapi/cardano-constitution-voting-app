@@ -18,22 +18,22 @@ export default async function getPollVoteCount(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
-  const { params } = req.query;
-
-  // Ensures params are an array of strings
-  if (Array.isArray(params)) {
-    params.forEach((param) => {
-      if (typeof param !== 'string') {
-        return res.status(400).json({ vote: '', message: 'Invalid params' });
-      }
-    });
-  } else {
-    return res.status(400).json({ vote: '', message: 'Invalid params' });
-  }
-  const userId = params[0];
-  const pollId = params[1];
-
   try {
+    const { params } = req.query;
+
+    // Ensures params are an array of strings
+    if (Array.isArray(params)) {
+      params.forEach((param) => {
+        if (typeof param !== 'string') {
+          return res.status(400).json({ vote: '', message: 'Invalid params' });
+        }
+      });
+    } else {
+      return res.status(400).json({ vote: '', message: 'Invalid params' });
+    }
+    const userId = params[0];
+    const pollId = params[1];
+
     const vote = await prisma.poll_vote.findFirst({
       where: {
         poll_id: BigInt(pollId),
