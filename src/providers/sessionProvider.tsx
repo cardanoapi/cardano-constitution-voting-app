@@ -8,11 +8,17 @@ declare module 'next-auth' {
     user: DefaultUser & {
       stakeAddress: string;
       walletName: string;
+      isCoordinator: boolean;
+      isDelegate: boolean;
+      isAlternate: boolean;
     };
   }
 
   interface User {
     stakeAddress: string;
     walletName: string;
+    isCoordinator: boolean;
+    isDelegate: boolean;
+    isAlternate: boolean;
   }
 }
