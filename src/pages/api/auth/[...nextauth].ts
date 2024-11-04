@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient } from '@prisma/client';
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+
+const prisma = new PrismaClient();
 
 // the shape of the user session object is defined in /types/next-auth.d.ts
 export const authOptions: NextAuthOptions = {
@@ -18,9 +21,15 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials) return null;
 
-        if (true) {
+        const user = await prisma.user.findFirst({
+          where: {
+            wallet_address: credentials.stakeAddress,
+          },
+        });
+
+        if (user) {
           return {
-            id: credentials.stakeAddress,
+            id: user.id.toString(),
             stakeAddress: credentials.stakeAddress,
             walletName: credentials.walletName,
           };
@@ -46,13 +55,37 @@ export const authOptions: NextAuthOptions = {
         session.user.stakeAddress = token.stakeAddress;
       if (typeof token.walletName === 'string')
         session.user.walletName = token.walletName;
+      const user = await prisma.user.findFirst({
+        where: {
+          wallet_address: session.user.stakeAddress,
+        },
+      });
+      if (user) {
+        session.user.id = user.id.toString();
+      }
 
       return Promise.resolve(session);
     },
-    async signIn() {
+    async signIn({ credentials }) {
       // https://next-auth.js.org/configuration/callbacks#sign-in-callback
-      // TODO: ADD CHECK TO MAKE SURE THE USER HAS BEEN REGISTERED
-      return true;
+      if (!credentials) return false;
+
+      // Check if the user is registered in the database
+      const registeredUser = await prisma.user.findFirst({
+        where: {
+          wallet_address: credentials.stakeAddress.value,
+        },
+      });
+
+      // If user exists in the database, allow sign-in; otherwise, deny it
+      if (registeredUser) {
+        return true;
+      } else {
+        console.error(
+          `Sign-in attempt with unregistered wallet address: ${credentials.stakeAddress}`,
+        );
+        return false;
+      }
     },
   },
 };

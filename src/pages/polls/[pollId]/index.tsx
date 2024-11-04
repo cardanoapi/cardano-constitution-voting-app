@@ -17,6 +17,7 @@ import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
+import { PollResults } from '@/components/polls/pollResults';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { PollVoteCount } from '@/components/polls/pollVoteCount';
 
@@ -97,44 +98,59 @@ export default function ViewPoll(): JSX.Element {
                   alignItems="center"
                 >
                   {/* Coordinator Buttons */}
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    alignItems="center"
-                  >
-                    <Typography>Manage Poll:</Typography>
-                    {poll.status === pollPhases.pending &&
-                      typeof pollId === 'string' && (
+
+                  {poll.status === pollPhases.pending &&
+                    typeof pollId === 'string' && (
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={1}
+                        alignItems="center"
+                      >
+                        <Typography>Manage Poll:</Typography>
                         <BeginVoteButton
                           pollId={pollId}
                           isSubmitting={isSubmitting}
                           setIsSubmitting={updateIsSubmitting}
                         />
-                      )}
-                    {poll.status === pollPhases.voting &&
-                      typeof pollId === 'string' && (
+                      </Box>
+                    )}
+                  {poll.status === pollPhases.voting &&
+                    typeof pollId === 'string' && (
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={1}
+                        alignItems="center"
+                      >
+                        <Typography>Manage Poll:</Typography>
                         <EndVoteButton
                           pollId={pollId}
                           isSubmitting={isSubmitting}
                           setIsSubmitting={updateIsSubmitting}
                         />
-                      )}
-                  </Box>
+                      </Box>
+                    )}
                   {/* Delegate Voting Buttons */}
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    alignItems="center"
-                  >
-                    <Typography>Cast your vote:</Typography>
-                    <VoteOnPollButtons
-                      poll={poll}
-                      disabled={isSubmitting}
-                      setDisabled={updateIsSubmitting}
-                    />
-                  </Box>
+                  {poll.status === pollPhases.voting && (
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      gap={1}
+                      alignItems="center"
+                    >
+                      <Typography>Cast your vote:</Typography>
+                      <VoteOnPollButtons
+                        pollId={poll.id}
+                        disabled={isSubmitting}
+                        setDisabled={updateIsSubmitting}
+                      />
+                    </Box>
+                  )}
+                  {/* Vote Results */}
+                  {poll.status === pollPhases.concluded && (
+                    <PollResults pollId={poll.id} />
+                  )}
                 </Box>
               </Grid>
             )}
