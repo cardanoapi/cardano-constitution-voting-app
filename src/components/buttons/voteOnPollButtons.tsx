@@ -8,12 +8,11 @@ import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
-import { Poll } from '@/types';
 import { getPollVote } from '@/lib/getPollVote';
 import { castVote } from '@/lib/helpers/castVote';
 
 interface Props {
-  poll: Poll;
+  pollId: string;
   disabled: boolean;
   setDisabled: (value: boolean) => void;
 }
@@ -23,7 +22,7 @@ interface Props {
  * @returns Vote on Poll Buttons
  */
 export function VoteOnPollButtons(props: Props): JSX.Element {
-  const { poll, disabled, setDisabled } = props;
+  const { pollId, disabled, setDisabled } = props;
   const [vote, setVote] = useState('');
 
   const session = useSession();
@@ -31,7 +30,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
 
   async function handleVote(vote: string): Promise<void> {
     setDisabled(true);
-    const result = await castVote(poll.id, vote);
+    const result = await castVote(pollId, vote);
     if (result.succeeded === false) {
       toast.error(result.message);
     } else {
@@ -44,7 +43,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
   useEffect(() => {
     async function getVote(): Promise<void> {
       if (session.data?.user.id) {
-        const recordedVote = await getPollVote(session.data?.user.id, poll.id);
+        const recordedVote = await getPollVote(session.data?.user.id, pollId);
 
         setVote(recordedVote.vote);
       }
@@ -53,7 +52,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
     if (session.data?.user.id && disabled == false) {
       getVote();
     }
-  }, [session.data?.user.id, poll.id, disabled]);
+  }, [session.data?.user.id, pollId, disabled]);
 
   return (
     <Box display="flex" flexDirection="column" gap={2} alignItems="center">
