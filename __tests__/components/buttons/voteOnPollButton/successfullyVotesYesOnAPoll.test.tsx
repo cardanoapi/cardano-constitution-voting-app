@@ -1,5 +1,3 @@
-import { newPollVoteNoIdHandler } from '@/../__mocks__/newPollVote/errorHandlers';
-import { server } from '@/../__mocks__/server';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SessionProvider } from 'next-auth/react';
@@ -8,8 +6,7 @@ import { expect, test } from 'vitest';
 
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 
-test('alerts user when poll ID is not provided', async () => {
-  server.use(...newPollVoteNoIdHandler);
+test('successfully votes yes on a poll', async () => {
   const user = userEvent.setup();
   render(
     <SessionProvider
@@ -41,6 +38,6 @@ test('alerts user when poll ID is not provided', async () => {
   });
   expect(yesVoteButton).toBeDefined();
   await user.click(yesVoteButton);
-  const toast = await screen.findByText(/poll id must be provided/i);
+  const toast = await screen.findByText(/vote recorded/i);
   expect(toast).toBeDefined();
 });
