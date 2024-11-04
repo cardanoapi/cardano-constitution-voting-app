@@ -1,4 +1,4 @@
-import { endVotingNotVotingHandler } from '@/../__mocks__/endVoting/errorHandlers';
+import { endVotingNotFoundHandler } from '@/../__mocks__/endVoting/errorHandlers';
 import { server } from '@/../__mocks__/server';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -7,8 +7,8 @@ import { expect, test } from 'vitest';
 
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 
-test('alerts user when poll voting is already closed', async () => {
-  server.use(...endVotingNotVotingHandler);
+test('alerts user when poll is not found', async () => {
+  server.use(...endVotingNotFoundHandler);
   const user = userEvent.setup();
   render(
     <>
@@ -26,6 +26,6 @@ test('alerts user when poll voting is already closed', async () => {
   });
   expect(endVoteButton).toBeDefined();
   await user.click(endVoteButton);
-  const toast = await screen.findByText(/poll is not voting/i);
+  const toast = await screen.findByText(/poll not found/i);
   expect(toast).toBeDefined();
 });

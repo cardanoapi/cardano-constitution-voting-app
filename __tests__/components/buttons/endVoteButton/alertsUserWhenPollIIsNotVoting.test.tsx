@@ -7,7 +7,7 @@ import { expect, test } from 'vitest';
 
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 
-test('alerts user when poll voting is already closed', async () => {
+test('alerts user when poll is not voting', async () => {
   server.use(...endVotingNotVotingHandler);
   const user = userEvent.setup();
   render(
