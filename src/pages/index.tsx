@@ -24,9 +24,21 @@ export default function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Link href={paths.polls.new} data-testid="create-poll-button">
-          <Button variant="contained">Create Poll</Button>
-        </Link>
+        {session.data?.user.isCoordinator && (
+          <Box display="flex" flexDirection="row" gap={4}>
+            <Link href={paths.polls.new} data-testid="create-poll-button">
+              <Button variant="contained">Create Poll</Button>
+            </Link>
+            <Link
+              href={paths.representatives.manage}
+              data-testid="create-poll-button"
+            >
+              <Button variant="contained" color="secondary">
+                Manage Users
+              </Button>
+            </Link>
+          </Box>
+        )}
         <Box display="flex" flexDirection="column" gap={4} alignItems="center">
           <Box
             display="flex"
