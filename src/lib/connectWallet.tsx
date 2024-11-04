@@ -21,6 +21,16 @@ export async function connectWallet(walletName: string): Promise<boolean> {
     const bytes = Buffer.from(stakeAddressHex, 'hex');
     const words = bech32.toWords(bytes);
 
+    // @ts-expect-error getNetworkId exists
+    const network = await wallet.getNetworkId();
+    if (process.env.NEXT_PUBLIC_NETWORK === 'mainnet' && network !== 1) {
+      toast.error('Please switch to Mainnet and try again.');
+      return false;
+    } else if (process.env.NEXT_PUBLIC_NETWORK === 'testnet' && network !== 0) {
+      toast.error('Please switch to Preview Network and try again.');
+      return false;
+    }
+
     let stakeAddress;
     if (process.env.NEXT_PUBLIC_NETWORK === 'mainnet') {
       stakeAddress = bech32.encode('stake', words);
