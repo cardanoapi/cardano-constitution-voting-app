@@ -24,6 +24,13 @@ export const getPollsHandlers = [
         status: 'pending',
         summary_tx_id: null,
       },
+      {
+        id: '4',
+        name: 'Poll #4',
+        description: 'Additional poll to test user with no recorded vote',
+        status: 'concluded',
+        summary_tx_id: null,
+      },
     ]);
   }),
 ];
