@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { startVoting } from '@/lib/helpers/startVoting';
 
 interface Props {
-  pollId: string;
+  pollId: string | string[] | undefined;
   isSubmitting: boolean;
   setIsSubmitting: (value: boolean) => void;
 }
@@ -17,6 +17,10 @@ export function BeginVoteButton(props: Props): JSX.Element {
   const { pollId, isSubmitting, setIsSubmitting } = props;
 
   async function handleBeginVote(): Promise<void> {
+    if (typeof pollId !== 'string') {
+      toast.error('Invalid pollId');
+      return;
+    }
     setIsSubmitting(true);
     // Begin Vote
     const result = await startVoting(pollId);
