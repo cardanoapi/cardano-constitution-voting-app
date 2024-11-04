@@ -14,6 +14,7 @@ import { Poll } from '@/types';
 import { paths } from '@/paths';
 import { getPoll } from '@/lib/helpers/getPoll';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
+import { DeletePollButton } from '@/components/buttons/deletePollButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
@@ -98,39 +99,40 @@ export default function ViewPoll(): JSX.Element {
                   alignItems="center"
                 >
                   {/* Coordinator Buttons */}
-
-                  {poll.status === pollPhases.pending &&
-                    typeof pollId === 'string' && (
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        gap={1}
-                        alignItems="center"
-                      >
-                        <Typography>Manage Poll:</Typography>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    gap={1}
+                    alignItems="center"
+                  >
+                    <Typography>Manage Poll:</Typography>
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      gap={1}
+                      alignItems="center"
+                    >
+                      {poll.status === pollPhases.pending && (
                         <BeginVoteButton
                           pollId={pollId}
                           isSubmitting={isSubmitting}
                           setIsSubmitting={updateIsSubmitting}
                         />
-                      </Box>
-                    )}
-                  {poll.status === pollPhases.voting &&
-                    typeof pollId === 'string' && (
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        gap={1}
-                        alignItems="center"
-                      >
-                        <Typography>Manage Poll:</Typography>
+                      )}
+                      {poll.status === pollPhases.voting && (
                         <EndVoteButton
                           pollId={pollId}
                           isSubmitting={isSubmitting}
                           setIsSubmitting={updateIsSubmitting}
                         />
-                      </Box>
-                    )}
+                      )}
+                      <DeletePollButton
+                        pollId={pollId}
+                        isSubmitting={isSubmitting}
+                        setIsSubmitting={updateIsSubmitting}
+                      />
+                    </Box>
+                  </Box>
                   {/* Delegate Voting Buttons */}
                   {poll.status === pollPhases.voting && (
                     <Box
