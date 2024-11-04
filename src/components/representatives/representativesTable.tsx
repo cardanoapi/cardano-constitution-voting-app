@@ -133,7 +133,7 @@ export function RepresentativesTable(): JSX.Element {
     return <></>;
   } else if (representatives.length > 0) {
     return (
-      <Box display="flex" flexDirection="column" gap={1}>
+      <Box display="flex" flexDirection="column" gap={1} width="100%">
         <Typography variant="h6" fontWeight="600" textAlign="center">
           Representatives
         </Typography>
