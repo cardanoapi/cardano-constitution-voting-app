@@ -102,3 +102,4 @@ ALTER TABLE "workshop" ADD CONSTRAINT "workshop_alternate_id_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "workshop" ADD CONSTRAINT "workshop_delegate_id_fkey" FOREIGN KEY ("delegate_id") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
