@@ -130,7 +130,6 @@ export function ManageRepresentativesTable(): JSX.Element {
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
         if (isInEditMode) {
           return [
             <GridActionsCellItem
@@ -141,6 +140,7 @@ export function ManageRepresentativesTable(): JSX.Element {
               }}
               onClick={handleSaveClick(id)}
               data-testid={`save-representative-info-${id}`}
+              key={`save-representative-info-${id}`}
             />,
             <GridActionsCellItem
               icon={<CancelRounded />}
@@ -149,6 +149,7 @@ export function ManageRepresentativesTable(): JSX.Element {
               onClick={handleCancelClick(id)}
               color="inherit"
               data-testid={`cancel-representative-info-${id}`}
+              key={`cancel-representative-info-${id}`}
             />,
           ];
         }
@@ -161,6 +162,7 @@ export function ManageRepresentativesTable(): JSX.Element {
             onClick={handleEditClick(id)}
             color="inherit"
             data-testid={`edit-representative-info-${id}`}
+            key={`edit-representative-info-${id}`}
           />,
         ];
       },

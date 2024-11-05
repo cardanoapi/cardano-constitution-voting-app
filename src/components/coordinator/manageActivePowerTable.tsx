@@ -9,7 +9,6 @@ import {
   DataGrid,
   GridActionsCellItem,
   GridColDef,
-  GridEventListener,
   GridRowEditStopParams,
   GridRowEditStopReasons,
   GridRowId,
@@ -237,6 +236,7 @@ export function ManageActivePowerTable(): JSX.Element {
                 }}
                 onClick={handleSaveClick(id)}
                 data-testid={`save-active-voter-${id}`}
+                key={`save-active-voter-${id}`}
               />,
               <GridActionsCellItem
                 icon={<CancelRounded />}
@@ -245,6 +245,7 @@ export function ManageActivePowerTable(): JSX.Element {
                 onClick={handleCancelClick(id)}
                 color="inherit"
                 data-testid={`cancel-active-voter-${id}`}
+                key={`cancel-active-voter-${id}`}
               />,
             ];
           }
@@ -257,6 +258,7 @@ export function ManageActivePowerTable(): JSX.Element {
               className="textPrimary"
               onClick={handleEditClick(id)}
               color="inherit"
+              key={`edit-active-voter-${id}`}
             />,
           ];
         },
