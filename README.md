@@ -18,6 +18,8 @@ This project was organized and funded by [Intersect](https://www.intersectmbo.or
 
 The primary functionality of this app allows a convention organizer to create polls and the delegates/alternates to vote on the created polls. This process will happen iteratively until a constitution receives enough votes to pass the winning threshold.
 
+Anybody will have the ability to visit the app and view the polls. When the polls conclude, everybody will be able to view the results. For these observers, no wallet is required. Only the convention organizers and delegates/alternates will be required to sign-in with a wallet.
+
 This voting app will be hosted through the end of February, to provide ample time for viewing of the poll results. All vote records for the final constitution vote will be on-chain indefinitely.
 
 ## Features
@@ -71,6 +73,7 @@ When a delegate or alternate votes on a poll, they will sign a message that cont
 - Delegate's / alternate's full name
 - Delegate's / alternate's workshop location
 - Whether they were a delegate or an alternate
+- Name of the poll
 - How the delegate / alternate voted (yes, no, or abstain)
 
 This message and their signature will be saved to the voting app's database. At the conclusion of the final poll, the convention organizer will sign a number of transactions. Each transaction will contain the vote data for multiple delegate/alternate votes. Anybody will be able to refer to these on-chain transactions and verify the votes themselves.
