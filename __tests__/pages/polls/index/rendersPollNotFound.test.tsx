@@ -5,7 +5,7 @@ import mockRouter from 'next-router-mock';
 import { createDynamicRouteParser } from 'next-router-mock/dynamic-routes';
 import { expect, test } from 'vitest';
 
-test('renders poll carrousel', async () => {
+test('renders poll not found', async () => {
   mockRouter.useParser(
     createDynamicRouteParser([
       // These paths should match those found in the `/pages` folder:
@@ -28,7 +28,6 @@ test('renders poll carrousel', async () => {
     </SessionProvider>,
   );
 
-  // Because JSDOM does not have a window object, the carrousel renders both the desktop and mobile versions
-  const pollCarrousel = await screen.findAllByTestId('poll-card-4');
-  expect(pollCarrousel).toHaveLength(2);
+  const pollNotFound = await screen.findByText(/poll not found/i);
+  expect(pollNotFound).toBeDefined();
 });
