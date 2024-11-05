@@ -57,7 +57,7 @@ model user {
 
 model workshop {
   id                                  BigInt  @id @default(autoincrement())
-  name                                String  @db.VarChar(255)
+  name                                String  @db.VarChar(255) @unique
   delegate_id                         BigInt? @unique
   alternate_id                        BigInt? @unique
   active_voter_id                     BigInt? @unique
