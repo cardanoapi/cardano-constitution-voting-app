@@ -5,7 +5,7 @@ import mockRouter from 'next-router-mock';
 import { createDynamicRouteParser } from 'next-router-mock/dynamic-routes';
 import { expect, test } from 'vitest';
 
-// TODO: Have not been able to get this test to pass
+// TODO: Have not been able to get this test to pass as it depends on URL params
 test.skip('renders name, description, and status', async () => {
   mockRouter.useParser(
     createDynamicRouteParser([
