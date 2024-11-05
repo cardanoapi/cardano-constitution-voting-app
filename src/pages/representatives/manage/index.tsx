@@ -1,4 +1,8 @@
 import Head from 'next/head';
+import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+
+import { ManageRepresentativesTable } from '@/components/coordinator/manageRepresentativesTable';
 
 export default function ManageRepresentatives(): JSX.Element {
   return (
@@ -12,7 +16,15 @@ export default function ManageRepresentatives(): JSX.Element {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main></main>
+      <main>
+        <Box display="flex" flexDirection="column" gap={6}>
+          <Typography variant="h3" fontWeight="bold">
+            Coordinator Dashboard
+          </Typography>
+
+          <ManageRepresentativesTable />
+        </Box>
+      </main>
     </>
   );
 }
