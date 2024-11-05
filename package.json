@@ -12,7 +12,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "seed": "npx prisma migrate reset"
+    "seed": "npx prisma migrate reset",
+    "prisma-build": "prisma migrate deploy && next build"
   },
   "dependencies": {
     "@claritydao/clarity-backend": "^0.4.0-dev-f82487b359ff0d0dc93db2bd24777a1ee7dbf921",
