@@ -23,7 +23,7 @@ import { User, Workshop } from '@/types';
 import { paths } from '@/paths';
 import { getRepresentatives } from '@/lib/helpers/getRepresentatives';
 import { getWorkshops } from '@/lib/helpers/getWorkshops';
-import { updateUser } from '@/lib/helpers/updateUser';
+import { updateActiveVoter } from '@/lib/helpers/updateActiveVoter';
 
 /**
  * Allows a workshop coordinator to manage if delegates or alternates have active power from each workhsop
@@ -33,23 +33,19 @@ export function ManageActivePowerTable(): JSX.Element {
   const [representatives, setRepresentatives] = useState<User[]>([]);
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-  const [loadingReps, setLoadingReps] = useState(true);
   const [reload, setReload] = useState(false);
 
   const theme = useTheme();
 
   useEffect(() => {
     async function fetchData(): Promise<void> {
-      setLoadingReps(true);
       const workshops = await getWorkshops();
       setWorkshops(workshops);
       const reps = await getRepresentatives();
-      console.log('reps', reps);
       setRepresentatives(reps);
-      setLoadingReps(false);
     }
     fetchData();
-  }, []);
+  }, [reload]);
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (
     params,
@@ -78,13 +74,9 @@ export function ManageActivePowerTable(): JSX.Element {
   };
 
   const processRowUpdate = async (newRow: GridRowModel) => {
-    // update user name, email, and wallet address
-    const data = await updateUser(
-      newRow.id,
-      newRow.name,
-      newRow.email,
-      newRow.wallet_address,
-    );
+    console.log('new row', newRow);
+    const data = await updateActiveVoter(newRow.id, newRow.active_voter_id);
+    // update active voter id
     if (data.userId !== '-1') {
       toast.success('User info updated!');
     } else {
@@ -104,24 +96,22 @@ export function ManageActivePowerTable(): JSX.Element {
         field: 'name',
         headerName: 'Workshop',
         width: 280,
-        editable: true,
+        editable: false,
         flex: 0.5,
       },
       {
         field: 'delegate_id',
         headerName: 'Delegate',
         width: 280,
-        editable: true,
+        editable: false,
         flex: 0.5,
         renderCell: (params): JSX.Element => {
           const delegateId = params.row.delegate_id;
           const delegate = representatives.find((rep) => {
-            if (delegate) {
-              console.log('testing', rep.id.toString(), delegateId);
-            }
             return rep.id === delegateId;
           });
-          if (delegate) console.log('delegate', delegate.name);
+          const isActivePower =
+            params.row.delegate_id === params.row.active_voter_id;
           return (
             <Link
               href={paths.representatives.representative + delegateId}
@@ -136,8 +126,12 @@ export function ManageActivePowerTable(): JSX.Element {
               }}
               data-testid={`delegate-name-${delegate?.id}`}
             >
-              <Typography variant="body1">{delegate?.name}</Typography>
-              Ju
+              <Typography
+                variant="body1"
+                color={isActivePower ? 'success' : theme.palette.text.primary}
+              >
+                {delegate?.name}
+              </Typography>
               <LaunchRounded fontSize="small" />
             </Link>
           );
@@ -147,10 +141,72 @@ export function ManageActivePowerTable(): JSX.Element {
         field: 'alternate_id',
         headerName: 'Alternate',
         width: 280,
-        editable: true,
+        editable: false,
         flex: 0.5,
+        renderCell: (params): JSX.Element => {
+          const alternateId = params.row.alternate_id;
+          const alternate = representatives.find((rep) => {
+            return rep.id === alternateId;
+          });
+          const isActivePower =
+            params.row.alternate_id === params.row.active_voter_id;
+          return (
+            <Link
+              href={paths.representatives.representative + alternateId}
+              style={{
+                textDecoration: 'none',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 12,
+                color: theme.palette.text.primary,
+              }}
+              data-testid={`alternate-name-${alternate?.id}`}
+            >
+              <Typography
+                variant="body1"
+                color={isActivePower ? 'success' : theme.palette.text.primary}
+              >
+                {alternate?.name}
+              </Typography>
+              <LaunchRounded fontSize="small" />
+            </Link>
+          );
+        },
       },
-
+      {
+        field: 'active_voter_id',
+        headerName: 'Active Voter',
+        width: 130,
+        editable: true,
+        type: 'singleSelect',
+        valueOptions: (params) => [
+          { value: params.row.delegate_id, label: 'Delegate' },
+          { value: params.row.alternate_id, label: 'Alternate' },
+        ],
+        renderCell: (params): JSX.Element => {
+          const activeVoterId = params.row.active_voter_id;
+          const delegateId = params.row.delegate_id;
+          const alternateId = params.row.alternate_id;
+          return (
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              height="100%"
+            >
+              <Typography>
+                {activeVoterId == delegateId
+                  ? 'Delegate'
+                  : activeVoterId == alternateId
+                    ? 'Alternate'
+                    : ''}
+              </Typography>
+            </Box>
+          );
+        },
+      },
       {
         field: 'actions',
         type: 'actions',
@@ -192,7 +248,7 @@ export function ManageActivePowerTable(): JSX.Element {
         },
       },
     ];
-  }, [workshops, representatives]);
+  }, [workshops, representatives, rowModesModel]);
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
@@ -213,6 +269,7 @@ export function ManageActivePowerTable(): JSX.Element {
             showQuickFilter: true,
           },
         }}
+        sortModel={[{ field: 'name', sort: 'asc' }]}
       />
     </Box>
   );

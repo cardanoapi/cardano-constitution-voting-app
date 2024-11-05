@@ -154,6 +154,7 @@ export function ManageRepresentativesTable(): JSX.Element {
       },
     },
   ];
+
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h5" fontWeight="600">
@@ -173,6 +174,7 @@ export function ManageRepresentativesTable(): JSX.Element {
             showQuickFilter: true,
           },
         }}
+        sortModel={[{ field: 'name', sort: 'asc' }]}
       />
     </Box>
   );
