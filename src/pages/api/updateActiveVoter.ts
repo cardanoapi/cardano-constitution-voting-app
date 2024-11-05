@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 type Data = {
   userId: string;
-  message?: string;
+  message: string;
 };
 /**
  * Updates which user is the active voter for a workshop
@@ -27,7 +27,7 @@ export default async function updateActiveVoter(
     if (!workshopId) {
       return res.status(400).json({
         userId: BigInt(-1).toString(),
-        message: 'Active Voter id must be provided.',
+        message: 'Workshop id must be provided.',
       });
     }
 
@@ -75,6 +75,7 @@ export default async function updateActiveVoter(
     });
     return res.status(200).json({
       userId: updatedWorkshop.active_voter_id?.toString() || activeVoterId,
+      message: 'Active voter updated',
     });
   } catch (error) {
     Sentry.captureException(error);

@@ -131,6 +131,7 @@ export function ManageRepresentativesTable(): JSX.Element {
                 color: 'primary.main',
               }}
               onClick={handleSaveClick(id)}
+              data-testid={`save-representative-info-${id}`}
             />,
             <GridActionsCellItem
               icon={<CancelRounded />}
@@ -138,6 +139,7 @@ export function ManageRepresentativesTable(): JSX.Element {
               className="textPrimary"
               onClick={handleCancelClick(id)}
               color="inherit"
+              data-testid={`cancel-representative-info-${id}`}
             />,
           ];
         }
@@ -149,6 +151,7 @@ export function ManageRepresentativesTable(): JSX.Element {
             className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
+            data-testid={`edit-representative-info-${id}`}
           />,
         ];
       },

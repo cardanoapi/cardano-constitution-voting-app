@@ -74,15 +74,14 @@ export function ManageActivePowerTable(): JSX.Element {
   };
 
   const processRowUpdate = async (newRow: GridRowModel) => {
-    console.log('new row', newRow);
-    const data = await updateActiveVoter(newRow.id, newRow.active_voter_id);
     // update active voter id
+    const data = await updateActiveVoter(newRow.id, newRow.active_voter_id);
     if (data.userId !== '-1') {
-      toast.success('User info updated!');
+      toast.success('Active voter updated!');
+      setReload(!reload);
     } else {
       toast.error(data.message);
     }
-    setReload(!reload);
     return newRow;
   };
 
@@ -225,6 +224,7 @@ export function ManageActivePowerTable(): JSX.Element {
                   color: 'primary.main',
                 }}
                 onClick={handleSaveClick(id)}
+                data-testid={`save-active-voter-${id}`}
               />,
               <GridActionsCellItem
                 icon={<CancelRounded />}
@@ -232,12 +232,14 @@ export function ManageActivePowerTable(): JSX.Element {
                 className="textPrimary"
                 onClick={handleCancelClick(id)}
                 color="inherit"
+                data-testid={`cancel-active-voter-${id}`}
               />,
             ];
           }
 
           return [
             <GridActionsCellItem
+              data-testid={`edit-active-voter-${id}`}
               icon={<EditRounded />}
               label="Edit"
               className="textPrimary"

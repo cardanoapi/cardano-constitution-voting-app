@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 type Data = {
   userId: string;
-  message?: string;
+  message: string;
 };
 /**
  * Updates a user's name, email, and wallet address in the database
@@ -73,7 +73,12 @@ export default async function updateUser(
         wallet_address: wallet_address,
       },
     });
-    return res.status(200).json({ userId: updatedUser.id.toString() });
+    return res
+      .status(200)
+      .json({
+        userId: updatedUser.id.toString(),
+        message: 'User info updated',
+      });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({
