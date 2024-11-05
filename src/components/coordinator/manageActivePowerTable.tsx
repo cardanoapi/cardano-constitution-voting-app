@@ -10,12 +10,15 @@ import {
   GridActionsCellItem,
   GridColDef,
   GridEventListener,
+  GridRowEditStopParams,
   GridRowEditStopReasons,
   GridRowId,
   GridRowModel,
   GridRowModes,
   GridRowModesModel,
   GridToolbar,
+  MuiBaseEvent,
+  MuiEvent,
 } from '@mui/x-data-grid';
 import toast from 'react-hot-toast';
 
@@ -47,33 +50,40 @@ export function ManageActivePowerTable(): JSX.Element {
     fetchData();
   }, [reload]);
 
-  const handleRowEditStop: GridEventListener<'rowEditStop'> = (
-    params,
-    event,
-  ) => {
+  function handleRowEditStop(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params: GridRowEditStopParams<any>,
+    event: MuiEvent<MuiBaseEvent>,
+  ): void {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
     }
-  };
+  }
 
-  const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
+  function handleEditClick(id: GridRowId): () => void {
+    return () => {
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    };
+  }
 
-  const handleSaveClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
+  function handleSaveClick(id: GridRowId): () => void {
+    return () => {
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    };
+  }
 
-  const handleCancelClick = (id: GridRowId) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
+  function handleCancelClick(id: GridRowId): () => void {
+    return () => {
+      setRowModesModel({
+        ...rowModesModel,
+        [id]: { mode: GridRowModes.View, ignoreModifications: true },
+      });
 
-    setReload(!reload);
-  };
+      setReload(!reload);
+    };
+  }
 
-  const processRowUpdate = async (newRow: GridRowModel) => {
+  async function processRowUpdate(newRow: GridRowModel): Promise<GridRowModel> {
     // update active voter id
     const data = await updateActiveVoter(newRow.id, newRow.active_voter_id);
     if (data.userId !== '-1') {
@@ -83,11 +93,13 @@ export function ManageActivePowerTable(): JSX.Element {
       toast.error(data.message);
     }
     return newRow;
-  };
+  }
 
-  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+  function handleRowModesModelChange(
+    newRowModesModel: GridRowModesModel,
+  ): void {
     setRowModesModel(newRowModesModel);
-  };
+  }
 
   const columns: GridColDef[] = useMemo(() => {
     return [
