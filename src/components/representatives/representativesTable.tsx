@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import LaunchRounded from '@mui/icons-material/LaunchRounded';
-import { Box, useTheme } from '@mui/material';
+import { Box, CircularProgress, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
@@ -130,7 +130,16 @@ export function RepresentativesTable(): JSX.Element {
   ];
 
   if (loadingReps) {
-    return <></>;
+    return (
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="center"
+        width="100%"
+      >
+        <CircularProgress />
+      </Box>
+    );
   } else if (representatives.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={1} width="100%">
