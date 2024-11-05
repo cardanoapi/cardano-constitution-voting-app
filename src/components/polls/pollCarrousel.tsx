@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -95,7 +96,16 @@ export function PollCarrousel(props: Props): JSX.Element {
   }, [polls]);
 
   if (loadingPolls) {
-    return <></>;
+    return (
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="center"
+        width="100%"
+      >
+        <CircularProgress />
+      </Box>
+    );
   } else if (polls.length > 0) {
     return (
       <Box

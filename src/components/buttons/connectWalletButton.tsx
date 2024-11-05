@@ -124,6 +124,7 @@ export function ConnectWalletButton(): JSX.Element {
       <Button
         variant={session.status === 'authenticated' ? 'outlined' : 'contained'}
         color={session.status === 'authenticated' ? 'success' : 'secondary'}
+        disabled={connecting}
         id="connect-wallet"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
