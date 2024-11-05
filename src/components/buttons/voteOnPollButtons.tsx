@@ -8,8 +8,8 @@ import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
-import { getPollVote } from '@/lib/getPollVote';
 import { castVote } from '@/lib/helpers/castVote';
+import { getPollVote } from '@/lib/helpers/getPollVote';
 
 interface Props {
   pollId: string;
