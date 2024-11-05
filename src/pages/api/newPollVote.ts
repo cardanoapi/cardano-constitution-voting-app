@@ -22,10 +22,10 @@ export default async function newPollVote(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
-  const { pollId, vote } = req.body;
-  // TODO: Add session check to verify it is delegator/alternate. Also additional security step of verifying delegator/alternate's signature before casting vote
-  // TODO: Add check that the delegate/alternate is the active voter for the convention location
   try {
+    const { pollId, vote } = req.body;
+    // TODO: Add session check to verify it is delegator/alternate. Also additional security step of verifying delegator/alternate's signature before casting vote
+    // TODO: Add check that the delegate/alternate is the active voter for the convention location
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
     // validate poll id
     if (!pollId) {

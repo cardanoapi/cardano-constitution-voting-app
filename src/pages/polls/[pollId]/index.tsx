@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
-import { useTheme } from '@mui/material';
+import { CircularProgress, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -17,6 +17,7 @@ import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
+import { PollResults } from '@/components/polls/pollResults';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { PollVoteCount } from '@/components/polls/pollVoteCount';
 
@@ -59,7 +60,10 @@ export default function ViewPoll(): JSX.Element {
           content="Voting app to be used by delegates at the Cardano Consitution Convention in Buenos Aires to ratify the initial constitution. This voting app was commissioned by Intersect."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗳️</text></svg>"
+        />
       </Head>
       <main>
         <Box display="flex" flexDirection="column" gap={3}>
@@ -71,7 +75,13 @@ export default function ViewPoll(): JSX.Element {
             alignItems="center"
           >
             <Typography variant="h1" fontWeight="bold">
-              {poll ? poll.name : 'View Poll'}
+              {poll ? (
+                poll.name
+              ) : loadingPoll ? (
+                <CircularProgress />
+              ) : (
+                'View Poll'
+              )}
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
@@ -97,36 +107,59 @@ export default function ViewPoll(): JSX.Element {
                   alignItems="center"
                 >
                   {/* Coordinator Buttons */}
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    alignItems="center"
-                  >
-                    <Typography>Manage Poll:</Typography>
-                    {poll.status === pollPhases.pending &&
-                      typeof pollId === 'string' && (
+
+                  {poll.status === pollPhases.pending &&
+                    typeof pollId === 'string' && (
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={1}
+                        alignItems="center"
+                      >
+                        <Typography>Manage Poll:</Typography>
                         <BeginVoteButton
                           pollId={pollId}
                           isSubmitting={isSubmitting}
                           setIsSubmitting={updateIsSubmitting}
                         />
-                      )}
-                    {poll.status === pollPhases.voting &&
-                      typeof pollId === 'string' && (
+                      </Box>
+                    )}
+                  {poll.status === pollPhases.voting &&
+                    typeof pollId === 'string' && (
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={1}
+                        alignItems="center"
+                      >
+                        <Typography>Manage Poll:</Typography>
                         <EndVoteButton
                           pollId={pollId}
                           isSubmitting={isSubmitting}
                           setIsSubmitting={updateIsSubmitting}
                         />
-                      )}
-                  </Box>
+                      </Box>
+                    )}
                   {/* Delegate Voting Buttons */}
-                  <VoteOnPollButtons
-                    poll={poll}
-                    disabled={isSubmitting}
-                    setDisabled={updateIsSubmitting}
-                  />
+                  {poll.status === pollPhases.voting && (
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      gap={1}
+                      alignItems="center"
+                    >
+                      <Typography>Cast your vote:</Typography>
+                      <VoteOnPollButtons
+                        pollId={poll.id}
+                        disabled={isSubmitting}
+                        setDisabled={updateIsSubmitting}
+                      />
+                    </Box>
+                  )}
+                  {/* Vote Results */}
+                  {poll.status === pollPhases.concluded && (
+                    <PollResults pollId={poll.id} />
+                  )}
                 </Box>
               </Grid>
             )}
