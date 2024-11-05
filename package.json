@@ -2,13 +2,17 @@
   "name": "cardano-constitution-voting-app",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest",
+    "seed": "npx prisma migrate reset"
   },
   "dependencies": {
     "@claritydao/clarity-backend": "^0.4.0-dev-f82487b359ff0d0dc93db2bd24777a1ee7dbf921",
@@ -36,7 +40,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
-    "@types/node": "^20",
+    "@types/node": "^20.17.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.3.3",
@@ -50,7 +54,7 @@
     "prettier": "3.3.3",
     "prisma": "^5.21.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5",
+    "typescript": "^5.6.3",
     "typescript-eslint": "^8.12.2",
     "vitest": "^2.1.4"
   }
