@@ -14,6 +14,7 @@ import {
   GridRowModesModel,
   GridToolbar,
 } from '@mui/x-data-grid';
+import toast from 'react-hot-toast';
 
 import { User } from '@/types';
 import { getRepresentatives } from '@/lib/helpers/getRepresentatives';
@@ -65,12 +66,17 @@ export function ManageRepresentativesTable(): JSX.Element {
 
   const processRowUpdate = async (newRow: GridRowModel) => {
     // update user name, email, and wallet address
-    await updateUser(
+    const data = await updateUser(
       newRow.id,
       newRow.name,
       newRow.email,
       newRow.wallet_address,
     );
+    if (data.userId !== '-1') {
+      toast.success('User info updated!');
+    } else {
+      toast.error(data.message);
+    }
     setReload(!reload);
     return newRow;
   };
@@ -151,7 +157,7 @@ export function ManageRepresentativesTable(): JSX.Element {
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h5" fontWeight="600">
-        Manage Representative Personal Information
+        Manage Representative Information
       </Typography>
       <DataGrid
         rows={representatives}

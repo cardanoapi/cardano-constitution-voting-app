@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 
+import { ManageActivePowerTable } from '@/components/coordinator/manageActivePowerTable';
 import { ManageRepresentativesTable } from '@/components/coordinator/manageRepresentativesTable';
 
 export default function ManageRepresentatives(): JSX.Element {
@@ -23,6 +24,8 @@ export default function ManageRepresentatives(): JSX.Element {
           </Typography>
 
           <ManageRepresentativesTable />
+
+          <ManageActivePowerTable />
         </Box>
       </main>
     </>
