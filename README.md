@@ -46,17 +46,18 @@ This voting app will be hosted through the end of February, to provide ample tim
 ## Running the app locally
 
 1. Download or clone the repository
-2. `npm install`
-3. Download [PostgreSQL](https://www.postgresql.org/) in your preferred method and initiate it (I personally use the [Postgress.app](https://postgresapp.com/downloads.html) method)
-4. Create database in local PostgreSQL instance using [psql](https://www.postgresql.org/docs/current/app-psql.html), [pgAdmin](https://www.pgadmin.org/download/), or whatever your preferred method for interacting with a PostgreSQL database is
-5. Adjust DATABASE_URL with your local PostgreSQL instance credentials. Additional info on Prisma connection URL can be [here](https://www.prisma.io/docs/orm/overview/databases/postgresql#connection-url)
-6. Run `npx prisma migrate dev` to populate the database with the proper tables
-7. Run `npx prisma generate` in root of repository to create TS client for Prisma
-8. In the `prisma/seed.ts` file, adjust the seed data so that there is a user with the stake address that you will be connecting with
-9. Run `npm run seed` to seed the database with testing data located in `prisma/seed.ts`
-10. Run command `openssl rand -base64 32` in terminal and paste result to `NEXTAUTH_SECRET` environment variable
-11. Set `NEXT_PUBLIC_NETWORK` to `testnet` or `mainnet` depending on the network of the wallet you are connecting
-12. Run `npm run dev` in root of repository
+2. Get `.npmrc` file with your Auth Token from the team
+3. `npm install`
+4. Download [PostgreSQL](https://www.postgresql.org/) in your preferred method and initiate it (I personally use the [Postgress.app](https://postgresapp.com/downloads.html) method)
+5. Create database in local PostgreSQL instance using [psql](https://www.postgresql.org/docs/current/app-psql.html), [pgAdmin](https://www.pgadmin.org/download/), or whatever your preferred method for interacting with a PostgreSQL database is
+6. Adjust DATABASE_URL with your local PostgreSQL instance credentials. Additional info on Prisma connection URL can be [here](https://www.prisma.io/docs/orm/overview/databases/postgresql#connection-url)
+7. Run `npx prisma migrate dev` to populate the database with the proper tables
+8. Run `npx prisma generate` in root of repository to create TS client for Prisma
+9. In the `prisma/seed.ts` file, adjust the seed data so that there is a user with the stake address that you will be connecting with
+10. Run `npm run seed` to seed the database with testing data located in `prisma/seed.ts`
+11. Run command `openssl rand -base64 32` in terminal and paste result to `NEXTAUTH_SECRET` environment variable
+12. Set `NEXT_PUBLIC_NETWORK` to `testnet` or `mainnet` depending on the network of the wallet you are connecting
+13. Run `npm run dev` in root of repository
 
 ## Integrated Services
 
