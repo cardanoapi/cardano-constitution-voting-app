@@ -78,6 +78,15 @@ When a delegate or alternate votes on a poll, they will sign a message that cont
 
 This message and their signature will be saved to the voting app's database. At the conclusion of the final poll, the convention organizer will sign a number of transactions. Each transaction will contain the vote data for multiple delegate/alternate votes. Anybody will be able to refer to these on-chain transactions and verify the votes themselves.
 
+## Managing Database Migration
+
+1. Ensure there are no pending migrations from open PRs to avoid potential conflicts
+2. Make necessary changes to `schema.prisma` and necessary changes to the DB diagram
+3. Run `npx prisma migrate dev`
+4. Give the migration a name in the following format `remove_user_color_property`
+5. Commit the new `schema.prisma` and generated `migration.sql` file
+6. The migration will propogate through all environments as Vercel creates the preview and production builds
+
 ## Resources / Acknowledgements
 
 - [Clear Contracts](https://www.clearcontracts.io/)
