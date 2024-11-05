@@ -1,0 +1,23 @@
+{
+  "name": "cardano-constitution-voting-app",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "npx playwright test",
+    "format": "prettier . --write",
+    "allure:generate": "npx allure generate ./allure-results --clean",
+    "allure:open": "npx allure open ./allure-report",
+    "allure:serve": "npx allure serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.44.1",
+    "@types/node": "^20.12.12",
+    "dotenv": "^16.4.4",
+    "prettier": "3.2.5",
+    "allure-playwright": "^2.15.0",
+    "allure-commandline": "^2.27.0"
+  }
+}
