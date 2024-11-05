@@ -11,7 +11,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@claritydao/clarity-backend": "^0.4.0-dev-f82487b359ff0d0dc93db2bd24777a1ee7dbf921",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@emurgo/cardano-serialization-lib-nodejs": "^13.1.0",
