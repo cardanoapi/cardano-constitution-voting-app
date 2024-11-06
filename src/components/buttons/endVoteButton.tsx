@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { endVoting } from '@/lib/helpers/endVoting';
 
 interface Props {
-  pollId: string;
+  pollId: string | string[] | undefined;
   isSubmitting: boolean;
   setIsSubmitting: (value: boolean) => void;
 }
@@ -17,6 +17,10 @@ export function EndVoteButton(props: Props): JSX.Element {
   const { pollId, isSubmitting, setIsSubmitting } = props;
 
   async function handleEndVote(): Promise<void> {
+    if (typeof pollId !== 'string') {
+      toast.error('Invalid pollId');
+      return;
+    }
     setIsSubmitting(true);
     // End Vote
     const result = await endVoting(pollId);
