@@ -1,3 +1,4 @@
+import { deletePollHandlers } from '@/../__mocks__/deletePoll/handlers';
 import { endVotingHandlers } from '@/../__mocks__/endVoting/handlers';
 import { getPollHandlers } from '@/../__mocks__/getPoll/handlers';
 import { getPollResultsHandlers } from '@/../__mocks__/getPollResults/handlers';
@@ -12,8 +13,6 @@ import { newPollHandlers } from '@/../__mocks__/newPoll/handlers';
 import { newPollVoteHandlers } from '@/../__mocks__/newPollVote/handlers';
 import { startVotingHandlers } from '@/../__mocks__/startVoting/handlers';
 import { setupServer } from 'msw/node';
-
-import { deletePollHandlers } from './deletePoll/handlers';
 
 export const server = setupServer(
   ...newPollHandlers,
