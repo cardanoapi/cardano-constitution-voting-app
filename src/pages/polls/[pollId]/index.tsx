@@ -21,6 +21,7 @@ import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollResults } from '@/components/polls/pollResults';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { PollVoteCount } from '@/components/polls/pollVoteCount';
+import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
 export default function ViewPoll(): JSX.Element {
   const [poll, setPoll] = useState<Poll | null>(null);
@@ -169,31 +170,23 @@ export default function ViewPoll(): JSX.Element {
           <Box
             display="flex"
             flexDirection="column"
-            gap={1}
+            gap={3}
             alignItems="center"
           >
             {/* Browse Other Polls Carrousel */}
-            <PollCarrousel currentPollId={pollId} />
-            <Box display="flex" flexDirection="row" gap={3}>
-              {/* Link all polls */}
-              <Link
-                href={paths.home}
-                style={{
-                  color: theme.palette.text.primary,
-                }}
-              >
-                View all polls
-              </Link>
-              {/* Link to browse representatives */}
-              <Link
-                href={paths.home}
-                style={{
-                  color: theme.palette.text.primary,
-                }}
-              >
-                Browse representatives
-              </Link>
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              alignItems="center"
+            >
+              <Typography variant="h6" fontWeight="600">
+                Browse other polls
+              </Typography>
+              <PollCarrousel currentPollId={pollId} />
             </Box>
+
+            <RepresentativesTable />
           </Box>
         </Box>
       </main>
