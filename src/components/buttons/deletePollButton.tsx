@@ -1,7 +1,10 @@
+import { useRouter } from 'next/router';
+import { DeleteRounded } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import toast from 'react-hot-toast';
 
-import { startVoting } from '@/lib/helpers/startVoting';
+import { paths } from '@/paths';
+import { deletePoll } from '@/lib/helpers/deletePoll';
 
 interface Props {
   pollId: string | string[] | undefined;
@@ -13,33 +16,37 @@ interface Props {
  * A button for workshop coordinators to open voting for a poll
  * @returns Begin Voting Button
  */
-export function BeginVoteButton(props: Props): JSX.Element {
+export function DeletePollButton(props: Props): JSX.Element {
   const { pollId, isSubmitting, setIsSubmitting } = props;
 
-  async function handleBeginVote(): Promise<void> {
+  const router = useRouter();
+
+  async function handleDeleteVote(): Promise<void> {
     if (typeof pollId !== 'string') {
       toast.error('Invalid pollId');
       return;
     }
+    // Delete Poll
     setIsSubmitting(true);
-    // Begin Vote
-    const result = await startVoting(pollId);
+    const result = await deletePoll(pollId);
     if (result.succeeded === false) {
       toast.error(result.message);
     } else {
-      toast.success('Poll voting is open!');
+      toast.success('Poll deleted!');
+      router.push(paths.home);
     }
     setIsSubmitting(false);
   }
 
   return (
     <Button
-      onClick={handleBeginVote}
-      variant="contained"
+      onClick={handleDeleteVote}
+      variant="text"
       disabled={isSubmitting}
-      data-testid="begin-vote-button"
+      data-testid="delete-poll-button"
+      color="error"
     >
-      Begin Voting
+      <DeleteRounded />
     </Button>
   );
 }
