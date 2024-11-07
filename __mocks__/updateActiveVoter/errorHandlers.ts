@@ -66,7 +66,7 @@ export const updateActiveVoterInvalidSessionHandler = [
     return HttpResponse.json(
       {
         userId: BigInt(-1).toString(),
-        message: 'You must be signed in as an Organizer update active voter.',
+        message: 'You must be signed in as an Organizer update active voter.', // TODO: Ensure this mock handler response matches actual response once the session check is implemented
       },
       { status: 401 },
     );

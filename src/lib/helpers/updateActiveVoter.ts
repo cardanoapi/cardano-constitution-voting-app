@@ -2,9 +2,8 @@ import axios from 'axios';
 
 /**
  * Updates the active voter for a workshop, can be a delegate or alternate
- * @param name - The name of the user
- * @param email - The email of the user
- * @param wallet_address - The wallet address of the user
+ * @param workshopId - The ID of the workshop
+ * @param activeVoterId - The ID of the delegate/alternate to make the active voter
  * @returns UserId - The ID of the newly activated voter
  * @returns Message - An error message if the active voter updating failed
  */

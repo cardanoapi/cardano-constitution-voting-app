@@ -7,7 +7,7 @@ import { expect, test } from 'vitest';
 
 import { ManageActivePowerTable } from '@/components/coordinator/manageActivePowerTable';
 
-test('Successfully alerts when workshop id is not provided', async () => {
+test('Successfully alerts when voter is not a delegate or alternate', async () => {
   server.use(...updateActiveVoterInvalidVoterHandler);
   const user = userEvent.setup();
   render(

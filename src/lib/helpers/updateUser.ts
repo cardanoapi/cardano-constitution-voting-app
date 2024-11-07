@@ -2,6 +2,7 @@ import axios from 'axios';
 
 /**
  * Updates a user's name, email, and wallet address in the databas
+ * @param userId - The ID of the user to update
  * @param name - The name of the user
  * @param email - The email of the user
  * @param wallet_address - The wallet address of the user

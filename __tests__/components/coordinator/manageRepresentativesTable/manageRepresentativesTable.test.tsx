@@ -5,7 +5,7 @@ import { expect, test } from 'vitest';
 
 import { ManageRepresentativesTable } from '@/components/coordinator/manageRepresentativesTable';
 
-test('Successfully updates active voter', async () => {
+test('Successfully edits user information', async () => {
   const user = userEvent.setup();
   render(
     <>

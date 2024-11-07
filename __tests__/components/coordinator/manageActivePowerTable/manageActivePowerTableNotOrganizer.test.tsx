@@ -7,7 +7,7 @@ import { expect, test } from 'vitest';
 
 import { ManageActivePowerTable } from '@/components/coordinator/manageActivePowerTable';
 
-test('Successfully alerts when workshop id is not provided', async () => {
+test('Successfully alerts when non-organizer attempts to update active voter', async () => {
   server.use(...updateActiveVoterNotOrganizerHandler);
   const user = userEvent.setup();
   render(
@@ -25,7 +25,7 @@ test('Successfully alerts when workshop id is not provided', async () => {
 
   // Wait for the error toast to appear
   const errorToast = await screen.findByText(
-    'You must be an Organizer to update active voter.',
+    'You must be an Organizer to update active voter.', // TODO: Ensure this message matches the actual message when the check is created
   );
   expect(errorToast).toBeDefined();
 });
