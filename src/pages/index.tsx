@@ -18,7 +18,7 @@ export default function Home(): JSX.Element {
         <title>Constitutional Convention Voting App</title>
         <meta
           name="description"
-          content="Voting app to be used by delegates at the Cardano Consitution Convention in Buenos Aires to ratify the initial constitution. This voting app was commissioned by Intersect."
+          content="Voting app to be used by delegates at the Cardano Constitutional Convention in Buenos Aires to ratify the initial constitution. This voting app was commissioned by Intersect."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
@@ -27,9 +27,21 @@ export default function Home(): JSX.Element {
         />
       </Head>
       <main>
-        <Link href={paths.polls.new} data-testid="create-poll-button">
-          <Button variant="contained">Create Poll</Button>
-        </Link>
+        {session.data?.user.isCoordinator && (
+          <Box display="flex" flexDirection="row" gap={4}>
+            <Link href={paths.polls.new} data-testid="create-poll-button">
+              <Button variant="contained">Create Poll</Button>
+            </Link>
+            <Link
+              href={paths.representatives.manage}
+              data-testid="create-poll-button"
+            >
+              <Button variant="contained" color="secondary">
+                Manage Users
+              </Button>
+            </Link>
+          </Box>
+        )}
         <Box display="flex" flexDirection="column" gap={4} alignItems="center">
           <Box
             display="flex"
