@@ -4,12 +4,15 @@ import { pollPhases } from '@/constants/pollPhases';
 import { PrismaClient } from '@prisma/client';
 import * as Sentry from '@sentry/nextjs';
 
+import { verifyWallet } from '@/lib/verifyWallet';
+
 const prisma = new PrismaClient();
 
 type Data = {
   success: boolean;
   message: string;
 };
+
 /**
  * Records a Poll Vote in the Database
  * @param pollId - The ID of the poll
@@ -23,9 +26,63 @@ export default async function newPollVote(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
-    const { pollId, vote } = req.body;
-    // TODO: Add session check to verify it is delegator/alternate. Also additional security step of verifying delegator/alternate's signature before casting vote
-    // TODO: Add check that the delegate/alternate is the active voter for the convention location
+    const { pollId, vote, stakeAddress, signature } = req.body;
+
+    // TODO: Additional security step of verifying delegator/alternate's signature before casting vote
+    const valid = await verifyWallet(
+      signature.signature.payload,
+      {
+        signature: signature.signature.signedMessage.signature,
+        key: signature.signature.signedMessage.key,
+      },
+      signature.challenge.challenge,
+    );
+
+    if (!valid) {
+      res.status(401).json({
+        success: false,
+        message: 'Invalid signature.',
+      });
+    }
+
+    // TODO: Make sure we trust where the stake address came from
+    const user = await prisma.user.findFirst({
+      where: {
+        wallet_address: stakeAddress,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not found.',
+      });
+    }
+    if (user.is_delegate === false && user.is_alternate === false) {
+      return res.status(401).json({
+        success: false,
+        message: 'User is not a delegate or alternate.',
+      });
+    }
+
+    const workshop = await prisma.workshop.findFirst({
+      where: {
+        id: BigInt(user.workshop_id),
+      },
+    });
+    if (!workshop) {
+      return res.status(401).json({
+        success: false,
+        message: 'Workshop not found.',
+      });
+    }
+    if (workshop.active_voter_id !== user.id) {
+      return res.status(401).json({
+        success: false,
+        message: `User is not the active voter for ${workshop.name} workshop.`,
+      });
+    }
+
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
     // validate poll id
     if (!pollId) {
@@ -73,13 +130,13 @@ export default async function newPollVote(
       where: {
         poll_id_user_id: {
           poll_id: BigInt(pollId),
-          user_id: BigInt(9), // TODO: Replace with actual user ID
+          user_id: user.id,
         },
       },
       create: {
-        // TODO: ADD USER ID, SIGNATURE, AND HASH OF MESSAGE
+        // TODO: ADD SIGNATURE, AND HASH OF MESSAGE
         poll_id: BigInt(pollId),
-        user_id: BigInt(9),
+        user_id: user.id,
         vote: vote,
         signature: Date.now().toString(),
         hashed_message: Date.now().toString(),

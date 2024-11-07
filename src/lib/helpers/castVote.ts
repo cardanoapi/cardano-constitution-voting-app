@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { signMessage } from '../signMessage';
+
 /**
  * Casts a vote on a poll
  * @param pollId - The ID of the poll to cast a vote on
@@ -9,13 +11,25 @@ import axios from 'axios';
 export async function castVote(
   pollId: string,
   vote: string,
+  stakeAddress: string | null | undefined,
+  walletName: string | null | undefined,
 ): Promise<{ succeeded: boolean; message: string }> {
   try {
+    if (!stakeAddress || !walletName) {
+      return {
+        succeeded: false,
+        message: 'You must be signed in as a Representative to vote.',
+      };
+    }
+    const message = `Wallet: ${stakeAddress}, Poll Id: ${pollId}, Vote: ${vote}`;
+    const signature = await signMessage(walletName, message);
     const response = await axios.post(
       '/api/newPollVote',
       {
         pollId: pollId,
         vote: vote,
+        stakeAddress: stakeAddress,
+        signature: signature,
       },
       {
         headers: {

@@ -30,7 +30,12 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
 
   async function handleVote(vote: string): Promise<void> {
     setDisabled(true);
-    const result = await castVote(pollId, vote);
+    const result = await castVote(
+      pollId,
+      vote,
+      session.data?.user.stakeAddress,
+      session.data?.user.walletName,
+    );
     if (result.succeeded === false) {
       toast.error(result.message);
     } else {
