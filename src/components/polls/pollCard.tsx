@@ -31,6 +31,7 @@ export function PollCard(props: Props): JSX.Element {
         textDecoration: 'none',
         color: theme.palette.text.primary,
         height: '100%',
+        width: '100%',
       }}
       data-testid={`poll-card-${poll.id}`}
     >
