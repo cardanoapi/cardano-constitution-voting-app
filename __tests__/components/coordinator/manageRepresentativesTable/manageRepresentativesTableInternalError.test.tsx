@@ -1,29 +1,31 @@
 import { server } from '@/../__mocks__/server';
-import { updateActiveVoterInternalErrorHandler } from '@/../__mocks__/updateActiveVoter/errorHandlers';
+import { updateUserInternalErrorHandler } from '@/../__mocks__/updateUser/errorHandlers';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Toaster } from 'react-hot-toast';
 import { expect, test } from 'vitest';
 
-import { ManageActivePowerTable } from '@/components/coordinator/manageActivePowerTable';
+import { ManageRepresentativesTable } from '@/components/coordinator/manageRepresentativesTable';
 
 test('Successfully alerts on internal error', async () => {
-  server.use(...updateActiveVoterInternalErrorHandler);
+  server.use(...updateUserInternalErrorHandler);
   const user = userEvent.setup();
   render(
     <>
       <Toaster />
-      <ManageActivePowerTable />
+      <ManageRepresentativesTable />
     </>,
   );
 
-  const submitButton = await screen.findByTestId('edit-active-voter-1');
+  const submitButton = await screen.findByTestId('edit-representative-info-1');
   await user.click(submitButton);
 
-  const saveButton = await screen.findByTestId('save-active-voter-1');
+  const saveButton = await screen.findByTestId('save-representative-info-1');
   await user.click(saveButton);
 
   // Wait for the error toast to appear
-  const errorToast = await screen.findByText('Error updating active voter.');
+  const errorToast = await screen.findByText(
+    'Error updating User Information.',
+  );
   expect(errorToast).toBeDefined();
 });
