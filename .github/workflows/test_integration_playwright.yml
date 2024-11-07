@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: tests/integration
+        working-directory: integration_test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: "./tests/integration/package-lock.json"
+          cache-dependency-path: "./integration_test/package-lock.json"
 
       - name: Install dependencies
         run: npm ci
@@ -43,7 +43,7 @@ jobs:
         if: always()
         with:
           name: allure-results
-          path: tests/integration/allure-results
+          path: integration_test/allure-results
 
   publish-report:
     runs-on: ubuntu-latest
@@ -63,8 +63,9 @@ jobs:
         with:
           ref: gh-pages
           path: gh-pages
-          repository: ${{vars.GH_PAGES}}
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          repository: cardanoapi/ccv-test-reports
+          token: ${{ secrets.GH_PAGE_DEPLOY_KEY }}
+          # ssh-key:
 
       - name: Register report
         id: register-project
@@ -75,8 +76,9 @@ jobs:
       - if: steps.register-project.outputs.project_exists != 'true'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
-          repository-name: ${{vars.GH_PAGES}}
+          token:  ${{ secrets.GH_PAGE_DEPLOY_KEY }}
+          # ssh-key: 
+          repository-name: cardanoapi/ccv-test-reports
           branch: gh-pages
           folder: project
 
@@ -92,7 +94,7 @@ jobs:
         id: allure-report
         with:
           allure_results: allure-results
-          gh_pages: gh-pages/${{env.REPORT_NAME}}
+          gh_pages: gh-pages/${{ env.REPORT_NAME }}
           allure_report: allure-report
           allure_history: allure-history
           keep_reports: 2000
@@ -107,12 +109,13 @@ jobs:
       - name: Deploy report to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
-          repository-name: ${{vars.GH_PAGES}}
+          token: ${{ secrets.GH_PAGE_DEPLOY_KEY }}
+          # ssh-key: 
+          repository-name: cardanoapi/ccv-test-reports
           branch: gh-pages
           folder: build
-          target-folder: ${{ env.REPORT_NAME }}
+          target-folder: integration-tests
 
     env:
-      REPORT_NAME: frontend
-      GH_PAGES: ${{vars.GH_PAGES}}
+      REPORT_NAME: integration
+      GH_PAGES: cardanoapi/ccv-test-reports
