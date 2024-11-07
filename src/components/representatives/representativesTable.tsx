@@ -38,17 +38,20 @@ export function RepresentativesTable(): JSX.Element {
     {
       field: 'name',
       headerName: 'Name',
-      minWidth: 150,
+      minWidth: 125,
       flex: 1,
     },
     {
       field: 'Delegate',
       headerName: 'Delegate',
-      minWidth: 150,
+      minWidth: 125,
       flex: 1,
+      sortable: false,
+      filterable: false,
       renderCell: (params): JSX.Element => {
         const delegateId = params.row.delegate_id;
         const delegate = representatives.find((rep) => rep.id === delegateId);
+        const activeVoterId = params.row.active_voter_id;
         return (
           <Link
             href={paths.representatives.representative + delegateId}
@@ -56,15 +59,22 @@ export function RepresentativesTable(): JSX.Element {
               textDecoration: 'none',
               color: theme.palette.text.primary,
               height: '100%',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 12,
             }}
             data-testid={`delegate-name-${delegate?.id}`}
           >
-            <Typography variant="body1">{delegate?.name}</Typography>
-            <LaunchRounded fontSize="small" />
+            <Box
+              display="flex"
+              flexDirection={{ xs: 'column', sm: 'row' }}
+              gap={{
+                xs: 0,
+                sm: 1,
+              }}
+            >
+              <Typography color={delegateId === activeVoterId ? 'success' : ''}>
+                {delegate?.name}
+              </Typography>
+              <LaunchRounded fontSize="small" />
+            </Box>
           </Link>
         );
       },
@@ -72,11 +82,14 @@ export function RepresentativesTable(): JSX.Element {
     {
       field: 'alternate',
       headerName: 'Alternate',
-      minWidth: 150,
+      minWidth: 125,
       flex: 1,
+      sortable: false,
+      filterable: false,
       renderCell: (params): JSX.Element => {
         const alternateId = params.row.alternate_id;
         const alternate = representatives.find((rep) => rep.id === alternateId);
+        const activeVoterId = params.row.active_voter_id;
         return (
           <Link
             href={paths.representatives.representative + alternateId}
@@ -84,15 +97,24 @@ export function RepresentativesTable(): JSX.Element {
               textDecoration: 'none',
               color: theme.palette.text.primary,
               height: '100%',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 12,
             }}
             data-testid={`alternate-name-${alternate?.id}`}
           >
-            <Typography variant="body1">{alternate?.name}</Typography>
-            <LaunchRounded fontSize="small" />
+            <Box
+              display="flex"
+              flexDirection={{ xs: 'column', sm: 'row' }}
+              gap={{
+                xs: 0,
+                sm: 1,
+              }}
+            >
+              <Typography
+                color={alternateId === activeVoterId ? 'success' : ''}
+              >
+                {alternate?.name}
+              </Typography>
+              <LaunchRounded fontSize="small" />
+            </Box>
           </Link>
         );
       },
@@ -100,8 +122,10 @@ export function RepresentativesTable(): JSX.Element {
     {
       field: 'active_voter',
       headerName: 'Active Voter',
-      minWidth: 150,
+      minWidth: 125,
       flex: 1,
+      sortable: false,
+      filterable: false,
       renderCell: (params): JSX.Element => {
         const activeVoterId = params.row.active_voter_id;
         const activeVoter = representatives.find(
@@ -114,15 +138,20 @@ export function RepresentativesTable(): JSX.Element {
               textDecoration: 'none',
               color: theme.palette.text.primary,
               height: '100%',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 12,
             }}
             data-testid={`active-voter-name-${activeVoter?.id}`}
           >
-            <Typography variant="body1">{activeVoter?.name}</Typography>
-            <LaunchRounded fontSize="small" />
+            <Box
+              display="flex"
+              flexDirection={{ xs: 'column', sm: 'row' }}
+              gap={{
+                xs: 0,
+                sm: 1,
+              }}
+            >
+              <Typography noWrap>{activeVoter?.name}</Typography>
+              <LaunchRounded fontSize="small" />
+            </Box>
           </Link>
         );
       },
@@ -160,6 +189,12 @@ export function RepresentativesTable(): JSX.Element {
           columnVisibilityModel={{
             id: false,
           }}
+          sortModel={[
+            {
+              field: 'name',
+              sort: 'asc',
+            },
+          ]}
         />
       </Box>
     );
