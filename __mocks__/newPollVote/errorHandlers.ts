@@ -83,3 +83,15 @@ export const newPollVoteNotRepresentativeHandler = [
     );
   }),
 ];
+
+export const newPollVoteInternalErrorHandler = [
+  http.post('/api/newPollVote', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'Error voting on Poll.',
+      },
+      { status: 500 },
+    );
+  }),
+];

@@ -59,3 +59,15 @@ export const endVotingNotOrganizerHandler = [
     );
   }),
 ];
+
+export const endVotingNotAllVotesSubmitted = [
+  http.post('/api/endVoting', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'You must be an Organizer to end voting.',
+      },
+      { status: 401 },
+    );
+  }),
+];

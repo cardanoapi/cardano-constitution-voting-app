@@ -2,7 +2,7 @@ export interface Poll {
   id: string;
   name: string;
   description: string;
-  status: string;
+  status: 'pending' | 'voting' | 'concluded';
   summary_tx_id?: string;
 }
 
