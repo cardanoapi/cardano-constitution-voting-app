@@ -5,6 +5,8 @@ import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+import { verifyWallet } from '@/lib/verifyWallet';
+
 const prisma = new PrismaClient();
 
 // the shape of the user session object is defined in /types/next-auth.d.ts
@@ -16,10 +18,25 @@ export const authOptions: NextAuthOptions = {
       type: 'credentials',
       credentials: {
         stakeAddress: { label: 'Stake Address', type: 'text' },
+        stakeAddressHex: { label: 'Stake Address Hex', type: 'text' },
+        payload: { label: 'Original Payload', type: 'text' },
+        signature: { label: 'Signature', type: 'text' },
+        key: { label: 'Key', type: 'text' },
         walletName: { label: 'Wallet Name', type: 'text' },
+        challenge: { label: 'Challenge', type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials) return null;
+
+        const valid = await verifyWallet(
+          credentials.payload,
+          { signature: credentials.signature, key: credentials.key },
+          credentials.challenge,
+        );
+
+        if (!valid) {
+          return null;
+        }
 
         const user = await prisma.user.findFirst({
           where: {

@@ -65,3 +65,8 @@ model workshop {
   user_workshop_alternate_idTouser    user?   @relation("workshop_alternate_idTouser", fields: [alternate_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user_workshop_delegate_idTouser     user?   @relation("workshop_delegate_idTouser", fields: [delegate_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
+
+model challenge {
+  id           String @db.VarChar(255) @unique
+  expire_time  BigInt  
+}
