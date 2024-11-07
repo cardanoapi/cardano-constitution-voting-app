@@ -73,7 +73,6 @@ export function PollCarrousel(props: Props): JSX.Element {
             md: 'flex',
           }}
           flexDirection="column"
-          width="100%"
         >
           <Grid container spacing={3}>
             {polls.map((poll) => {
