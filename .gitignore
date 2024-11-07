@@ -47,3 +47,5 @@ cloud-sql-proxy
 
 # eslint config
 eslint.config.mjs
+
+allure-results

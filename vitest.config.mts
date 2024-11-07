@@ -7,8 +7,17 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
-    setupFiles: ['vitest.setup.ts'],
-    exclude:['node_modules','integration_test']
+    setupFiles: ['vitest.setup.ts','allure-vitest/setup'],
+    exclude:['integration_test', 'node_modules'],
+    reporters: [
+      'verbose',
+      [
+        'allure-vitest/reporter',
+        {
+          resultsDir: 'allure-results',
+        },
+      ],
+    ],
   },
   resolve: {
     alias: {
