@@ -165,7 +165,13 @@ export function ConnectWalletButton(): JSX.Element {
         </Typography>
       </Button>
       {session.status === 'authenticated' && (
-        <Typography color="success" fontWeight="500">
+        <Typography
+          color="success"
+          fontWeight="500"
+          display={{
+            xs: 'none',
+          }}
+        >
           Wallet connected
         </Typography>
       )}

@@ -1,17 +1,15 @@
 /* eslint-disable indent */
 import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
-import { CircularProgress, useTheme } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import toast from 'react-hot-toast';
 
 import { Poll } from '@/types';
-import { paths } from '@/paths';
 import { getPoll } from '@/lib/helpers/getPoll';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
@@ -21,13 +19,13 @@ import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollResults } from '@/components/polls/pollResults';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { PollVoteCount } from '@/components/polls/pollVoteCount';
+import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
 export default function ViewPoll(): JSX.Element {
   const [poll, setPoll] = useState<Poll | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingPoll, setLoadingPoll] = useState(true);
 
-  const theme = useTheme();
   const router = useRouter();
   const { pollId } = router.query;
 
@@ -150,7 +148,6 @@ export default function ViewPoll(): JSX.Element {
                       gap={1}
                       alignItems="center"
                     >
-                      <Typography>Cast your vote:</Typography>
                       <VoteOnPollButtons
                         pollId={poll.id}
                         disabled={isSubmitting}
@@ -166,34 +163,21 @@ export default function ViewPoll(): JSX.Element {
               </Grid>
             )}
           </Grid>
-          <Box
-            display="flex"
-            flexDirection="column"
-            gap={1}
-            alignItems="center"
-          >
+          <Box display="flex" flexDirection="column" gap={3} mt={10}>
             {/* Browse Other Polls Carrousel */}
-            <PollCarrousel currentPollId={pollId} />
-            <Box display="flex" flexDirection="row" gap={3}>
-              {/* Link all polls */}
-              <Link
-                href={paths.home}
-                style={{
-                  color: theme.palette.text.primary,
-                }}
-              >
-                View all polls
-              </Link>
-              {/* Link to browse representatives */}
-              <Link
-                href={paths.home}
-                style={{
-                  color: theme.palette.text.primary,
-                }}
-              >
-                Browse representatives
-              </Link>
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              alignItems="center"
+            >
+              <Typography variant="h6" fontWeight="600">
+                Browse other polls
+              </Typography>
+              <PollCarrousel currentPollId={pollId} />
             </Box>
+
+            <RepresentativesTable />
           </Box>
         </Box>
       </main>

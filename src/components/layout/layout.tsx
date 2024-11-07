@@ -48,10 +48,7 @@ export function Layout(props: Props): JSX.Element {
       <Box
         sx={{
           py: {
-            xs: 2,
-            sm: 4,
-            md: 10,
-            lg: 16,
+            xs: 16,
             xl: 24,
           },
 
