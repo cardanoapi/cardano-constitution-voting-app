@@ -23,7 +23,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: environments.ci ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? parseInt(process.env.TEST_WORKERS) : undefined,
+  workers: process.env.CI ? parseInt(process.env.TEST_WORKERS || '1' ) : 1,
   /*use Allure Playwright's testPlanFilter() to determine the grep parameter*/
   grep: testPlanFilter(),
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
