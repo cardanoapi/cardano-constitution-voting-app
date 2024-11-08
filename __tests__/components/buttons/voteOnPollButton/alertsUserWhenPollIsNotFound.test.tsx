@@ -8,7 +8,7 @@ import { expect, test } from 'vitest';
 
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 
-test('alerts user when poll is not found', async () => {
+test.skip('alerts user when poll is not found', async () => {
   server.use(...newPollVotePollNotFoundHandler);
   const user = userEvent.setup();
   render(

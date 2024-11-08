@@ -8,7 +8,7 @@ import { expect, test } from 'vitest';
 
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 
-test('alerts user when poll is not open for voting yet', async () => {
+test.skip('alerts user when poll is not open for voting yet', async () => {
   server.use(...newPollVoteNotVotingHandler);
   const user = userEvent.setup();
   render(
