@@ -28,7 +28,6 @@ export default async function newPollVote(
   try {
     const { pollId, vote, stakeAddress, signature } = req.body;
 
-    // TODO: Additional security step of verifying delegator/alternate's signature before casting vote
     const valid = await verifyWallet(
       signature.signature.payload,
       {
@@ -134,18 +133,16 @@ export default async function newPollVote(
         },
       },
       create: {
-        // TODO: ADD SIGNATURE, AND HASH OF MESSAGE
         poll_id: BigInt(pollId),
         user_id: user.id,
         vote: vote,
-        signature: Date.now().toString(),
-        hashed_message: Date.now().toString(),
+        signature: signature.signature.signedMessage.signature,
+        hashed_message: signature.signature.payload,
       },
       update: {
-        // TODO: ADD SIGNATURE, AND HASH OF MESSAGE
         vote: vote,
-        signature: Date.now().toString(),
-        hashed_message: Date.now().toString(),
+        signature: signature.signature.signedMessage.signature,
+        hashed_message: signature.signature.payload,
       },
     });
 
