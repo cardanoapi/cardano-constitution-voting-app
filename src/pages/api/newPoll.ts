@@ -5,6 +5,8 @@ import { PrismaClient } from '@prisma/client';
 import * as Sentry from '@sentry/nextjs';
 import { getServerSession } from 'next-auth';
 
+import { checkIfCO } from '@/lib/checkIfCO';
+
 const prisma = new PrismaClient();
 
 type Data = {
@@ -31,6 +33,13 @@ export default async function newPoll(
     }
 
     const stakeAddress = session.user.stakeAddress;
+    const isCO = await checkIfCO(req, res, stakeAddress);
+    if (!isCO) {
+      return res.status(401).json({
+        pollId: BigInt(-1).toString(),
+        message: 'User is not a convention organizer',
+      });
+    }
 
     const user = await prisma.user.findUnique({
       where: {
