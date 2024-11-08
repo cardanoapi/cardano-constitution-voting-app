@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CancelRounded, EditRounded, SaveRounded } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -50,29 +50,6 @@ export function ManageRepresentativesTable(): JSX.Element {
     }
   }
 
-  function handleEditClick(id: GridRowId): () => void {
-    return () => {
-      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-    };
-  }
-
-  function handleSaveClick(id: GridRowId): () => void {
-    return () => {
-      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    };
-  }
-
-  function handleCancelClick(id: GridRowId): () => void {
-    return () => {
-      setRowModesModel({
-        ...rowModesModel,
-        [id]: { mode: GridRowModes.View, ignoreModifications: true },
-      });
-
-      setReload(!reload);
-    };
-  }
-
   async function processRowUpdate(newRow: GridRowModel): Promise<GridRowModel> {
     // update user name, email, and wallet address
     const data = await updateUser(
@@ -90,84 +67,117 @@ export function ManageRepresentativesTable(): JSX.Element {
     return newRow;
   }
 
-  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+  const handleRowModesModelChange = (
+    newRowModesModel: GridRowModesModel,
+  ): void => {
     setRowModesModel(newRowModesModel);
   };
 
-  const columns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      width: 280,
-      editable: true,
-      flex: 0.5,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      type: 'string',
-      width: 280,
-      align: 'left',
-      headerAlign: 'left',
-      editable: true,
-      flex: 0.5,
-    },
-    {
-      field: 'wallet_address',
-      headerName: 'Stake Address',
-      type: 'string',
-      width: 550,
-      align: 'left',
-      headerAlign: 'left',
-      editable: true,
-      flex: 1,
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Edit',
-      width: 100,
-      cellClassName: 'actions',
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-        if (isInEditMode) {
+  const columns: GridColDef[] = useMemo(() => {
+    function handleEditClick(id: GridRowId): () => void {
+      return () => {
+        setRowModesModel({
+          ...rowModesModel,
+          [id]: { mode: GridRowModes.Edit },
+        });
+      };
+    }
+
+    function handleSaveClick(id: GridRowId): () => void {
+      return () => {
+        setRowModesModel({
+          ...rowModesModel,
+          [id]: { mode: GridRowModes.View },
+        });
+      };
+    }
+
+    function handleCancelClick(id: GridRowId): () => void {
+      return () => {
+        setRowModesModel({
+          ...rowModesModel,
+          [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+
+        setReload(!reload);
+      };
+    }
+
+    return [
+      {
+        field: 'name',
+        headerName: 'Name',
+        width: 280,
+        editable: true,
+        flex: 0.5,
+      },
+      {
+        field: 'email',
+        headerName: 'Email',
+        type: 'string',
+        width: 280,
+        align: 'left',
+        headerAlign: 'left',
+        editable: true,
+        flex: 0.5,
+      },
+      {
+        field: 'wallet_address',
+        headerName: 'Stake Address',
+        type: 'string',
+        width: 550,
+        align: 'left',
+        headerAlign: 'left',
+        editable: true,
+        flex: 1,
+      },
+      {
+        field: 'actions',
+        type: 'actions',
+        headerName: 'Edit',
+        width: 100,
+        cellClassName: 'actions',
+        getActions: ({ id }): JSX.Element[] => {
+          const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+          if (isInEditMode) {
+            return [
+              <GridActionsCellItem
+                icon={<SaveRounded />}
+                label="Save"
+                sx={{
+                  color: 'primary.main',
+                }}
+                onClick={handleSaveClick(id)}
+                data-testid={`save-representative-info-${id}`}
+                key={`save-representative-info-${id}`}
+              />,
+              <GridActionsCellItem
+                icon={<CancelRounded />}
+                label="Cancel"
+                className="textPrimary"
+                onClick={handleCancelClick(id)}
+                color="inherit"
+                data-testid={`cancel-representative-info-${id}`}
+                key={`cancel-representative-info-${id}`}
+              />,
+            ];
+          }
+
           return [
             <GridActionsCellItem
-              icon={<SaveRounded />}
-              label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={handleSaveClick(id)}
-              data-testid={`save-representative-info-${id}`}
-              key={`save-representative-info-${id}`}
-            />,
-            <GridActionsCellItem
-              icon={<CancelRounded />}
-              label="Cancel"
+              icon={<EditRounded />}
+              label="Edit"
               className="textPrimary"
-              onClick={handleCancelClick(id)}
+              onClick={handleEditClick(id)}
               color="inherit"
-              data-testid={`cancel-representative-info-${id}`}
-              key={`cancel-representative-info-${id}`}
+              data-testid={`edit-representative-info-${id}`}
+              key={`edit-representative-info-${id}`}
             />,
           ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<EditRounded />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-            data-testid={`edit-representative-info-${id}`}
-            key={`edit-representative-info-${id}`}
-          />,
-        ];
+        },
       },
-    },
-  ];
+    ];
+  }, [reload, rowModesModel]);
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
