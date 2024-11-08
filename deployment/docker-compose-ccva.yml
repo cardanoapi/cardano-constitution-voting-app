@@ -6,28 +6,24 @@ services:
     build: 
       context: ../
     networks:
-      - default
+      - postgres
       - frontend
     environment:
-      - VIRTUAL_HOST=https://${DEPLOY_BASE_DOMAIN} 
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/ccva
-      - NEXTAUTH_URL=https://${DEPLOY_BASE_DOMAIN} 
-
-  db:
-    image: postgres:15 
-    container_name: db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=ccva
-    volumes:
-      - db:/var/lib/postgresql/data 
-    networks:
-      - default
-
+      VIRTUAL_HOST: https://${DEPLOY_BASE_DOMAIN} 
+      DATABASE_URL: postgresql://ccva:${DATABASE_PASSWORD}@postgres:5432/ccva_test
+      NEXTAUTH_URL: https://${DEPLOY_BASE_DOMAIN} 
+    deploy:
+      placement:
+        constraints:
+          - node.labels.ccva==true
+      restart_policy:
+        delay: 15s
 networks:
   frontend:
     name: frontend
+    external: true
+  postgres:
+    name: postgres
     external: true
 volumes:
   db:
