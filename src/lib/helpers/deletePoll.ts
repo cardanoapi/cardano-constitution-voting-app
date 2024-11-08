@@ -9,18 +9,12 @@ export async function deletePoll(
   pollId: string,
 ): Promise<{ succeeded: boolean; message: string }> {
   try {
-    const response = await axios.post(
-      '/api/deletePoll',
-      {
-        pollId: pollId,
+    const response = await axios.delete(`/api/deletePoll/${pollId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Custom-Header': 'intersect',
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Custom-Header': 'intersect',
-        },
-      },
-    );
+    });
     const data = await response.data;
     if (response.status === 200) {
       return { succeeded: true, message: 'Poll Deleted' };
