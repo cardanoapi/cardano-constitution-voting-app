@@ -28,7 +28,6 @@ export async function castVote(
       {
         pollId: pollId,
         vote: vote,
-        stakeAddress: stakeAddress,
         signature: signature,
       },
       {

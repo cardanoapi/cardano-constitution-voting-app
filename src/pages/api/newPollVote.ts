@@ -26,7 +26,7 @@ export default async function newPollVote(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
-    const { pollId, vote, stakeAddress, signature } = req.body;
+    const { pollId, vote, signature } = req.body;
 
     const valid = await verifyWallet(
       signature.signature.payload,
