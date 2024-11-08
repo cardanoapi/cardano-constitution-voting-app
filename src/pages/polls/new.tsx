@@ -1,12 +1,33 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Head from 'next/head';
-import { Box, TextField, Typography } from '@mui/material';
+import { Alert, Box, TextField, Typography } from '@mui/material';
 
+import { Poll } from '@/types';
+import { getPolls } from '@/lib/helpers/getPolls';
 import { CreatePollButton } from '@/components/buttons/createPollButton';
 
 export default function NewPoll(): JSX.Element {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [polls, setPolls] = useState<Poll[]>([]);
+
+  useEffect(() => {
+    // get polls so we know how many there are, and if there are any pending or voting polls
+    async function lookupPolls(): Promise<void> {
+      const pollData = await getPolls();
+      setPolls(pollData);
+
+      setName(`Poll #${pollData.length + 1}`);
+    }
+    lookupPolls();
+  }, []);
+
+  const isPendingOrVotingPoll = polls.some(
+    (poll) => poll.status === 'pending' || poll.status === 'voting',
+  );
+
+  const shouldDisableCreateButton =
+    !name || !description || isPendingOrVotingPoll;
 
   return (
     <>
@@ -49,11 +70,21 @@ export default function NewPoll(): JSX.Element {
             rows={4}
             data-testid="poll-description-input"
           />
+          {isPendingOrVotingPoll && (
+            <Alert severity="warning" variant="outlined">
+              <Typography variant="h6" fontWeight="600">
+                You cannot create a new poll while there are pending or voting
+                polls. End any open poll then return to this page to create a
+                new poll.
+              </Typography>
+            </Alert>
+          )}
           <CreatePollButton
             name={name}
             description={description}
             setName={setName}
             setDescription={setDescription}
+            disabled={shouldDisableCreateButton}
           />
         </Box>
       </main>
