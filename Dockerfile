@@ -1,11 +1,10 @@
-ARG NPM_AUTH_TOKEN
-
 FROM node:20-alpine AS builder
+ARG NPM_AUTH_TOKEN
 WORKDIR /app
 RUN npm install -g prisma
 COPY ./package.json ./package-lock.json  ./
 COPY ./prisma ./prisma
-RUN npm config set //registry.npmjs.org/:_authToken ${NPM_AUTH_TOKEN} --location=global
+RUN npm config set //registry.npmjs.org/:_authToken ${NPM_AUTH_TOKEN}
 RUN npm install --legacy-peer-deps
 COPY --chown=node:node . .
 

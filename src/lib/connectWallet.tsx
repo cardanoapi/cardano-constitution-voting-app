@@ -1,4 +1,4 @@
-// import { connectWallet as connectWalletClarity } from '@claritydao/clarity-backend';
+import { connectWallet as connectWalletClarity } from '@claritydao/clarity-backend';
 import { Typography } from '@mui/material';
 import * as Sentry from '@sentry/nextjs';
 import { bech32 } from 'bech32';
@@ -15,9 +15,8 @@ import toast from 'react-hot-toast';
  */
 export async function connectWallet(walletName: string): Promise<boolean> {
   try {
-    // @ts-expect-error just use the window.cardano
-    const wallet = await window.cardano[walletName].enable(); // await connectWalletClarity(walletName);
-    
+    const wallet = await connectWalletClarity(walletName);
+    // @ts-expect-error getRewardAddresses is actually a proper function
     const stakeAddressHex = (await wallet.getRewardAddresses())[0];
     const bytes = Buffer.from(stakeAddressHex, 'hex');
     const words = bech32.toWords(bytes);
