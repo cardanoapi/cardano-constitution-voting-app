@@ -68,7 +68,7 @@ jobs:
               echo 'GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}'
               echo 'REGISTRY_BASE=registry.sireto.io/cardanoapi'
               echo 'STACK_NAME=ccva'
-              echo 'BASE_DOMAIN=ccv.cardanoapi.io'
+              echo 'DEPLOY_BASE_DOMAIN=ccv.cardanoapi.io'
               echo 'DATABASE_PASSWORD=postgres'
               echo 'CARDANO_NETWORK=preprod'
             } > .env
