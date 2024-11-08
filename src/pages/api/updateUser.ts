@@ -1,7 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { PrismaClient } from '@prisma/client';
 import * as Sentry from '@sentry/nextjs';
+import { getServerSession } from 'next-auth';
+
+import { checkIfCO } from '@/lib/checkIfCO';
 
 const prisma = new PrismaClient();
 
@@ -20,9 +24,28 @@ export default async function updateUser(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    const session = await getServerSession(req, res, authOptions);
+    if (!session) {
+      return res.status(401).json({
+        userId: BigInt(-1).toString(),
+        message: 'User is not logged in',
+      });
+    }
+
+    const stakeAddress = session.user.stakeAddress;
+    const isCO = await checkIfCO(stakeAddress);
+    if (!isCO) {
+      return res.status(401).json({
+        userId: BigInt(-1).toString(),
+        message: 'User is not a convention organizer',
+      });
+    }
+
     const { userId, name, email, wallet_address } = req.body;
-    // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before creating poll?
+
+    // TODO: Also additional security step of verifying coordinator's signature before creating poll?
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
+
     // validate name
     if (!name) {
       return res.status(400).json({
@@ -73,12 +96,10 @@ export default async function updateUser(
         wallet_address: wallet_address,
       },
     });
-    return res
-      .status(200)
-      .json({
-        userId: updatedUser.id.toString(),
-        message: 'User info updated',
-      });
+    return res.status(200).json({
+      userId: updatedUser.id.toString(),
+      message: 'User info updated',
+    });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({

@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { DeleteRounded } from '@mui/icons-material';
 import Button from '@mui/material/Button';
+import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { paths } from '@/paths';
@@ -19,6 +20,7 @@ interface Props {
 export function DeletePollButton(props: Props): JSX.Element {
   const { pollId, isSubmitting, setIsSubmitting } = props;
 
+  const session = useSession();
   const router = useRouter();
 
   async function handleDeleteVote(): Promise<void> {
@@ -38,15 +40,19 @@ export function DeletePollButton(props: Props): JSX.Element {
     setIsSubmitting(false);
   }
 
-  return (
-    <Button
-      onClick={handleDeleteVote}
-      variant="text"
-      disabled={isSubmitting}
-      data-testid="delete-poll-button"
-      color="error"
-    >
-      <DeleteRounded />
-    </Button>
-  );
+  if (session.data?.user.isCoordinator) {
+    return (
+      <Button
+        onClick={handleDeleteVote}
+        variant="text"
+        disabled={isSubmitting}
+        data-testid="delete-poll-button"
+        color="error"
+      >
+        <DeleteRounded />
+      </Button>
+    );
+  } else {
+    return <></>;
+  }
 }

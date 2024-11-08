@@ -7,6 +7,7 @@ import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
+import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { Poll } from '@/types';
@@ -26,6 +27,7 @@ export default function ViewPoll(): JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingPoll, setLoadingPoll] = useState(true);
 
+  const session = useSession();
   const router = useRouter();
   const { pollId } = router.query;
 
@@ -112,33 +114,37 @@ export default function ViewPoll(): JSX.Element {
                     gap={1}
                     alignItems="center"
                   >
-                    <Typography>Manage Poll:</Typography>
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      gap={1}
-                      alignItems="center"
-                    >
-                      {poll.status === pollPhases.pending && (
-                        <BeginVoteButton
-                          pollId={pollId}
-                          isSubmitting={isSubmitting}
-                          setIsSubmitting={updateIsSubmitting}
-                        />
-                      )}
-                      {poll.status === pollPhases.voting && (
-                        <EndVoteButton
-                          pollId={pollId}
-                          isSubmitting={isSubmitting}
-                          setIsSubmitting={updateIsSubmitting}
-                        />
-                      )}
-                      <DeletePollButton
-                        pollId={pollId}
-                        isSubmitting={isSubmitting}
-                        setIsSubmitting={updateIsSubmitting}
-                      />
-                    </Box>
+                    {session.data?.user.isCoordinator && (
+                      <>
+                        <Typography>Manage Poll:</Typography>
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          gap={1}
+                          alignItems="center"
+                        >
+                          {poll.status === pollPhases.pending && (
+                            <BeginVoteButton
+                              pollId={pollId}
+                              isSubmitting={isSubmitting}
+                              setIsSubmitting={updateIsSubmitting}
+                            />
+                          )}
+                          {poll.status === pollPhases.voting && (
+                            <EndVoteButton
+                              pollId={pollId}
+                              isSubmitting={isSubmitting}
+                              setIsSubmitting={updateIsSubmitting}
+                            />
+                          )}
+                          <DeletePollButton
+                            pollId={pollId}
+                            isSubmitting={isSubmitting}
+                            setIsSubmitting={updateIsSubmitting}
+                          />
+                        </Box>
+                      </>
+                    )}
                   </Box>
                   {/* Delegate Voting Buttons */}
                   {poll.status === pollPhases.voting && (
