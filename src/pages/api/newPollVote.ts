@@ -147,13 +147,19 @@ export default async function newPollVote(
         poll_id: BigInt(pollId),
         user_id: user.id,
         vote: vote,
-        signature: signature.signature.signedMessage.signature,
-        hashed_message: signature.signature.payload,
+        signature: signature.signature.signedMessage.signature.substring(
+          0,
+          250,
+        ),
+        hashed_message: signature.signature.payload.substring(0, 250),
       },
       update: {
         vote: vote,
-        signature: signature.signature.signedMessage.signature,
-        hashed_message: signature.signature.payload,
+        signature: signature.signature.signedMessage.signature.substring(
+          0,
+          250,
+        ),
+        hashed_message: signature.signature.payload.substring(0, 250),
       },
     });
 
