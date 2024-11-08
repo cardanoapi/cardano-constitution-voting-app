@@ -4,7 +4,6 @@ on:
   workflow_run: 
     workflows: 
       - Build and deploy CCVA
-    branches: test
     types: completed
   workflow_dispatch:
 
