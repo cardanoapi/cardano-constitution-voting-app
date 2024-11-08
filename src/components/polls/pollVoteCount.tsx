@@ -26,7 +26,7 @@ export function PollVoteCount(props: Props): JSX.Element {
     queryKey: ['pollVoteCount', pollId],
     queryFn: async () => {
       const data = await getPollVoteCount(pollId);
-      return data.votes;
+      return data;
     },
     enabled: typeof pollId === 'string' && pollId !== '',
     refetchInterval: 5000, // refresh every 5 seconds
@@ -34,24 +34,28 @@ export function PollVoteCount(props: Props): JSX.Element {
 
   if (isPending) {
     return <CircularProgress />;
-  } else if (error) {
-    toast.error(error.message);
+  } else if (error || data.votes === -1) {
+    toast.error(data?.message || error?.message || 'Error fetching vote count');
     return <></>;
   }
 
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      gap={1}
-      alignItems="center"
-      color={theme.palette.text.primary}
-      data-testid="poll-vote-count"
-    >
-      <HowToVoteRounded />
-      <Typography variant="body1">
-        {data} vote{data === 1 ? '' : 's'}
-      </Typography>
-    </Box>
+    <>
+      {data && (
+        <Box
+          display="flex"
+          flexDirection="row"
+          gap={1}
+          alignItems="center"
+          color={theme.palette.text.primary}
+          data-testid="poll-vote-count"
+        >
+          <HowToVoteRounded />
+          <Typography variant="body1">
+            {data.votes} vote{data.votes === 1 ? '' : 's'}
+          </Typography>
+        </Box>
+      )}
+    </>
   );
 }

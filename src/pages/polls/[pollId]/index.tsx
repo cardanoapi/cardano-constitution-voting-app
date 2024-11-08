@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
@@ -7,10 +7,10 @@ import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
+import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
-import { Poll } from '@/types';
 import { getPoll } from '@/lib/helpers/getPoll';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
@@ -23,34 +23,34 @@ import { PollVoteCount } from '@/components/polls/pollVoteCount';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
 export default function ViewPoll(): JSX.Element {
-  const [poll, setPoll] = useState<Poll | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loadingPoll, setLoadingPoll] = useState(true);
 
   const session = useSession();
   const router = useRouter();
   const { pollId } = router.query;
 
-  useEffect(() => {
-    async function fetchPoll(): Promise<void> {
-      if (typeof pollId !== 'string') {
-        return;
+  // Using react-query to fetch and refresh the vote count
+  const { isPending, error, data } = useQuery({
+    queryKey: ['poll', pollId],
+    queryFn: async () => {
+      if (typeof pollId === 'string') {
+        const data = await getPoll(pollId);
+        return data;
       }
-      setLoadingPoll(true);
-      const data = await getPoll(pollId);
-      if (data.poll) {
-        setPoll(data.poll);
-      } else {
-        toast.error(data.message);
-      }
-      setLoadingPoll(false);
-    }
-    fetchPoll();
-  }, [pollId]);
+    },
+    enabled: typeof pollId === 'string' && pollId !== '',
+    refetchInterval: 5000, // refresh every 5 seconds
+  });
 
   const updateIsSubmitting = useCallback((value: boolean) => {
     setIsSubmitting(value);
   }, []);
+
+  const poll = data?.poll;
+
+  if (error) {
+    toast.error(data?.message || error?.message || 'Error fetching poll');
+  }
 
   return (
     <>
@@ -78,7 +78,7 @@ export default function ViewPoll(): JSX.Element {
             <Typography variant="h1" fontWeight="bold">
               {poll ? (
                 poll.name
-              ) : loadingPoll ? (
+              ) : isPending ? (
                 <CircularProgress />
               ) : (
                 'View Poll'
@@ -95,9 +95,7 @@ export default function ViewPoll(): JSX.Element {
                 </Box>
               </Grid>
             ) : (
-              !loadingPoll && (
-                <Typography variant="h4">Poll not found</Typography>
-              )
+              !isPending && <Typography variant="h4">Poll not found</Typography>
             )}
             {poll && (
               <Grid size={{ xs: 12, lg: 6 }}>
