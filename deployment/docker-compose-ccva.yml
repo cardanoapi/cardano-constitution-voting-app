@@ -5,6 +5,8 @@ services:
     image: ${REGISTRY_BASE}/webapp:${IMAGE_VERSION_TAG}
     build: 
       context: ../
+      args:
+        - NPM_AUTH_TOKEN=${NPM_AUTH_TOKEN}
     networks:
       - postgres
       - frontend
