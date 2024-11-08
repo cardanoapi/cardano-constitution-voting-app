@@ -60,7 +60,7 @@ export default async function newPollVote(
     if (user.is_delegate === false && user.is_alternate === false) {
       return res.status(401).json({
         success: false,
-        message: 'User is not a delegate or alternate.',
+        message: 'You must be a Representative to vote.',
       });
     }
 

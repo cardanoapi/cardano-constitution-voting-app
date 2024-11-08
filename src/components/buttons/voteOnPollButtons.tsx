@@ -49,7 +49,6 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
     async function getVote(): Promise<void> {
       if (session.data?.user.id) {
         const recordedVote = await getPollVote(session.data?.user.id, pollId);
-
         setVote(recordedVote.vote);
       }
     }
