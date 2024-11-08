@@ -60,19 +60,43 @@ export const newPollVoteNotVotingHandler = [
   }),
 ];
 
-export const newPollVoteInvalidSessionHandler = [
+export const newPollVoteInternalErrorHandler = [
   http.post('/api/newPollVote', async () => {
     return HttpResponse.json(
       {
         success: false,
-        message: 'You must be signed in as a Representative to vote.',
+        message: 'Error voting on Poll.',
+      },
+      { status: 500 },
+    );
+  }),
+];
+
+export const newPollVoteInvalidSignatureHandler = [
+  http.post('/api/newPollVote', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'Invalid signature.',
       },
       { status: 401 },
     );
   }),
 ];
 
-export const newPollVoteNotRepresentativeHandler = [
+export const newPollVoteUserNotFoundHandler = [
+  http.post('/api/newPollVote', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'User not found.',
+      },
+      { status: 401 },
+    );
+  }),
+];
+
+export const newPollVoteUserNotRepresentativeHandler = [
   http.post('/api/newPollVote', async () => {
     return HttpResponse.json(
       {
@@ -84,14 +108,26 @@ export const newPollVoteNotRepresentativeHandler = [
   }),
 ];
 
-export const newPollVoteInternalErrorHandler = [
+export const newPollVoteWorkshopNotFoundHandler = [
   http.post('/api/newPollVote', async () => {
     return HttpResponse.json(
       {
         success: false,
-        message: 'Error voting on Poll.',
+        message: 'Workshop not found.',
       },
-      { status: 500 },
+      { status: 401 },
+    );
+  }),
+];
+
+export const newPollVoteNotActiveVoterHandler = [
+  http.post('/api/newPollVote', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'User is not the active voter for Sydney, Australia workshop.',
+      },
+      { status: 401 },
     );
   }),
 ];

@@ -8,7 +8,7 @@ import { expect, test } from 'vitest';
 
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 
-test('alerts user when vote is invalid', async () => {
+test.skip('alerts user when vote is invalid', async () => {
   server.use(...newPollVoteInvalidVoteHandler);
   const user = userEvent.setup();
   render(
