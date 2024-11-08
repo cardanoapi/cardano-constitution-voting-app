@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { signMessage } from '../signMessage';
+import { signMessage } from '@/lib/signMessage';
 
 /**
  * Casts a vote on a poll

@@ -1,8 +1,18 @@
 import { connectWallet as connectWalletClarity } from '@claritydao/clarity-backend';
 import toast from 'react-hot-toast';
 
-import { getChallenge } from './helpers/getChallenge';
+import { getChallenge } from '@/lib/helpers/getChallenge';
 
+/**
+ * Signs a message with a wallet.
+ * Connects to the wallet via Clarity Backend, generates a challenge,
+ * and signs the message with the wallet. Verified later with verifyWallet.
+ * @param walletName - Name of the wallet to connect (ex: eternl, nami, etc)
+ * @param message - Message to sign
+ * @returns signature - Signature & key returned, initial payload
+ * @returns challenge - Boolean Succeeded, challenge returned
+ * @returns false - If the signature fails to sign
+ */
 export async function signMessage(
   walletName: string,
   message: string,

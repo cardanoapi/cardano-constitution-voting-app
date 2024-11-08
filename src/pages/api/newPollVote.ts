@@ -1,8 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pollPhases } from '@/constants/pollPhases';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { PrismaClient } from '@prisma/client';
 import * as Sentry from '@sentry/nextjs';
+import { getServerSession } from 'next-auth';
 
 import { verifyWallet } from '@/lib/verifyWallet';
 
@@ -25,6 +27,13 @@ export default async function newPollVote(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      message: 'You must be signed in to vote.',
+    });
+  }
   try {
     const { pollId, vote, signature } = req.body;
 
@@ -43,6 +52,8 @@ export default async function newPollVote(
         message: 'Invalid signature.',
       });
     }
+
+    const stakeAddress = session.user.stakeAddress;
 
     // TODO: Make sure we trust where the stake address came from
     const user = await prisma.user.findFirst({
