@@ -67,6 +67,7 @@ jobs:
               echo 'IMAGE_VERSION_TAG=${{ github.sha }}'
               echo 'GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}'
               echo 'REGISTRY_BASE=registry.sireto.io/cardanoapi'
+              echo 'NEXT_AUTH_SECRET=${{ secrets.NEXT_AUTH_SECRET }}'
               echo 'STACK_NAME=ccva'
               echo 'DEPLOY_BASE_DOMAIN=ccv.cardanoapi.io'
               echo 'NPM_AUTH_TOKEN=${{ secrets.NPM_AUTH_TOKEN }}'
