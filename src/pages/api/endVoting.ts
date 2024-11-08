@@ -20,6 +20,12 @@ export default async function endVoting(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    if (req.method !== 'POST') {
+      res.setHeader('Allow', 'POST');
+      return res
+        .status(405)
+        .json({ success: false, message: 'Method not allowed' });
+    }
     const { pollId } = req.body;
     // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before updating poll?
     const findPoll = await prisma.poll.findFirst({

@@ -20,6 +20,12 @@ export default async function updateUser(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    if (req.method !== 'POST') {
+      res.setHeader('Allow', 'POST');
+      return res
+        .status(405)
+        .json({ userId: BigInt(-1).toString(), message: 'Method not allowed' });
+    }
     const { userId, name, email, wallet_address } = req.body;
     // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before creating poll?
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
@@ -73,12 +79,10 @@ export default async function updateUser(
         wallet_address: wallet_address,
       },
     });
-    return res
-      .status(200)
-      .json({
-        userId: updatedUser.id.toString(),
-        message: 'User info updated',
-      });
+    return res.status(200).json({
+      userId: updatedUser.id.toString(),
+      message: 'User info updated',
+    });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({

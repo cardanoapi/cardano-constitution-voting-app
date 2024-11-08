@@ -29,6 +29,12 @@ export default async function getPollResults(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    if (req.method !== 'GET') {
+      res.setHeader('Allow', 'GET');
+      return res
+        .status(405)
+        .json({ votes: null, message: 'Method not allowed' });
+    }
     const pollId = req.query.pollId;
     if (typeof pollId !== 'string') {
       return res.status(400).json({
