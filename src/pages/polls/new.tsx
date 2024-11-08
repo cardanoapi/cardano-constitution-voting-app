@@ -49,7 +49,7 @@ export default function NewPoll(): JSX.Element {
             Create a new poll
           </Typography>
           <TextField
-            variant="filled"
+            variant="outlined"
             type="text"
             onChange={(event: ChangeEvent<HTMLInputElement>): void => {
               setName(event.target.value);
