@@ -8,7 +8,9 @@ import { CreatePollButton } from '@/components/buttons/createPollButton';
 
 export default function NewPoll(): JSX.Element {
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(
+    'Do you agree to ratify the Constitution in its current form?',
+  );
   const [polls, setPolls] = useState<Poll[]>([]);
 
   useEffect(() => {
