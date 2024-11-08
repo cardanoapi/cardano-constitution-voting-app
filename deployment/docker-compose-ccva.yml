@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  webapp:
+    image: ${REGISTRY_BASE}/webapp:${IMAGE_VERSION_TAG}
+    build: 
+      context: ../
+    networks:
+      - default
+      - frontend
+    environment:
+      - VIRTUAL_HOST=https://${DEPLOY_BASE_DOMAIN} 
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/ccva
+      - NEXTAUTH_URL=https://${DEPLOY_BASE_DOMAIN} 
+
+  db:
+    image: postgres:15 
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ccva
+    volumes:
+      - db:/var/lib/postgresql/data 
+    networks:
+      - default
+
+networks:
+  frontend:
+    name: frontend
+    external: true
+volumes:
+  db:

@@ -1,9 +1,12 @@
 name: Integration Test [Playwright]
 
 on:
-  push:
-    branches:
-      - test
+  workflow_run: 
+    workflows: 
+      - Build and deploy CCVA
+    branches: test
+    types: completed
+  workflow_dispatch:
 
 jobs:
   integration-tests:

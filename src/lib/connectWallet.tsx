@@ -15,8 +15,9 @@ import toast from 'react-hot-toast';
  */
 export async function connectWallet(walletName: string): Promise<boolean> {
   try {
+    // @ts-expect-error just use the window.cardano
     const wallet = await window.cardano[walletName].enable(); // await connectWalletClarity(walletName);
-    // @ts-expect-error getRewardAddresses is actually a proper function
+    
     const stakeAddressHex = (await wallet.getRewardAddresses())[0];
     const bytes = Buffer.from(stakeAddressHex, 'hex');
     const words = bech32.toWords(bytes);
