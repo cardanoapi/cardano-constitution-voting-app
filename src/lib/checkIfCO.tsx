@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -9,11 +8,7 @@ const prisma = new PrismaClient();
  * @param res - NextApiResponse
  * @returns Boolean - True if user is a convention organizer, false otherwise
  */
-export async function checkIfCO(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  stakeAddress: string,
-): Promise<boolean> {
+export async function checkIfCO(stakeAddress: string): Promise<boolean> {
   const user = await prisma.user.findUnique({
     where: {
       wallet_address: stakeAddress,

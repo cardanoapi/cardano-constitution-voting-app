@@ -33,7 +33,7 @@ export default async function newPoll(
     }
 
     const stakeAddress = session.user.stakeAddress;
-    const isCO = await checkIfCO(req, res, stakeAddress);
+    const isCO = await checkIfCO(stakeAddress);
     if (!isCO) {
       return res.status(401).json({
         pollId: BigInt(-1).toString(),

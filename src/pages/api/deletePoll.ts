@@ -34,7 +34,7 @@ export default async function deletePoll(
     }
 
     const stakeAddress = session.user.stakeAddress;
-    const isCO = await checkIfCO(req, res, stakeAddress);
+    const isCO = await checkIfCO(stakeAddress);
     if (!isCO) {
       return res.status(401).json({
         success: false,
