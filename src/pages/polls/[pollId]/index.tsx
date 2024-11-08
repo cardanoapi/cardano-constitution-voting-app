@@ -169,18 +169,7 @@ export default function ViewPoll(): JSX.Element {
           </Grid>
           <Box display="flex" flexDirection="column" gap={3} mt={10}>
             {/* Browse Other Polls Carrousel */}
-            <Box
-              display="flex"
-              flexDirection="column"
-              gap={1}
-              alignItems="center"
-            >
-              <Typography variant="h6" fontWeight="600">
-                Browse other polls
-              </Typography>
-              <PollCarrousel currentPollId={pollId} />
-            </Box>
-
+            <PollCarrousel currentPollId={pollId} />
             <RepresentativesTable />
           </Box>
         </Box>

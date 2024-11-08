@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
+import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
-import type { Poll } from '@/types';
 import { getPolls } from '@/lib/helpers/getPolls';
 import { PollCard } from '@/components/polls/pollCard';
 
@@ -14,23 +14,23 @@ import { PollCard } from '@/components/polls/pollCard';
  * @returns Poll List
  */
 export function PollList(): JSX.Element {
-  const [loadingPolls, setLoadingPolls] = useState(true);
-  const [polls, setPolls] = useState<Poll[]>([]);
+  // Using react-query to fetch and refresh the vote count
+  const { isPending, data } = useQuery({
+    queryKey: ['fetchPollList'],
+    queryFn: async () => {
+      const data = await getPolls();
+      return data;
+    },
+    enabled: true,
+    refetchInterval: 5000, // refresh every 5 seconds
+  });
 
-  useEffect(() => {
-    async function fetchPolls(): Promise<void> {
-      setLoadingPolls(true);
-      const polls = await getPolls();
-      setPolls(polls);
-      setLoadingPolls(false);
-    }
-    fetchPolls();
-  }, []);
+  const polls = data;
 
   const session = useSession();
 
   const pollCards = useMemo(() => {
-    return polls.map((poll) => {
+    return (polls || []).map((poll) => {
       return (
         <Grid
           key={poll.id}
@@ -47,7 +47,7 @@ export function PollList(): JSX.Element {
     });
   }, [polls]);
 
-  if (loadingPolls) {
+  if (isPending) {
     return (
       <Box
         display="flex"
@@ -58,7 +58,7 @@ export function PollList(): JSX.Element {
         <CircularProgress />
       </Box>
     );
-  } else if (polls.length > 0) {
+  } else if (polls && polls.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={2} width="100%">
         {session.status !== 'authenticated' && (
