@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
 import { HowToVoteRounded } from '@mui/icons-material';
-import { useTheme } from '@mui/material';
+import { CircularProgress, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
 import { getPollVoteCount } from '@/lib/helpers/getPollVoteCount';
@@ -18,46 +18,40 @@ interface Props {
  */
 export function PollVoteCount(props: Props): JSX.Element {
   const { pollId } = props;
-  const [count, setCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
 
   const theme = useTheme();
 
-  useEffect(() => {
-    async function lookupVoteCount(): Promise<void> {
-      setIsLoading(true);
+  // Using react-query to fetch and refresh the vote count
+  const { isPending, error, data } = useQuery({
+    queryKey: ['pollVoteCount', pollId],
+    queryFn: async () => {
       const data = await getPollVoteCount(pollId);
-      if (data.votes < 0) {
-        toast.error(data.message);
-        setCount(0);
-      } else {
-        setCount(data.votes);
-      }
+      return data.votes;
+    },
+    enabled: typeof pollId === 'string' && pollId !== '',
+    refetchInterval: 5000, // refresh every 5 seconds
+  });
 
-      setIsLoading(false);
-    }
-    if (pollId && typeof pollId === 'string') {
-      lookupVoteCount();
-    }
-  }, [pollId]);
+  if (isPending) {
+    return <CircularProgress />;
+  } else if (error) {
+    toast.error(error.message);
+    return <></>;
+  }
 
   return (
-    <>
-      {!isLoading && (
-        <Box
-          display="flex"
-          flexDirection="row"
-          gap={1}
-          alignItems="center"
-          color={theme.palette.text.primary}
-          data-testid="poll-vote-count"
-        >
-          <HowToVoteRounded />
-          <Typography variant="body1">
-            {count} vote{count === 1 ? '' : 's'}
-          </Typography>
-        </Box>
-      )}
-    </>
+    <Box
+      display="flex"
+      flexDirection="row"
+      gap={1}
+      alignItems="center"
+      color={theme.palette.text.primary}
+      data-testid="poll-vote-count"
+    >
+      <HowToVoteRounded />
+      <Typography variant="body1">
+        {data} vote{data === 1 ? '' : 's'}
+      </Typography>
+    </Box>
   );
 }
