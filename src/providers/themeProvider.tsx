@@ -43,6 +43,7 @@ export function ColorModeProvider({
       text: {
         primary: '#FFFFFF',
         secondary: 'rgb(0,33,112,1)',
+        disabled: 'rgba(255, 255, 255, 0.25)',
       },
       divider: 'rgba(255, 255, 255, 0.25)',
     },
