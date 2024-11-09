@@ -61,7 +61,7 @@ export default function NewPoll(): JSX.Element {
             data-testid="poll-name-input"
           />
           <TextField
-            variant="filled"
+            variant="outlined"
             type="text"
             onChange={(event: ChangeEvent<HTMLInputElement>): void => {
               setDescription(event.target.value);
