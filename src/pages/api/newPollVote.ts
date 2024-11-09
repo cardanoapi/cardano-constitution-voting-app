@@ -27,14 +27,22 @@ export default async function newPollVote(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
-  const session = await getServerSession(req, res, authOptions);
-  if (!session) {
-    return res.status(401).json({
-      success: false,
-      message: 'You must be signed in to vote.',
-    });
-  }
   try {
+    if (req.method !== 'POST') {
+      res.setHeader('Allow', 'POST');
+      return res
+        .status(405)
+        .json({ success: false, message: 'Method not allowed' });
+    }
+
+    const session = await getServerSession(req, res, authOptions);
+    if (!session) {
+      return res.status(401).json({
+        success: false,
+        message: 'You must be signed in to vote.',
+      });
+    }
+
     const { pollId, vote, signature } = req.body;
 
     const valid = await verifyWallet(

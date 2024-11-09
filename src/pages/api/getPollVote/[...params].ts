@@ -19,6 +19,10 @@ export default async function getPollVoteCount(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    if (req.method !== 'GET') {
+      res.setHeader('Allow', 'GET');
+      return res.status(405).json({ vote: '', message: 'Method not allowed' });
+    }
     const { params } = req.query;
 
     // Ensures params are an array of strings

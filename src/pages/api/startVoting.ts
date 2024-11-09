@@ -24,6 +24,12 @@ export default async function startVoting(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    if (req.method !== 'POST') {
+      res.setHeader('Allow', 'POST');
+      return res
+        .status(405)
+        .json({ success: false, message: 'Method not allowed' });
+    }
     const session = await getServerSession(req, res, authOptions);
     if (!session) {
       return res.status(401).json({

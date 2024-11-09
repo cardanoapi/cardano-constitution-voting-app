@@ -22,9 +22,15 @@ export default async function deletePoll(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
-  const { pollId } = req.body;
-  // TODO: Additional security step of verifying coordinator's signature before deleting poll
   try {
+    if (req.method !== 'DELETE') {
+      res.setHeader('Allow', 'DELETE');
+      return res
+        .status(405)
+        .json({ success: false, message: 'Method not allowed' });
+    }
+
+    // TODO: Additional security step of verifying coordinator's signature before deleting poll
     const session = await getServerSession(req, res, authOptions);
     if (!session) {
       return res.status(401).json({
@@ -41,6 +47,17 @@ export default async function deletePoll(
         message: 'User is not a convention organizer',
       });
     }
+
+    const pollId = req.query.pollId;
+
+    if (typeof pollId !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid pollId',
+      });
+    }
+
+    // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before deleting poll
     await prisma.poll.delete({
       where: {
         id: BigInt(pollId),
