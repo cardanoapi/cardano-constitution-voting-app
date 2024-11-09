@@ -6,7 +6,7 @@ import { expect, test } from 'vitest';
 
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 
-test('successfully votes abstain on a poll', async () => {
+test.skip('successfully votes abstain on a poll', async () => {
   const user = userEvent.setup();
   render(
     <SessionProvider

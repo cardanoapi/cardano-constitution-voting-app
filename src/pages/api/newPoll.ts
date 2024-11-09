@@ -1,7 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { PrismaClient } from '@prisma/client';
 import * as Sentry from '@sentry/nextjs';
+import { getServerSession } from 'next-auth';
+
+import { checkIfCO } from '@/lib/checkIfCO';
 
 const prisma = new PrismaClient();
 
@@ -26,8 +30,37 @@ export default async function newPoll(
         .status(405)
         .json({ pollId: BigInt(-1).toString(), message: 'Method not allowed' });
     }
+    const session = await getServerSession(req, res, authOptions);
+    if (!session) {
+      return res.status(401).json({
+        pollId: BigInt(-1).toString(),
+        message: 'User is not logged in',
+      });
+    }
+
+    const stakeAddress = session.user.stakeAddress;
+    const isCO = await checkIfCO(stakeAddress);
+    if (!isCO) {
+      return res.status(401).json({
+        pollId: BigInt(-1).toString(),
+        message: 'User is not a convention organizer',
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        wallet_address: stakeAddress,
+      },
+    });
+    if (!user || !user.is_convention_organizer) {
+      return res.status(401).json({
+        pollId: BigInt(-1).toString(),
+        message: 'User is not a convention organizer',
+      });
+    }
+
     const { name, description } = req.body;
-    // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before creating poll?
+    // TODO: Additional security step of verifying coordinator's signature before creating poll?
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
     // validate name
     if (!name) {

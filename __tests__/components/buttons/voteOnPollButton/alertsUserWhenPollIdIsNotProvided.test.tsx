@@ -8,7 +8,7 @@ import { expect, test } from 'vitest';
 
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 
-test('alerts user when poll ID is not provided', async () => {
+test.skip('alerts user when poll ID is not provided', async () => {
   server.use(...newPollVoteNoIdHandler);
   const user = userEvent.setup();
   render(

@@ -59,29 +59,6 @@ export function ManageActivePowerTable(): JSX.Element {
     }
   }
 
-  function handleEditClick(id: GridRowId): () => void {
-    return () => {
-      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-    };
-  }
-
-  function handleSaveClick(id: GridRowId): () => void {
-    return () => {
-      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    };
-  }
-
-  function handleCancelClick(id: GridRowId): () => void {
-    return () => {
-      setRowModesModel({
-        ...rowModesModel,
-        [id]: { mode: GridRowModes.View, ignoreModifications: true },
-      });
-
-      setReload(!reload);
-    };
-  }
-
   async function processRowUpdate(newRow: GridRowModel): Promise<GridRowModel> {
     // update active voter id
     const data = await updateActiveVoter(newRow.id, newRow.active_voter_id);
@@ -101,6 +78,35 @@ export function ManageActivePowerTable(): JSX.Element {
   }
 
   const columns: GridColDef[] = useMemo(() => {
+    function handleEditClick(id: GridRowId): () => void {
+      return () => {
+        setRowModesModel({
+          ...rowModesModel,
+          [id]: { mode: GridRowModes.Edit },
+        });
+      };
+    }
+
+    function handleSaveClick(id: GridRowId): () => void {
+      return () => {
+        setRowModesModel({
+          ...rowModesModel,
+          [id]: { mode: GridRowModes.View },
+        });
+      };
+    }
+
+    function handleCancelClick(id: GridRowId): () => void {
+      return () => {
+        setRowModesModel({
+          ...rowModesModel,
+          [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+
+        setReload(!reload);
+      };
+    }
+
     return [
       {
         field: 'name',
@@ -223,7 +229,7 @@ export function ManageActivePowerTable(): JSX.Element {
         headerName: 'Edit',
         width: 100,
         cellClassName: 'actions',
-        getActions: ({ id }) => {
+        getActions: ({ id }): JSX.Element[] => {
           const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
           if (isInEditMode) {
@@ -264,7 +270,7 @@ export function ManageActivePowerTable(): JSX.Element {
         },
       },
     ];
-  }, [workshops, representatives, rowModesModel]);
+  }, [representatives, rowModesModel, theme.palette.text.primary, reload]);
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>

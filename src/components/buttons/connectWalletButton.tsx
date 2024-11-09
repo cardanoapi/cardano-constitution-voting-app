@@ -94,7 +94,7 @@ export function ConnectWalletButton(): JSX.Element {
             <Button
               variant="contained"
               color="error"
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: '/' })}
               fullWidth
               data-testid="disconnect-wallet"
             >
