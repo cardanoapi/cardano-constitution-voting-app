@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
 import { secureRandom } from '@/lib/secureRandom';
-
-const prisma = new PrismaClient();
 
 /**
  * Generates a unique challenge to include with signature for Cardano
