@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 import { useCallback, useState } from 'react';
+import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
@@ -11,6 +12,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
+import type { Poll, User, Workshop } from '@/types';
+import { pollDto } from '@/data/pollDto';
+import { pollResultsDto } from '@/data/pollResultsDto';
+import { representativesDto } from '@/data/representativesDto';
+import { workshopsDto } from '@/data/workshopsDto';
 import { getPoll } from '@/lib/helpers/getPoll';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
@@ -22,7 +28,29 @@ import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { PollVoteCount } from '@/components/polls/pollVoteCount';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
-export default function ViewPoll(): JSX.Element {
+interface Props {
+  poll: Poll | null;
+  representatives: User[];
+  workshops: Workshop[];
+  pollResults: {
+    yes: {
+      name: string;
+      id: string;
+    }[];
+    no: {
+      name: string;
+      id: string;
+    }[];
+    abstain: {
+      name: string;
+      id: string;
+    }[];
+  };
+}
+
+export default function ViewPoll(props: Props): JSX.Element {
+  const { representatives, workshops, pollResults } = props;
+  let { poll } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const session = useSession();
@@ -46,7 +74,9 @@ export default function ViewPoll(): JSX.Element {
     setIsSubmitting(value);
   }, []);
 
-  const poll = data?.poll;
+  if (data && data.poll) {
+    poll = data.poll;
+  }
 
   if (error) {
     toast.error(data?.message || error?.message || 'Error fetching poll');
@@ -86,7 +116,7 @@ export default function ViewPoll(): JSX.Element {
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
-          <PollVoteCount pollId={poll?.id?.toString() || ''} />
+          <PollVoteCount pollId={poll?.id || ''} />
           <Grid container data-testid="poll-description">
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>
@@ -161,7 +191,7 @@ export default function ViewPoll(): JSX.Element {
                   )}
                   {/* Vote Results */}
                   {poll.status === pollPhases.concluded && (
-                    <PollResults pollId={poll.id} />
+                    <PollResults votes={pollResults} />
                   )}
                 </Box>
               </Grid>
@@ -170,10 +200,60 @@ export default function ViewPoll(): JSX.Element {
           <Box display="flex" flexDirection="column" gap={3} mt={10}>
             {/* Browse Other Polls Carrousel */}
             <PollCarrousel currentPollId={pollId} />
-            <RepresentativesTable />
+            <RepresentativesTable
+              representatives={representatives}
+              workshops={workshops}
+            />
           </Box>
         </Box>
       </main>
     </>
   );
 }
+
+type Params = {
+  pollId: string;
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<Params>,
+): Promise<{
+  props: {
+    poll: Poll | null;
+    representatives: User[];
+    workshops: Workshop[];
+    pollResults: {
+      [key: string]: {
+        name: string;
+        id: string;
+      }[];
+    };
+  };
+}> => {
+  if (!context.params) {
+    return {
+      props: {
+        poll: null,
+        representatives: [],
+        workshops: [],
+        pollResults: {},
+      },
+    };
+  }
+
+  const { pollId } = context.params;
+
+  const poll = await pollDto(pollId);
+  const representatives = await representativesDto();
+  const workshops = await workshopsDto();
+  const pollResults = await pollResultsDto(pollId);
+
+  return {
+    props: {
+      poll: poll,
+      representatives: representatives,
+      workshops: workshops,
+      pollResults: pollResults,
+    },
+  };
+};
