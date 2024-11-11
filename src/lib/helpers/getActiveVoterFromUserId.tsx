@@ -2,7 +2,7 @@ import axios from 'axios';
 
 /**
  * Fetches a poll from the database by PollId
- * @param pollId - The ID of the poll to fetch
+ * @param userId - The ID of the user ID
  * @returns Poll - The poll with the given ID
  */
 export async function getActiveVoterFromUserId(
@@ -28,7 +28,7 @@ export async function getActiveVoterFromUserId(
     } else {
       return {
         activeVoterId: '',
-        message: 'An error occurred getting poll information',
+        message: 'An error occurred getting active voter',
       };
     }
   }

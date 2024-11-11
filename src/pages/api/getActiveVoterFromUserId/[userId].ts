@@ -19,6 +19,13 @@ export default async function getActiveVoterFromUserId(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    if (req.method !== 'GET') {
+      res.setHeader('Allow', 'GET');
+      return res.status(405).json({
+      message: 'Method not allowed.',
+      activeVoter: '',
+    });
+    }
     const userId = req.query.userId;
     if (typeof userId !== 'string') {
       return res.status(400).json({
@@ -41,14 +48,14 @@ export default async function getActiveVoterFromUserId(
     if (user === null) {
       return res.status(404).json({
         activeVoter: '',
-        message: 'Poll not found',
+        message: 'Active voter status not found',
       });
     }
     const pollJson = {
       activeVoter:
         user.workshop_user_workshop_idToworkshop.active_voter_id?.toString() ||
         '',
-      message: 'Poll found',
+      message: 'Active voter status found',
     };
     return res.status(200).json(pollJson);
   } catch (error) {
