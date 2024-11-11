@@ -7,7 +7,8 @@ import { useSession } from 'next-auth/react';
 
 import type { Poll, User, Workshop } from '@/types';
 import { paths } from '@/paths';
-import { convertBigIntsToNumbers } from '@/lib/convertBigIntsToNumbers';
+import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
+import { isValidPollStatus } from '@/lib/isValidPollStatus';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 import { PollList } from '@/components/polls/pollList';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
@@ -92,22 +93,26 @@ export const getServerSideProps = async (): Promise<{
   props: {
     polls: Poll[];
     representatives: User[];
+    workshops: Workshop[];
   };
 }> => {
   const polls = await prisma.poll.findMany();
-  const formattedPolls = convertBigIntsToNumbers(polls);
+  const convertedPolls = convertBigIntsToStrings(polls);
+
+  // Filter items to include only those with a valid poll status
+  const filteredPolls = convertedPolls.filter(isValidPollStatus);
 
   const users = await prisma.user.findMany();
-  const formattedUsers = convertBigIntsToNumbers(users);
+  const convertedUsers = convertBigIntsToStrings(users);
 
   const workshops = await prisma.workshop.findMany();
-  const formattedWorkshops = convertBigIntsToNumbers(workshops);
+  const convertedWorkshops = convertBigIntsToStrings(workshops);
 
   return {
     props: {
-      polls: formattedPolls,
-      representatives: formattedUsers,
-      workshops: formattedWorkshops,
+      polls: filteredPolls,
+      representatives: convertedUsers,
+      workshops: convertedWorkshops,
     },
   };
 };
