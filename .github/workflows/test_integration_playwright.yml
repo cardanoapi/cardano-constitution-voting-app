@@ -4,8 +4,8 @@ on:
   workflow_run: 
     workflows: 
       - Build and deploy CCVA
-    types: completed
-  workflow_dispatch:
+    types: 
+      - completed
 
 jobs:
   integration-tests:
@@ -121,4 +121,5 @@ jobs:
     env:
       REPORT_NAME: integration-tests
       GH_PAGES: cardanoapi/ccv-test-reports
+      HOST_URL: https://ccv.cardanoapi.io
       CI: ture
