@@ -1,5 +1,5 @@
 export interface Poll {
-  id: number;
+  id: string;
   name: string;
   description: string;
   status: 'pending' | 'voting' | 'concluded';
@@ -14,16 +14,15 @@ export interface User {
   workshop_id: string;
   name: string;
   email: string;
-  color: string;
   wallet_address: string;
 }
 
 export interface Workshop {
   id: string;
   name: string;
-  delegate_id?: string;
-  alternate_id?: string;
-  active_voter_id?: string;
+  delegate_id: string | null;
+  alternate_id: string | null;
+  active_voter_id: string | null;
 }
 
 export interface PollVote {
@@ -32,5 +31,5 @@ export interface PollVote {
   vote: string;
   signature: string;
   hashed_message: string;
-  poll_transaction_id?: string;
+  poll_transaction_id: string | null;
 }
