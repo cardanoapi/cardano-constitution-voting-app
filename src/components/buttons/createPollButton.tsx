@@ -11,6 +11,7 @@ interface Props {
   description: string;
   setName: React.Dispatch<React.SetStateAction<string>>;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
+  disabled: boolean;
 }
 
 /**
@@ -18,7 +19,7 @@ interface Props {
  * @returns Create Poll Button
  */
 export function CreatePollButton(props: Props): JSX.Element {
-  const { name, description, setName, setDescription } = props;
+  const { name, description, setName, setDescription, disabled } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   // call new poll api with this name & description
@@ -43,7 +44,7 @@ export function CreatePollButton(props: Props): JSX.Element {
     <Button
       onClick={handleCreatePoll}
       variant="contained"
-      disabled={isSubmitting}
+      disabled={disabled || isSubmitting}
       data-testid="create-poll-button"
     >
       Submit

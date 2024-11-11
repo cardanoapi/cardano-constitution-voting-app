@@ -59,6 +59,22 @@ export default async function newPoll(
       });
     }
 
+    // make sure there are no pending or voting polls
+    const polls = await prisma.poll.findMany({
+      where: {
+        status: {
+          in: ['pending', 'voting'],
+        },
+      },
+    });
+    if (polls.length > 0) {
+      return res.status(400).json({
+        pollId: BigInt(-1).toString(),
+        message:
+          'You cannot create a new poll while there are pending or voting polls. End any open poll then return to this page to create a new poll.',
+      });
+    }
+
     const { name, description } = req.body;
     // TODO: Additional security step of verifying coordinator's signature before creating poll?
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
