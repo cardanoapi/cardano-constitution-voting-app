@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/db';
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { verifyWallet } from '@/lib/verifyWallet';
-
-const prisma = new PrismaClient();
 
 // the shape of the user session object is defined in /types/next-auth.d.ts
 export const authOptions: NextAuthOptions = {
