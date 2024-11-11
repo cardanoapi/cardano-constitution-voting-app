@@ -3,7 +3,6 @@ import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
-import { useSession } from 'next-auth/react';
 import Carousel from 'react-material-ui-carousel';
 
 import type { Poll } from '@/types';
@@ -41,8 +40,6 @@ export function PollCarrousel(props: Props): JSX.Element {
     }
     fetchPolls();
   }, [currentPollId]);
-
-  const session = useSession();
 
   const pollCards = useMemo(() => {
     return (
@@ -116,11 +113,9 @@ export function PollCarrousel(props: Props): JSX.Element {
         width="100%"
         alignItems="center"
       >
-        {session.status !== 'authenticated' && (
-          <Typography textAlign="center" variant="h6" fontWeight="600">
-            Browse other polls
-          </Typography>
-        )}
+        <Typography textAlign="center" variant="h6" fontWeight="600">
+          Browse other polls
+        </Typography>
         {pollCards}
       </Box>
     );
