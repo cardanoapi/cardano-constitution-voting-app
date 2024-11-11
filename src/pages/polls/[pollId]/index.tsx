@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 import type { Poll, User, Workshop } from '@/types';
 import { pollDto } from '@/data/pollDto';
 import { pollResultsDto } from '@/data/pollResultsDto';
+import { pollsDto } from '@/data/pollsDto';
 import { representativesDto } from '@/data/representativesDto';
 import { workshopsDto } from '@/data/workshopsDto';
 import { getPoll } from '@/lib/helpers/getPoll';
@@ -46,10 +47,11 @@ interface Props {
       id: string;
     }[];
   };
+  polls: Poll[];
 }
 
 export default function ViewPoll(props: Props): JSX.Element {
-  const { representatives, workshops, pollResults } = props;
+  const { representatives, workshops, pollResults, polls } = props;
   let { poll } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -199,7 +201,7 @@ export default function ViewPoll(props: Props): JSX.Element {
           </Grid>
           <Box display="flex" flexDirection="column" gap={3} mt={10}>
             {/* Browse Other Polls Carrousel */}
-            <PollCarrousel currentPollId={pollId} />
+            <PollCarrousel currentPollId={pollId} polls={polls} />
             <RepresentativesTable
               representatives={representatives}
               workshops={workshops}
@@ -228,6 +230,7 @@ export const getServerSideProps = async (
         id: string;
       }[];
     };
+    polls: Poll[];
   };
 }> => {
   if (!context.params) {
@@ -237,6 +240,7 @@ export const getServerSideProps = async (
         representatives: [],
         workshops: [],
         pollResults: {},
+        polls: [],
       },
     };
   }
@@ -247,6 +251,7 @@ export const getServerSideProps = async (
   const representatives = await representativesDto();
   const workshops = await workshopsDto();
   const pollResults = await pollResultsDto(pollId);
+  const polls = await pollsDto();
 
   return {
     props: {
@@ -254,6 +259,7 @@ export const getServerSideProps = async (
       representatives: representatives,
       workshops: workshops,
       pollResults: pollResults,
+      polls: polls,
     },
   };
 };
