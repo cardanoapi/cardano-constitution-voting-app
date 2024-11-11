@@ -1,11 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { pollPhases } from '@/constants/pollPhases';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
 import type { PollVote } from '@/types';
-import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
+import { userVotesDto } from '@/data/userVotesDto';
 
 type Data = {
   votes: PollVote[];
@@ -37,24 +35,13 @@ export default async function getUserVotes(
         .json({ votes: [], message: 'Invalid query userId' });
     }
 
-    const votes = await prisma.poll_vote.findMany({
-      where: {
-        user_id: BigInt(userId),
-        poll: {
-          status: pollPhases.concluded,
-        },
-      },
-    });
+    const votes = await userVotesDto(userId);
 
     if (!votes) {
       return res.status(404).json({ votes: [], message: 'Votes not found' });
     }
 
-    const convertedVotes = convertBigIntsToStrings(votes);
-
-    return res
-      .status(200)
-      .json({ votes: convertedVotes, message: 'Found user votes' });
+    return res.status(200).json({ votes: votes, message: 'Found user votes' });
   } catch (error) {
     Sentry.captureException(error);
     return res

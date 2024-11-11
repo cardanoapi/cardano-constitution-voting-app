@@ -1,10 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
 import type { Poll } from '@/types';
-import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
+import { pollDto } from '@/data/pollDto';
 import { isValidPollStatus } from '@/lib/isValidPollStatus';
 
 type Data = { poll: Poll | null; message: string };
@@ -37,11 +36,7 @@ export default async function getPoll(
       });
     }
 
-    const poll = await prisma.poll.findFirst({
-      where: {
-        id: BigInt(pollId),
-      },
-    });
+    const poll = await pollDto(pollId);
 
     if (poll === null) {
       return res.status(404).json({
@@ -50,16 +45,14 @@ export default async function getPoll(
       });
     }
 
-    const convertedPoll = convertBigIntsToStrings(poll);
-
-    if (!isValidPollStatus(convertedPoll)) {
+    if (!isValidPollStatus(poll)) {
       return res.status(400).json({
         poll: null,
         message: 'Invalid poll status',
       });
     }
 
-    return res.status(200).json({ poll: convertedPoll, message: 'Poll found' });
+    return res.status(200).json({ poll: poll, message: 'Poll found' });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({

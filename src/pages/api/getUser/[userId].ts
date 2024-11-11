@@ -1,10 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
 import type { User } from '@/types';
-import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
+import { userDto } from '@/data/userDto';
 
 type Data = {
   user: User | null;
@@ -38,19 +37,13 @@ export default async function getUser(
         .json({ user: null, message: 'Invalid query userId' });
     }
 
-    const user = await prisma.user.findFirst({
-      where: {
-        id: BigInt(userId),
-      },
-    });
+    const user = await userDto(userId);
 
     if (!user) {
       return res.status(404).json({ user: null, message: 'User not found' });
     }
 
-    const convertedUser = convertBigIntsToStrings(user);
-
-    return res.status(200).json({ user: convertedUser, message: 'Found user' });
+    return res.status(200).json({ user: user, message: 'Found user' });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({ user: null, message: 'Error fetching user' });

@@ -1,9 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
+import { pollResultsDto } from '@/data/pollResultsDto';
 
 type Data = {
   votes: {
@@ -43,58 +42,10 @@ export default async function getPollResults(
       });
     }
 
-    const votes = await prisma.poll_vote.findMany({
-      where: {
-        poll_id: BigInt(pollId),
-        poll: {
-          status: 'concluded',
-        },
-      },
-      select: {
-        user_id: true,
-        vote: true,
-        user: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-
-    const convertedVotes = convertBigIntsToStrings(votes);
-
-    const transformedVotes = convertedVotes.reduce(
-      (
-        acc: {
-          [key: string]: {
-            name: string;
-            id: string;
-          }[];
-        },
-        {
-          user,
-          user_id,
-          vote,
-        }: { user: { name: string }; user_id: string; vote: string },
-      ) => {
-        // Initialize the array for each vote choice if it doesn't exist
-        if (!acc[vote]) {
-          acc[vote] = [];
-        }
-
-        // Add the user object to the appropriate vote choice array
-        acc[vote].push({
-          name: user.name,
-          id: user_id,
-        });
-
-        return acc;
-      },
-      { yes: [], no: [], abstain: [] },
-    );
+    const votes = await pollResultsDto(pollId);
 
     return res.status(200).json({
-      votes: transformedVotes,
+      votes: votes,
       message: 'Poll vote count retrieved',
     });
   } catch (error) {

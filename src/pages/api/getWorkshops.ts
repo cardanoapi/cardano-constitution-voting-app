@@ -1,10 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
 import type { Workshop } from '@/types';
-import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
+import { workshopsDto } from '@/data/workshopsDto';
 
 type Data = Workshop[];
 
@@ -23,11 +22,9 @@ export default async function getWorkshops(
       return res.status(405).json([]);
     }
 
-    const workshops = await prisma.workshop.findMany();
+    const workshops = await workshopsDto();
 
-    const convertedWorkshops = convertBigIntsToStrings(workshops);
-
-    return res.status(200).json(convertedWorkshops);
+    return res.status(200).json(workshops);
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json([]);
