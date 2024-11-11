@@ -8,7 +8,15 @@ import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
  * @returns Results of the poll
  */
 export async function pollResultsDto(pollId: string): Promise<{
-  [key: string]: {
+  yes: {
+    name: string;
+    id: string;
+  }[];
+  no: {
+    name: string;
+    id: string;
+  }[];
+  abstain: {
     name: string;
     id: string;
   }[];
@@ -63,5 +71,52 @@ export async function pollResultsDto(pollId: string): Promise<{
     { yes: [], no: [], abstain: [] },
   );
 
-  return formattedVotes;
+  if (isFormattedVotesCorrect(formattedVotes)) {
+    return formattedVotes;
+  } else {
+    return {
+      yes: [],
+      no: [],
+      abstain: [],
+    };
+  }
+}
+
+type Vote = {
+  name: string;
+  id: string;
+};
+
+type FormattedVotes = {
+  yes: Vote[];
+  no: Vote[];
+  abstain: Vote[];
+};
+
+function isFormattedVotesCorrect(formattedVotes: {
+  [key: string]: {
+    name: string;
+    id: string;
+  }[];
+}): formattedVotes is FormattedVotes {
+  // Check if formattedVotes has the keys 'yes', 'no', and 'abstain' as arrays
+  if (!formattedVotes || typeof formattedVotes !== 'object') return false;
+
+  const keys: (keyof FormattedVotes)[] = ['yes', 'no', 'abstain'];
+
+  for (const key of keys) {
+    // Ensure the key exists and is an array
+    if (!Array.isArray(formattedVotes[key])) {
+      return false;
+    }
+
+    // Check each element in the array for `name` and `id` properties
+    for (const entry of formattedVotes[key]) {
+      if (typeof entry.name !== 'string' || typeof entry.id !== 'string') {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
