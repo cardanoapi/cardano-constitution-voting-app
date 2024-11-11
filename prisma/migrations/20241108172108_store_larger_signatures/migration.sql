@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "poll_vote" ALTER COLUMN "signature" SET DATA TYPE VARCHAR(1000),
+ALTER COLUMN "hashed_message" SET DATA TYPE VARCHAR(1000);
