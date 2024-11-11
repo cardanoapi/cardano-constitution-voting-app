@@ -1,9 +1,9 @@
 export interface Poll {
-  id: string;
+  id: number;
   name: string;
   description: string;
   status: 'pending' | 'voting' | 'concluded';
-  summary_tx_id?: string;
+  summary_tx_id: string | null;
 }
 
 export interface User {
