@@ -3,8 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { parseJsonData } from '@/lib/parseJsonData';
-
 type Data = {
   name: string;
   message: string;
@@ -26,25 +24,28 @@ export default async function getWorkshopName(
       res.setHeader('Allow', 'GET');
       return res.status(405).json({ name: '', message: 'Method not allowed' });
     }
+
     const workshopId = req.query.workshopId;
+
     if (typeof workshopId !== 'string') {
       return res
         .status(400)
         .json({ name: '', message: 'Invalid query workshopId' });
     }
+
     const workshop = await prisma.workshop.findFirst({
       where: {
         id: BigInt(workshopId),
       },
     });
+
     if (!workshop) {
       return res.status(404).json({ name: '', message: 'Workshop not found' });
     }
-    const workshopJson = parseJsonData(workshop);
-    const workshopName = workshopJson.name;
+
     return res
       .status(200)
-      .json({ name: workshopName, message: 'Found workshop' });
+      .json({ name: workshop.name, message: 'Found workshop' });
   } catch (error) {
     Sentry.captureException(error);
     return res

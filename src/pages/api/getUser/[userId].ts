@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { User } from '@/types';
-import { parseJsonData } from '@/lib/parseJsonData';
+import type { User } from '@/types';
+import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
 
 type Data = {
   user: User | null;
@@ -29,22 +29,28 @@ export default async function getUser(
         .status(405)
         .json({ user: null, message: 'Method not allowed' });
     }
+
     const userId = req.query.userId;
+
     if (typeof userId !== 'string') {
       return res
         .status(400)
         .json({ user: null, message: 'Invalid query userId' });
     }
+
     const user = await prisma.user.findFirst({
       where: {
         id: BigInt(userId),
       },
     });
+
     if (!user) {
       return res.status(404).json({ user: null, message: 'User not found' });
     }
-    const userJson = parseJsonData(user);
-    return res.status(200).json({ user: userJson, message: 'Found user' });
+
+    const convertedUser = convertBigIntsToStrings(user);
+
+    return res.status(200).json({ user: convertedUser, message: 'Found user' });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({ user: null, message: 'Error fetching user' });

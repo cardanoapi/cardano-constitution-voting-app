@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { User } from '@/types';
-import { parseJsonData } from '@/lib/parseJsonData';
+import type { User } from '@/types';
+import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
 
 type Data = User[];
 
@@ -22,9 +22,12 @@ export default async function getRepresentatives(
       res.setHeader('Allow', 'GET');
       return res.status(405).json([]);
     }
-    const usersJson = await prisma.user.findMany({});
-    const users = parseJsonData(usersJson);
-    return res.status(200).json(users);
+
+    const users = await prisma.user.findMany({});
+
+    const convertedUsers = convertBigIntsToStrings(users);
+
+    return res.status(200).json(convertedUsers);
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json([]);

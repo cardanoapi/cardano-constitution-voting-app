@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { Workshop } from '@/types';
-import { parseJsonData } from '@/lib/parseJsonData';
+import type { Workshop } from '@/types';
+import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
 
 type Data = Workshop[];
 
@@ -22,9 +22,12 @@ export default async function getWorkshops(
       res.setHeader('Allow', 'GET');
       return res.status(405).json([]);
     }
-    const workshopJson = await prisma.workshop.findMany({});
-    const workshops = parseJsonData(workshopJson);
-    return res.status(200).json(workshops);
+
+    const workshops = await prisma.workshop.findMany();
+
+    const convertedWorkshops = convertBigIntsToStrings(workshops);
+
+    return res.status(200).json(convertedWorkshops);
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json([]);

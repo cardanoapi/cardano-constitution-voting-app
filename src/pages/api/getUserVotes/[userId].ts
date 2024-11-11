@@ -4,8 +4,8 @@ import { pollPhases } from '@/constants/pollPhases';
 import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { PollVote } from '@/types';
-import { parseJsonData } from '@/lib/parseJsonData';
+import type { PollVote } from '@/types';
+import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
 
 type Data = {
   votes: PollVote[];
@@ -28,12 +28,15 @@ export default async function getUserVotes(
       res.setHeader('Allow', 'GET');
       return res.status(405).json({ votes: [], message: 'Method not allowed' });
     }
+
     const userId = req.query.userId;
+
     if (typeof userId !== 'string') {
       return res
         .status(400)
         .json({ votes: [], message: 'Invalid query userId' });
     }
+
     const votes = await prisma.poll_vote.findMany({
       where: {
         user_id: BigInt(userId),
@@ -42,13 +45,16 @@ export default async function getUserVotes(
         },
       },
     });
+
     if (!votes) {
       return res.status(404).json({ votes: [], message: 'Votes not found' });
     }
-    const votesJson = parseJsonData(votes);
+
+    const convertedVotes = convertBigIntsToStrings(votes);
+
     return res
       .status(200)
-      .json({ votes: votesJson, message: 'Found user votes' });
+      .json({ votes: convertedVotes, message: 'Found user votes' });
   } catch (error) {
     Sentry.captureException(error);
     return res

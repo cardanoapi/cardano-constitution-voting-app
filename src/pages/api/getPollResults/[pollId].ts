@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { parseJsonData } from '@/lib/parseJsonData';
+import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
 
 type Data = {
   votes: {
@@ -33,13 +33,16 @@ export default async function getPollResults(
         .status(405)
         .json({ votes: null, message: 'Method not allowed' });
     }
+
     const pollId = req.query.pollId;
+
     if (typeof pollId !== 'string') {
       return res.status(400).json({
         votes: null,
         message: 'Invalid pollId',
       });
     }
+
     const votes = await prisma.poll_vote.findMany({
       where: {
         poll_id: BigInt(pollId),
@@ -57,9 +60,10 @@ export default async function getPollResults(
         },
       },
     });
-    const votesJson = parseJsonData(votes);
 
-    const transformedVotes = votesJson.reduce(
+    const convertedVotes = convertBigIntsToStrings(votes);
+
+    const transformedVotes = convertedVotes.reduce(
       (
         acc: {
           [key: string]: {
