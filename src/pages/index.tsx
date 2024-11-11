@@ -1,15 +1,25 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { prisma } from '@/db';
 import { Box, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 
+import type { Poll, User, Workshop } from '@/types';
 import { paths } from '@/paths';
+import { convertBigIntsToNumbers } from '@/lib/convertBigIntsToNumbers';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 import { PollList } from '@/components/polls/pollList';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
-export default function Home(): JSX.Element {
+interface Props {
+  polls: Poll[];
+  representatives: User[];
+  workshops: Workshop[];
+}
+
+export default function Home(props: Props): JSX.Element {
+  const { polls, representatives, workshops } = props;
   const session = useSession();
 
   return (
@@ -67,10 +77,37 @@ export default function Home(): JSX.Element {
               <ConnectWalletButton />
             </Box>
           </Box>
-          <PollList />
-          <RepresentativesTable />
+          <PollList polls={polls} />
+          <RepresentativesTable
+            representatives={representatives}
+            workshops={workshops}
+          />
         </Box>
       </main>
     </>
   );
 }
+
+export const getServerSideProps = async (): Promise<{
+  props: {
+    polls: Poll[];
+    representatives: User[];
+  };
+}> => {
+  const polls = await prisma.poll.findMany();
+  const formattedPolls = convertBigIntsToNumbers(polls);
+
+  const users = await prisma.user.findMany();
+  const formattedUsers = convertBigIntsToNumbers(users);
+
+  const workshops = await prisma.workshop.findMany();
+  const formattedWorkshops = convertBigIntsToNumbers(workshops);
+
+  return {
+    props: {
+      polls: formattedPolls,
+      representatives: formattedUsers,
+      workshops: formattedWorkshops,
+    },
+  };
+};

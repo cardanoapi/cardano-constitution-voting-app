@@ -1,37 +1,27 @@
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import LaunchRounded from '@mui/icons-material/LaunchRounded';
-import { Box, CircularProgress, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import type { User, Workshop } from '@/types';
 import { paths } from '@/paths';
-import { getRepresentatives } from '@/lib/helpers/getRepresentatives';
-import { getWorkshops } from '@/lib/helpers/getWorkshops';
+
+interface Props {
+  representatives: User[];
+  workshops: Workshop[];
+}
 
 /**
  * A Table with all Representatives grouped by their Workshop
+ * @param representatives - List of Representatives
+ * @param workshops - List of Workshops
  * @returns Representatives Table
  */
-export function RepresentativesTable(): JSX.Element {
-  const [loadingReps, setLoadingReps] = useState(true);
-  const [representatives, setRepresentatives] = useState<User[]>([]);
-  const [workshops, setWorkshops] = useState<Workshop[]>([]);
+export function RepresentativesTable(props: Props): JSX.Element {
+  const { representatives, workshops } = props;
 
   const theme = useTheme();
-
-  useEffect(() => {
-    async function fetchData(): Promise<void> {
-      setLoadingReps(true);
-      const workshops = await getWorkshops();
-      setWorkshops(workshops);
-      const reps = await getRepresentatives();
-      setRepresentatives(reps);
-      setLoadingReps(false);
-    }
-    fetchData();
-  }, []);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID' },
@@ -158,18 +148,7 @@ export function RepresentativesTable(): JSX.Element {
     },
   ];
 
-  if (loadingReps) {
-    return (
-      <Box
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-        width="100%"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  } else if (representatives.length > 0) {
+  if (representatives.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={1} width="100%">
         <Typography variant="h6" fontWeight="600" textAlign="center">
