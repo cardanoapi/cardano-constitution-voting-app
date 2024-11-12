@@ -14,6 +14,7 @@ import {
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { calculateWinner } from '@/lib/helpers/calculateWinner';
 import { PollResultsVoter } from '@/components/polls/pollResultsVoter';
 
 interface Props {
@@ -134,12 +135,25 @@ export function PollResults(props: Props): JSX.Element {
     );
   }, [votes]);
 
+  const winningOption = useMemo((): string => {
+    const winner = calculateWinner(votes);
+    return winner;
+  }, [votes]);
+
   return (
     <Box display="flex" flexDirection="column" gap={6} width="100%">
       <Typography variant="h3" fontWeight="bold">
         Results
       </Typography>
-
+      <Typography
+        variant="h3"
+        fontWeight="bold"
+        color={winningOption === 'yes' ? 'success' : 'warning'}
+      >
+        {winningOption === 'yes'
+          ? 'Constitution Approved'
+          : 'Constitution Not Approved'}
+      </Typography>
       <Box display="flex" flexDirection="column" gap={6} width="100%">
         <Box
           display="flex"
