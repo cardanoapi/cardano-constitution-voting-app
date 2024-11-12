@@ -1,10 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { User } from '@/types';
-import { parseJsonData } from '@/lib/parseJsonData';
+import type { User } from '@/types';
+import { representativesDto } from '@/data/representativesDto';
 
 type Data = User[];
 
@@ -22,8 +21,9 @@ export default async function getRepresentatives(
       res.setHeader('Allow', 'GET');
       return res.status(405).json([]);
     }
-    const usersJson = await prisma.user.findMany({});
-    const users = parseJsonData(usersJson);
+
+    const users = await representativesDto();
+
     return res.status(200).json(users);
   } catch (error) {
     Sentry.captureException(error);

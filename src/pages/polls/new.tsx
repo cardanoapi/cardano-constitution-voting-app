@@ -1,28 +1,21 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Head from 'next/head';
 import { Alert, Box, TextField, Typography } from '@mui/material';
 
-import { Poll } from '@/types';
-import { getPolls } from '@/lib/helpers/getPolls';
+import type { Poll } from '@/types';
+import { pollsDto } from '@/data/pollsDto';
 import { CreatePollButton } from '@/components/buttons/createPollButton';
 
-export default function NewPoll(): JSX.Element {
-  const [name, setName] = useState('');
+interface Props {
+  polls: Poll[];
+}
+
+export default function NewPoll(props: Props): JSX.Element {
+  const { polls } = props;
+  const [name, setName] = useState(`Poll #${polls.length + 1}`);
   const [description, setDescription] = useState(
     'Do you agree to ratify the Constitution in its current form?',
   );
-  const [polls, setPolls] = useState<Poll[]>([]);
-
-  useEffect(() => {
-    // get polls so we know how many there are, and if there are any pending or voting polls
-    async function lookupPolls(): Promise<void> {
-      const pollData = await getPolls();
-      setPolls(pollData);
-
-      setName(`Poll #${pollData.length + 1}`);
-    }
-    lookupPolls();
-  }, []);
 
   const isPendingOrVotingPoll = polls.some(
     (poll) => poll.status === 'pending' || poll.status === 'voting',
@@ -93,3 +86,17 @@ export default function NewPoll(): JSX.Element {
     </>
   );
 }
+
+export const getServerSideProps = async (): Promise<{
+  props: {
+    polls: Poll[];
+  };
+}> => {
+  const polls = await pollsDto();
+
+  return {
+    props: {
+      polls: polls,
+    },
+  };
+};

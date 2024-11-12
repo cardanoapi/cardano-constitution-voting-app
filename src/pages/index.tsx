@@ -4,12 +4,23 @@ import { Box, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 
+import type { Poll, User, Workshop } from '@/types';
 import { paths } from '@/paths';
+import { pollsDto } from '@/data/pollsDto';
+import { representativesDto } from '@/data/representativesDto';
+import { workshopsDto } from '@/data/workshopsDto';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 import { PollList } from '@/components/polls/pollList';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
-export default function Home(): JSX.Element {
+interface Props {
+  polls: Poll[];
+  representatives: User[];
+  workshops: Workshop[];
+}
+
+export default function Home(props: Props): JSX.Element {
+  const { polls, representatives, workshops } = props;
   const session = useSession();
 
   return (
@@ -67,10 +78,33 @@ export default function Home(): JSX.Element {
               <ConnectWalletButton />
             </Box>
           </Box>
-          <PollList />
-          <RepresentativesTable />
+          <PollList polls={polls} />
+          <RepresentativesTable
+            representatives={representatives}
+            workshops={workshops}
+          />
         </Box>
       </main>
     </>
   );
 }
+
+export const getServerSideProps = async (): Promise<{
+  props: {
+    polls: Poll[];
+    representatives: User[];
+    workshops: Workshop[];
+  };
+}> => {
+  const polls = await pollsDto();
+  const representatives = await representativesDto();
+  const workshops = await workshopsDto();
+
+  return {
+    props: {
+      polls: polls,
+      representatives: representatives,
+      workshops: workshops,
+    },
+  };
+};

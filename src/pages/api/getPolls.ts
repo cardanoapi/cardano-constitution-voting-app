@@ -1,10 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
 
-import { Poll } from '@/types';
-import { parseJsonData } from '@/lib/parseJsonData';
+import type { Poll } from '@/types';
+import { pollsDto } from '@/data/pollsDto';
 
 type Data = Poll[];
 
@@ -17,8 +16,9 @@ export default async function getPolls(
       res.setHeader('Allow', 'GET');
       return res.status(405).json([]);
     }
-    const pollsJson = await prisma.poll.findMany({});
-    const polls = parseJsonData(pollsJson);
+
+    const polls = await pollsDto();
+
     return res.status(200).json(polls);
   } catch (error) {
     Sentry.captureException(error);

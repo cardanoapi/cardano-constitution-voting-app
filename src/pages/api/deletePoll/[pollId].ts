@@ -55,12 +55,12 @@ export default async function deletePoll(
       });
     }
 
-    // TODO: Add session check to verify it is coordinator. Also additional security step of verifying coordinator's signature before deleting poll
     await prisma.poll.delete({
       where: {
         id: BigInt(pollId),
       },
     });
+
     return res.status(200).json({ success: true, message: 'Poll deleted' });
   } catch (error) {
     Sentry.captureException(error);

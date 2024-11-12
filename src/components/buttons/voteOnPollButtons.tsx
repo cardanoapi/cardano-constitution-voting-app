@@ -50,7 +50,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
   useEffect(() => {
     async function getVote(): Promise<void> {
       if (session.data?.user.id) {
-        const recordedVote = await getPollVote(session.data?.user.id, pollId);
+        const recordedVote = await getPollVote(session.data.user.id, pollId);
         setVote(recordedVote.vote);
       }
     }
