@@ -31,7 +31,12 @@ export function DownloadPollVotesButton(props: Props): JSX.Element {
   }
 
   return (
-    <Button type="button" variant="contained" onClick={handleClick}>
+    <Button
+      type="button"
+      variant="contained"
+      onClick={handleClick}
+      data-testid="download-poll-votes-btn"
+    >
       Download Votes
     </Button>
   );
