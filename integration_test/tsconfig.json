@@ -9,7 +9,8 @@
       "@helpers/*": ["lib/helpers/*"],
       "@pages/*": ["lib/pages/*"],
       "@constants/*": ["lib/constants/*"],
-      "@datafactory/*": ["lib/datafactory/*"]
+      "@datafactory/*": ["lib/datafactory/*"],
+      "@types": ["lib/types.ts"],
     }
   }
 }
