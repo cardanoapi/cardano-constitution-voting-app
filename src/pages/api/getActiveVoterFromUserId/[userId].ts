@@ -22,9 +22,9 @@ export default async function getActiveVoterFromUserId(
     if (req.method !== 'GET') {
       res.setHeader('Allow', 'GET');
       return res.status(405).json({
-      message: 'Method not allowed.',
-      activeVoter: '',
-    });
+        message: 'Method not allowed.',
+        activeVoter: '',
+      });
     }
     const userId = req.query.userId;
     if (typeof userId !== 'string') {
