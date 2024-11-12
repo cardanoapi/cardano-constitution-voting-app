@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
@@ -26,6 +27,7 @@ export async function getChallenge(): Promise<{
       return { succeeded: false, challenge: null };
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return { succeeded: false, challenge: null };
     } else {

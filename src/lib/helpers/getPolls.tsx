@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 import { Poll } from '@/types';
@@ -23,6 +24,7 @@ export async function getPolls(): Promise<Poll[]> {
       return [];
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return [];
     } else {

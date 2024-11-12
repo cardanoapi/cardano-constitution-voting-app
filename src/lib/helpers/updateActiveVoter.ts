@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
@@ -31,6 +32,8 @@ export async function updateActiveVoter(
       return { userId: '-1', message: data.message };
     }
   } catch (error) {
+    Sentry.captureException(error);
+    ('s');
     if (axios.isAxiosError(error) && error.response) {
       return { userId: '-1', message: error.response.data.message };
     } else {

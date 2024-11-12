@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 import { PollVote } from '@/types';
@@ -31,6 +32,7 @@ export async function getUserVotes(
       return { votes: [], message: 'Invalid userId' };
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return { votes: [], message: error.response.data.message };
     } else {
