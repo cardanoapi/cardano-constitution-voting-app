@@ -27,7 +27,7 @@ export function PollVoteCount(props: Props): JSX.Element {
     async function lookupVoteCount(): Promise<void> {
       setIsLoading(true);
       const data = await getPollVoteCount(pollId);
-      if (data.votes === -1) {
+      if (data.votes < 0) {
         toast.error(data.message);
         setCount(0);
       } else {

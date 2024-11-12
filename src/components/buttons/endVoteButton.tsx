@@ -1,10 +1,11 @@
 import Button from '@mui/material/Button';
+import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { endVoting } from '@/lib/helpers/endVoting';
 
 interface Props {
-  pollId: string;
+  pollId: string | string[] | undefined;
   isSubmitting: boolean;
   setIsSubmitting: (value: boolean) => void;
 }
@@ -16,7 +17,13 @@ interface Props {
 export function EndVoteButton(props: Props): JSX.Element {
   const { pollId, isSubmitting, setIsSubmitting } = props;
 
+  const session = useSession();
+
   async function handleEndVote(): Promise<void> {
+    if (typeof pollId !== 'string') {
+      toast.error('Invalid pollId');
+      return;
+    }
     setIsSubmitting(true);
     // End Vote
     const result = await endVoting(pollId);
@@ -28,14 +35,18 @@ export function EndVoteButton(props: Props): JSX.Element {
     setIsSubmitting(false);
   }
 
-  return (
-    <Button
-      onClick={handleEndVote}
-      variant="contained"
-      disabled={isSubmitting}
-      data-testid="end-vote-button"
-    >
-      End Voting
-    </Button>
-  );
+  if (session.data?.user.isCoordinator) {
+    return (
+      <Button
+        onClick={handleEndVote}
+        variant="contained"
+        disabled={isSubmitting}
+        data-testid="end-vote-button"
+      >
+        End Voting
+      </Button>
+    );
+  } else {
+    return <></>;
+  }
 }

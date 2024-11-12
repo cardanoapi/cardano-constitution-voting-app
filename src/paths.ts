@@ -6,5 +6,8 @@ export const paths = {
   termsOfService: '/terms-of-service',
   contact: '/contact',
   polls: { new: '/polls/new', poll: '/polls/' },
-  representatives: '/representatives/',
+  representatives: {
+    manage: '/representatives/manage',
+    representative: '/representatives/',
+  },
 };

@@ -94,7 +94,7 @@ export function ConnectWalletButton(): JSX.Element {
             <Button
               variant="contained"
               color="error"
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: '/' })}
               fullWidth
               data-testid="disconnect-wallet"
             >
@@ -124,6 +124,7 @@ export function ConnectWalletButton(): JSX.Element {
       <Button
         variant={session.status === 'authenticated' ? 'outlined' : 'contained'}
         color={session.status === 'authenticated' ? 'success' : 'secondary'}
+        disabled={connecting}
         id="connect-wallet"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
@@ -164,7 +165,13 @@ export function ConnectWalletButton(): JSX.Element {
         </Typography>
       </Button>
       {session.status === 'authenticated' && (
-        <Typography color="success" fontWeight="500">
+        <Typography
+          color="success"
+          fontWeight="500"
+          display={{
+            xs: 'none',
+          }}
+        >
           Wallet connected
         </Typography>
       )}

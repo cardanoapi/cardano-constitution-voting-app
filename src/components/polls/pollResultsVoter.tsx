@@ -39,7 +39,7 @@ export function PollResultsVoter(props: Props): JSX.Element {
       }}
     >
       <Link
-        href={paths.representatives + id}
+        href={paths.representatives.representative + id}
         style={{
           textDecoration: 'none',
         }}

@@ -20,6 +20,10 @@ export default async function getRepresentatives(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    if (req.method !== 'GET') {
+      res.setHeader('Allow', 'GET');
+      return res.status(405).json([]);
+    }
     const usersJson = await prisma.user.findMany({});
     const users = parseJsonData(usersJson);
     return res.status(200).json(users);

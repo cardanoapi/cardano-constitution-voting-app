@@ -12,7 +12,7 @@ export const startVotingNotFoundHandler = [
   }),
 ];
 
-export const startVotingNotVotingHandler = [
+export const startVotingNotPendingHandler = [
   http.post('/api/startVoting', async () => {
     return HttpResponse.json(
       {

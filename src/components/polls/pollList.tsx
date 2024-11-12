@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { useSession } from 'next-auth/react';
@@ -47,7 +48,16 @@ export function PollList(): JSX.Element {
   }, [polls]);
 
   if (loadingPolls) {
-    return <></>;
+    return (
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="center"
+        width="100%"
+      >
+        <CircularProgress />
+      </Box>
+    );
   } else if (polls.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={2} width="100%">

@@ -2,6 +2,9 @@
   "name": "cardano-constitution-voting-app",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,21 +14,25 @@
     "test": "vitest",
     "allure:generate": "npx allure generate ./allure-results --clean",
     "allure:open": "npx allure open ./allure-report",
-    "allure:serve": "npx allure serve"
+    "allure:serve": "npx allure serve",
+    "seed": "npx prisma migrate reset",
+    "prisma-build": "prisma migrate deploy && next build"
   },
   "dependencies": {
     "@claritydao/clarity-backend": "^0.4.0-dev-f82487b359ff0d0dc93db2bd24777a1ee7dbf921",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@emurgo/cardano-message-signing-nodejs": "^1.1.0",
     "@emurgo/cardano-serialization-lib-nodejs": "^13.1.0",
     "@fontsource/roboto": "^5.1.0",
     "@mui/icons-material": "^6.1.4",
     "@mui/material": "^6.1.4",
     "@mui/x-data-grid": "^7.22.0",
-    "@prisma/client": "^5.21.1",
+    "@prisma/client": "^5.22.0",
     "@sentry/nextjs": "^8.35.0",
     "axios": "^1.7.7",
     "bech32": "^2.0.0",
+    "blakejs": "^1.2.1",
     "next": "14.2.15",
     "next-auth": "^4.24.8",
     "react": "^18",
@@ -39,7 +46,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
-    "@types/node": "^20",
+    "@types/node": "^20.17.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.3.3",
@@ -53,9 +60,9 @@
     "msw": "^2.5.0",
     "next-router-mock": "^0.9.13",
     "prettier": "3.3.3",
-    "prisma": "^5.21.1",
+    "prisma": "^5.22.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5",
+    "typescript": "^5.6.3",
     "typescript-eslint": "^8.12.2",
     "vitest": "^2.1.4",
     "allure-commandline": "^2.27.0"

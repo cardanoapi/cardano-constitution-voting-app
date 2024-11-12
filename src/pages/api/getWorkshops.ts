@@ -20,6 +20,10 @@ export default async function getWorkshops(
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
+    if (req.method !== 'GET') {
+      res.setHeader('Allow', 'GET');
+      return res.status(405).json([]);
+    }
     const workshopJson = await prisma.workshop.findMany({});
     const workshops = parseJsonData(workshopJson);
     return res.status(200).json(workshops);

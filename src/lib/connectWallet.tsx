@@ -5,6 +5,8 @@ import { bech32 } from 'bech32';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
+import { getChallenge } from '@/lib/helpers/getChallenge';
+
 /**
  * Connects the user's wallet to the application. It first connects the webapp to the wallet
  * via the CIP-30 wallet connection. The connectWallet function from clarity-backend simply
@@ -20,13 +22,41 @@ export async function connectWallet(walletName: string): Promise<boolean> {
     const stakeAddressHex = (await wallet.getRewardAddresses())[0];
     const bytes = Buffer.from(stakeAddressHex, 'hex');
     const words = bech32.toWords(bytes);
-    const stakeAddress = bech32.encode('stake', words);
+    const timestamp = new Date().toLocaleString();
+    const message = `Sign this message to verify wallet ownership.\nTimestamp: ${timestamp}`;
+    const messageHex = Buffer.from(message).toString('hex');
+
+    // @ts-expect-error getNetworkId exists
+    const network = await wallet.getNetworkId();
+    if (process.env.NEXT_PUBLIC_NETWORK === 'mainnet' && network !== 1) {
+      toast.error('Please switch to Mainnet and try again.');
+      return false;
+    } else if (process.env.NEXT_PUBLIC_NETWORK === 'testnet' && network !== 0) {
+      toast.error('Please switch to Preview Network and try again.');
+      return false;
+    }
+
+    let stakeAddress;
+    if (process.env.NEXT_PUBLIC_NETWORK === 'mainnet') {
+      stakeAddress = bech32.encode('stake', words);
+    } else {
+      stakeAddress = bech32.encode('stake_test', words);
+    }
+
+    // @ts-expect-error getNetworkId is actually a proper function
+    const signature = await wallet.signData(stakeAddressHex, messageHex);
+    const challenge = await getChallenge();
 
     // Sign in is defined here pages/api/auth/[...nextauth].ts
     const signInResponse = await signIn('credentials', {
       redirect: false,
       stakeAddress: stakeAddress,
+      stakeAddressHex: stakeAddressHex,
+      payload: message,
+      signature: signature.signature,
+      key: signature.key,
       walletName: walletName,
+      challenge: challenge.challenge,
     });
     if (!signInResponse || signInResponse.status !== 200) {
       toast.error(

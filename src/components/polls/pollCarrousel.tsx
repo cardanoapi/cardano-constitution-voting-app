@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -15,6 +16,7 @@ interface Props {
 
 /**
  * A Carrousel of poll cards
+ * @param currentPollId - The ID of the current poll
  * @returns Poll List
  */
 export function PollCarrousel(props: Props): JSX.Element {
@@ -95,7 +97,16 @@ export function PollCarrousel(props: Props): JSX.Element {
   }, [polls]);
 
   if (loadingPolls) {
-    return <></>;
+    return (
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="center"
+        width="100%"
+      >
+        <CircularProgress />
+      </Box>
+    );
   } else if (polls.length > 0) {
     return (
       <Box
@@ -114,10 +125,6 @@ export function PollCarrousel(props: Props): JSX.Element {
       </Box>
     );
   } else {
-    return (
-      <Typography variant="h4" textAlign="center">
-        No polls yet.
-      </Typography>
-    );
+    return <></>;
   }
 }
