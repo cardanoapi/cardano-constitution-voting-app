@@ -11,6 +11,8 @@ import type { Poll, PollVote } from '@/types';
 import { getPolls } from '@/lib/helpers/getPolls';
 import { getUserVotes } from '@/lib/helpers/getUserVotes';
 
+import { DownloadUserVotesButton } from '../buttons/downloadUserVotesButton';
+
 interface Props {
   userId: string | string[] | undefined;
 }
@@ -112,9 +114,12 @@ export function VotingHistoryTable(props: Props): JSX.Element {
   } else if (polls.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={1}>
-        <Typography variant="h5" fontWeight="600">
-          Voting History
-        </Typography>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Typography variant="h5" fontWeight="600">
+            Voting History
+          </Typography>
+          <DownloadUserVotesButton userId={userId} />
+        </Box>
         <DataGrid rows={polls} columns={columns} />
       </Box>
     );
