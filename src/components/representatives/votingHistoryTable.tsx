@@ -41,7 +41,9 @@ export function VotingHistoryTable(props: Props): JSX.Element {
 
       setLoading(false);
     }
-    fetchData();
+    if (userId) {
+      fetchData();
+    }
   }, [userId]);
 
   const columns: GridColDef[] = [
