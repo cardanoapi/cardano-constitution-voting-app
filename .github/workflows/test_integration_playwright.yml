@@ -20,6 +20,9 @@ jobs:
     env:
       HOST_URL: https://ccv.cardanoapi.io
       CI: ture
+      KUBER_API_URL: ${{vars.KUBER_API_URL}}
+      KUBER_API_KEY: ${{secrets.KUBER_API_KEY}}
+      TEST_WORKERS: ${{vars.TEST_WORKERS}}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
