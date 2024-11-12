@@ -14,7 +14,7 @@ export const test = base.extend<WalletExtensionTestOptions>({
 
   enableStakeSigning: [true, { option: true }],
 
-  supportedExtensions: [[{ cip: 95 }], { option: true }],
+  supportedExtensions: [],
 
   page: async (
     { page, wallet, enableStakeSigning, supportedExtensions },
