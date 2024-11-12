@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import { getPoll } from '@/lib/helpers/getPoll';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
+import { DownloadPollVotesButton } from '@/components/buttons/downloadPollVotesButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
@@ -85,6 +86,7 @@ export default function ViewPoll(): JSX.Element {
               )}
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
+            <DownloadPollVotesButton pollId={pollId} />
           </Box>
           <PollVoteCount pollId={poll?.id?.toString() || ''} />
           <Grid container data-testid="poll-description">
