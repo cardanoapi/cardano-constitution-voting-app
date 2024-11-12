@@ -33,7 +33,6 @@ export async function updateActiveVoter(
     }
   } catch (error) {
     Sentry.captureException(error);
-    ('s');
     if (axios.isAxiosError(error) && error.response) {
       return { userId: '-1', message: error.response.data.message };
     } else {
