@@ -1,13 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '@/db';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { PrismaClient } from '@prisma/client';
 import * as Sentry from '@sentry/nextjs';
 import { getServerSession } from 'next-auth';
 
 import { checkIfCO } from '@/lib/checkIfCO';
-
-const prisma = new PrismaClient();
 
 type Data = {
   pollId: string;
@@ -56,6 +54,22 @@ export default async function newPoll(
       return res.status(401).json({
         pollId: BigInt(-1).toString(),
         message: 'User is not a convention organizer',
+      });
+    }
+
+    // make sure there are no pending or voting polls
+    const polls = await prisma.poll.findMany({
+      where: {
+        status: {
+          in: ['pending', 'voting'],
+        },
+      },
+    });
+    if (polls.length > 0) {
+      return res.status(400).json({
+        pollId: BigInt(-1).toString(),
+        message:
+          'You cannot create a new poll while there are pending or voting polls. End any open poll then return to this page to create a new poll.',
       });
     }
 

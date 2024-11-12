@@ -51,16 +51,22 @@ export function ColorModeProvider({
         styleOverrides: {
           root: {
             border: '2px solid #B1B1B1',
-            backgroundColor: '#ffffff',
             borderRadius: '4px',
           },
         },
       },
-      MuiInputBase: {
+      MuiOutlinedInput: {
         styleOverrides: {
           root: {
-            backgroundColor: 'rgba(0, 0, 0, 0) !important',
-            border: 'none !important',
+            '& fieldset': {
+              borderColor: '#B1B1B1',
+            },
+            '&:hover fieldset': {
+              borderColor: '#FFFFFF !important',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: 'rgba(192,221,255) !important',
+            },
           },
         },
       },

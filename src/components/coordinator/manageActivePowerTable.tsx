@@ -68,6 +68,7 @@ export function ManageActivePowerTable(): JSX.Element {
     } else {
       toast.error(data.message);
     }
+    setReload(!reload);
     return newRow;
   }
 

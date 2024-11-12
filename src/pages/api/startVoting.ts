@@ -1,14 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pollPhases } from '@/constants/pollPhases';
+import { prisma } from '@/db';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { PrismaClient } from '@prisma/client';
 import * as Sentry from '@sentry/nextjs';
 import { getServerSession } from 'next-auth';
 
 import { checkIfCO } from '@/lib/checkIfCO';
-
-const prisma = new PrismaClient();
 
 type Data = {
   success: boolean;
