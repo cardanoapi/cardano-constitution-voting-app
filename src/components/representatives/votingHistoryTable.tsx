@@ -121,7 +121,7 @@ export function VotingHistoryTable(props: Props): JSX.Element {
   } else {
     return (
       <Typography variant="h4" textAlign="center">
-        No Representatives found.
+        No voting history found.
       </Typography>
     );
   }
