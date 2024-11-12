@@ -14,7 +14,7 @@ export default async function loadEternlExtension(
   enableStakeSigning?: boolean,
   supportedExtensions?: Record<string, number>[]
 ): Promise<void> {
-  const demosBundleScriptPath = path.resolve(
+  const eternlBundleScriptPath = path.resolve(
     __dirname,
     '../../node_modules/@cardanoapi/cardano-test-wallet/script.js'
   );
@@ -34,5 +34,5 @@ export default async function loadEternlExtension(
     { walletConfig, supportedExtensions }
   );
 
-  await page.addInitScript({ path: demosBundleScriptPath });
+  await page.addInitScript({ path: eternlBundleScriptPath });
 }
