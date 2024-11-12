@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { castVote } from '@/lib/helpers/castVote';
+import { getActiveVoterFromUserId } from '@/lib/helpers/getActiveVoterFromUserId';
 import { getPollVote } from '@/lib/helpers/getPollVote';
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
 export function VoteOnPollButtons(props: Props): JSX.Element {
   const { pollId, disabled, setDisabled } = props;
   const [vote, setVote] = useState('');
+  const [activeVoter, setActiveVoter] = useState('');
 
   const session = useSession();
   const theme = useTheme();
@@ -58,11 +60,26 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
     }
   }, [session.data?.user.id, pollId, disabled]);
 
+  // get the active voter from this workshop
+  useEffect(() => {
+    async function getActiveVoter(): Promise<void> {
+      if (session.data?.user.id) {
+        const activeVoter = await getActiveVoterFromUserId(
+          session.data?.user.id,
+        );
+        setActiveVoter(activeVoter.activeVoterId);
+      }
+    }
+    getActiveVoter();
+  }, [pollId]);
+
+  const isActiveVoter = activeVoter === session.data?.user.id;
+
   return (
     <>
-      {(session.data?.user.isDelegate || session.data?.user.isAlternate) && (
+      {session.status == 'authenticated' && (
         <Box display="flex" flexDirection="column" gap={2} alignItems="center">
-          {vote && (
+          {vote && isActiveVoter && (
             <Box display="flex" flexDirection="row" gap={1}>
               <Typography variant="h5" fontWeight="bold">
                 Your Vote:
@@ -82,7 +99,15 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
               </Typography>
             </Box>
           )}
-          <Typography>{vote ? 'Re-cast' : 'Cast'} your vote:</Typography>
+          {!isActiveVoter && !session.data?.user.isCoordinator && (
+            <Typography variant="h6" fontWeight="bold">
+              You are not the active voter for your workshop. Only the active
+              voter can vote.
+            </Typography>
+          )}
+          <Typography color={!isActiveVoter ? 'textDisabled' : ''}>
+            {vote ? 'Re-cast' : 'Cast'} your vote:
+          </Typography>
           <Box
             display="flex"
             flexDirection={{ xs: 'column', md: 'row' }}
@@ -97,7 +122,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
               endIcon={<ThumbUpRounded />}
               size="large"
               onClick={() => handleVote('yes')}
-              disabled={disabled}
+              disabled={disabled || !isActiveVoter}
               data-testid="vote-yes-button"
             >
               Yes
@@ -111,7 +136,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
               endIcon={<ThumbDownRounded />}
               size="large"
               onClick={() => handleVote('no')}
-              disabled={disabled}
+              disabled={disabled || !isActiveVoter}
               data-testid="vote-no-button"
             >
               No
@@ -124,7 +149,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
               endIcon={<DoDisturbRounded />}
               size="large"
               onClick={() => handleVote('abstain')}
-              disabled={disabled}
+              disabled={disabled || !isActiveVoter}
               data-testid="vote-abstain-button"
             >
               Abstain
