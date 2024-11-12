@@ -23,7 +23,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: environments.ci ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? parseInt(process.env.TEST_WORKERS || '1' ) : 1,
+  workers: process.env.CI ? parseInt(process.env.TEST_WORKERS || '1') : 1,
   /*use Allure Playwright's testPlanFilter() to determine the grep parameter*/
   grep: testPlanFilter(),
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -41,13 +41,25 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: 'auth setup',
+      testMatch: '**/auth.setup.ts',
+    },
+    {
+      name: 'loggedin (desktop)',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: '**/*.loggedin.spec.ts',
+      dependencies: environments.ci ? ['auth setup'] : [],
+    },
+    {
       name: 'independent (desktop)',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore:['**/*.loggedin.spec.ts'],
     },
 
     {
       name: 'mobile',
       use: { ...devices['Pixel 5'] },
+      testIgnore:['**/*.loggedin.spec.ts'],
     },
 
     /* Test against mobile viewports. */
