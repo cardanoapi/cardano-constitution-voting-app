@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 import { Workshop } from '@/types';
@@ -19,6 +20,7 @@ export async function getWorkshops(): Promise<Workshop[]> {
       return [];
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return [];
     } else {

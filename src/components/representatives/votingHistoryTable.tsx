@@ -1,52 +1,29 @@
-import { useEffect, useState } from 'react';
 import DoDisturbRounded from '@mui/icons-material/DoDisturbRounded';
 import ThumbDownRounded from '@mui/icons-material/ThumbDownRounded';
 import ThumbUpRounded from '@mui/icons-material/ThumbUpRounded';
-import { Box, CircularProgress } from '@mui/material';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import toast from 'react-hot-toast';
 
 import type { Poll, PollVote } from '@/types';
-import { getPolls } from '@/lib/helpers/getPolls';
-import { getUserVotes } from '@/lib/helpers/getUserVotes';
 
 import { DownloadUserVotesButton } from '../buttons/downloadUserVotesButton';
 
 interface Props {
-  userId: string | string[] | undefined;
+  userId: string;
+  votes: PollVote[];
+  polls: Poll[];
 }
 
 /**
  * A Table with a Representatives vote history in every Poll
+ * @param userId - The User's ID
+ * @param votes - The User's Votes
+ * @param polls - The Polls
  * @returns Voting History Table for Each Poll
  */
 export function VotingHistoryTable(props: Props): JSX.Element {
-  const { userId } = props;
-  const [loading, setLoading] = useState(true);
-  const [votes, setVotes] = useState<PollVote[]>([]);
-  const [polls, setPolls] = useState<Poll[]>([]);
-
-  useEffect(() => {
-    async function fetchData(): Promise<void> {
-      setLoading(true);
-      // get votes
-      const voteData = await getUserVotes(userId);
-      if (voteData.votes.length > 0) {
-        setVotes(voteData.votes);
-      } else if (voteData.message !== 'User votes found') {
-        toast.error(voteData.message);
-      }
-      // get polls
-      const polls = await getPolls();
-      setPolls(polls);
-
-      setLoading(false);
-    }
-    if (userId) {
-      fetchData();
-    }
-  }, [userId]);
+  const { userId, votes, polls } = props;
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: '#' },
@@ -100,18 +77,7 @@ export function VotingHistoryTable(props: Props): JSX.Element {
     },
   ];
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-        width="100%"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  } else if (polls.length > 0) {
+  if (polls.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={1}>
         <Box display="flex" alignItems="center" justifyContent="space-between">

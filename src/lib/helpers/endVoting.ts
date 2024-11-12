@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
@@ -28,6 +29,7 @@ export async function endVoting(
       return { succeeded: false, message: data.message };
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return { succeeded: false, message: error.response.data.message };
     } else {

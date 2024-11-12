@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
@@ -26,6 +27,7 @@ export async function getPollVoteCount(
       return { votes: -1, message: 'Error getting vote count' };
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return { votes: -1, message: error.response.data.message };
     } else {

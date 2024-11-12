@@ -1,7 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
+
+import { pollVoteDto } from '@/data/pollVoteDto';
 
 type Data = { vote: string; message: string };
 
@@ -33,22 +34,20 @@ export default async function getPollVoteCount(
     } else {
       return res.status(400).json({ vote: '', message: 'Invalid params' });
     }
+
     const userId = params[0];
     const pollId = params[1];
 
-    const vote = await prisma.poll_vote.findFirst({
-      where: {
-        poll_id: BigInt(pollId),
-        user_id: BigInt(userId),
-      },
-    });
+    const vote = await pollVoteDto(userId, pollId);
+
     if (!vote) {
       return res.status(404).json({
         vote: '',
         message: 'Vote not found',
       });
     }
-    return res.status(200).json({ vote: vote.vote, message: 'Vote found' });
+
+    return res.status(200).json({ vote: vote, message: 'Vote found' });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({
