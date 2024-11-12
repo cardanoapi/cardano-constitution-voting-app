@@ -36,12 +36,16 @@ export async function downloadPollVotes(
       window.URL.revokeObjectURL(url);
       return { succeeded: true, message: 'Poll votes downloaded' };
     } else {
-      const data = response.data;
-      return { succeeded: false, message: data.message };
+      const message = JSON.parse(await response.data.text()).message;
+      return { succeeded: false, message: message };
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      return { succeeded: false, message: error.response.data.message };
+      const message = JSON.parse(await error.response.data.text()).message;
+      return {
+        succeeded: false,
+        message: message,
+      };
     } else {
       Sentry.captureException(error);
       return {
