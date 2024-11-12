@@ -76,10 +76,7 @@ const downloadUserVotes = async (
 
     // Set headers to prompt download
     res.setHeader('Content-Type', 'text/csv');
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=${user?.wallet_address || 'Unknown Wallet Address'} votes.csv`,
-    );
+    res.setHeader('Content-Disposition', 'attachment');
     res.setHeader(
       'file-name',
       `${user?.name} - ${workshop?.name} - ${user?.is_delegate ? 'Delegate' : 'Alternate'} Votes.csv`,
