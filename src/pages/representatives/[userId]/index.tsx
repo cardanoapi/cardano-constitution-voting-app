@@ -16,7 +16,7 @@ import { RepresentativesTable } from '@/components/representatives/representativ
 import { VotingHistoryTable } from '@/components/representatives/votingHistoryTable';
 
 interface Props {
-  user: User | null;
+  user: User;
   userVotes: PollVote[];
   representatives: User[];
   workshops: Workshop[];
@@ -124,7 +124,11 @@ export default function Representative(props: Props): JSX.Element {
                 md: 6,
               }}
             >
-              <VotingHistoryTable votes={userVotes} polls={polls} />
+              <VotingHistoryTable
+                userId={user.id}
+                votes={userVotes}
+                polls={polls}
+              />
             </Grid>
           </Grid>
 

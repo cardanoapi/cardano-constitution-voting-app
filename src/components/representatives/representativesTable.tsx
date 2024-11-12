@@ -180,7 +180,7 @@ export function RepresentativesTable(props: Props): JSX.Element {
   } else {
     return (
       <Typography variant="h4" textAlign="center">
-        No Representatives found.
+        No representatives found.
       </Typography>
     );
   }

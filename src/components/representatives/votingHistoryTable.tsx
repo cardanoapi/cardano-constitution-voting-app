@@ -7,19 +7,23 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import type { Poll, PollVote } from '@/types';
 
+import { DownloadUserVotesButton } from '../buttons/downloadUserVotesButton';
+
 interface Props {
+  userId: string;
   votes: PollVote[];
   polls: Poll[];
 }
 
 /**
  * A Table with a Representatives vote history in every Poll
+ * @param userId - The User's ID
  * @param votes - The User's Votes
  * @param polls - The Polls
  * @returns Voting History Table for Each Poll
  */
 export function VotingHistoryTable(props: Props): JSX.Element {
-  const { votes, polls } = props;
+  const { userId, votes, polls } = props;
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: '#' },
@@ -76,16 +80,19 @@ export function VotingHistoryTable(props: Props): JSX.Element {
   if (polls.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={1}>
-        <Typography variant="h5" fontWeight="600">
-          Voting History
-        </Typography>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Typography variant="h5" fontWeight="600">
+            Voting History
+          </Typography>
+          <DownloadUserVotesButton userId={userId} />
+        </Box>
         <DataGrid rows={polls} columns={columns} />
       </Box>
     );
   } else {
     return (
       <Typography variant="h4" textAlign="center">
-        No Representatives found.
+        No voting history found.
       </Typography>
     );
   }
