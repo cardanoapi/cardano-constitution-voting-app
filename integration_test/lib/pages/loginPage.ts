@@ -19,6 +19,7 @@ export default class LoginPage {
   }
 
   async logout(): Promise<void> {
+    await this.connectWalletBtn.first().click();
     await this.disconnectWalletBtn.click();
   }
 
