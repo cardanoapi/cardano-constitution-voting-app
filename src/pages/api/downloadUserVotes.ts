@@ -31,6 +31,9 @@ const downloadUserVotes = async (
     const userVotes = await prisma.poll_vote.findMany({
       where: {
         user_id: BigInt(userId),
+        poll: {
+          status: 'concluded',
+        },
       },
       include: {
         poll: true,
