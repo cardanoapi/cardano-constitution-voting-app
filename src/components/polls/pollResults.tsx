@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   DoNotDisturbOutlined,
   HowToVoteOutlined,
@@ -77,6 +77,7 @@ const AbstainLinearProgress = styled(LinearProgress)(({ theme }) => ({
  */
 export function PollResults(props: Props): JSX.Element {
   const { votes } = props;
+  const [winningOption, setWinningOption] = useState('');
 
   const theme = useTheme();
 
@@ -135,9 +136,14 @@ export function PollResults(props: Props): JSX.Element {
     );
   }, [votes]);
 
-  const winningOption = useMemo((): string => {
-    const winner = calculateWinner(votes);
-    return winner;
+  useEffect(() => {
+    async function determineWinner(): Promise<void> {
+      const winningOption = await calculateWinner(votes);
+      setWinningOption(winningOption);
+    }
+    if (votes) {
+      determineWinner();
+    }
   }, [votes]);
 
   return (

@@ -1,4 +1,6 @@
-export function calculateWinner(votes: {
+import { getActiveVoterCount } from '@/lib/helpers/getActiveVoterCount';
+
+export async function calculateWinner(votes: {
   yes: {
     name: string;
     id: string;
@@ -11,13 +13,19 @@ export function calculateWinner(votes: {
     name: string;
     id: string;
   }[];
-}): string {
+}): Promise<string> {
   const yesCount = votes.yes.length;
   const abstainCount = votes.abstain.length;
 
-  const workshopCount = 62; // using constant # of 62 workshops
+  const data = await getActiveVoterCount();
+  const activeVoterCount = data.voters;
 
-  const threshold = (workshopCount - abstainCount) / 2; // using 50% theshold right now
+  if (activeVoterCount === -1) {
+    return '';
+  }
+
+  const threshold = (activeVoterCount - abstainCount) / 2; // using 50% according to Intersect
+
   if (yesCount > threshold) {
     return 'yes';
   } else {
