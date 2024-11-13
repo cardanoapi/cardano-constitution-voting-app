@@ -150,9 +150,7 @@ export function PollResults(props: Props): JSX.Element {
         fontWeight="bold"
         color={winningOption === 'yes' ? 'success' : 'warning'}
       >
-        {winningOption === 'yes'
-          ? 'Constitution Approved'
-          : 'Constitution Not Approved'}
+        {winningOption === 'yes' ? 'Approved' : 'Not Approved'}
       </Typography>
       <Box display="flex" flexDirection="column" gap={6} width="100%">
         <Box
