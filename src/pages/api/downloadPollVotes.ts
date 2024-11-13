@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import { Parser } from '@json2csv/plainjs';
 import * as Sentry from '@sentry/nextjs';
 
 import { pollDto } from '@/data/pollDto';
+import { pollVotesDto } from '@/data/pollVotesDto';
+import { workshopsDto } from '@/data/workshopsDto';
 
 /**
  * Generates excel file with a single poll's votes
@@ -37,17 +38,9 @@ const downloadPollVotes = async (
         .json({ success: false, message: 'Poll is not concluded' });
     }
 
-    const pollVotes = await prisma.poll_vote.findMany({
-      where: {
-        poll_id: BigInt(pollId),
-      },
-      include: {
-        poll_transaction: true,
-        user: true,
-      },
-    });
+    const pollVotes = await pollVotesDto(pollId);
 
-    const workshops = await prisma.workshop.findMany();
+    const workshops = await workshopsDto();
 
     const results: {
       user: string;
