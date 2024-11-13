@@ -105,56 +105,65 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
               voter can vote.
             </Typography>
           )}
-          <Typography color={!isActiveVoter ? 'textDisabled' : ''}>
-            {vote ? 'Re-cast' : 'Cast'} your vote:
-          </Typography>
-          <Box
-            display="flex"
-            flexDirection={{ xs: 'column', md: 'row' }}
-            gap={2}
-          >
-            <Button
-              variant="outlined"
-              color="success"
-              sx={{
-                width: '150px',
-              }}
-              endIcon={<ThumbUpRounded />}
-              size="large"
-              onClick={() => handleVote('yes')}
-              disabled={disabled || !isActiveVoter}
-              data-testid="vote-yes-button"
+          {isActiveVoter && (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={2}
+              alignItems="center"
             >
-              Yes
-            </Button>
-            <Button
-              variant="outlined"
-              color="warning"
-              sx={{
-                width: '150px',
-              }}
-              endIcon={<ThumbDownRounded />}
-              size="large"
-              onClick={() => handleVote('no')}
-              disabled={disabled || !isActiveVoter}
-              data-testid="vote-no-button"
-            >
-              No
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                width: '150px',
-              }}
-              endIcon={<DoDisturbRounded />}
-              size="large"
-              onClick={() => handleVote('abstain')}
-              disabled={disabled || !isActiveVoter}
-              data-testid="vote-abstain-button"
-            >
-              Abstain
-            </Button>
-          </Box>
+              <Typography color={!isActiveVoter ? 'textDisabled' : ''}>
+                {vote ? 'Re-cast' : 'Cast'} your vote:
+              </Typography>
+              <Box
+                display="flex"
+                flexDirection={{ xs: 'column', md: 'row' }}
+                gap={2}
+              >
+                <Button
+                  variant="outlined"
+                  color="success"
+                  sx={{
+                    width: '150px',
+                  }}
+                  endIcon={<ThumbUpRounded />}
+                  size="large"
+                  onClick={() => handleVote('yes')}
+                  disabled={disabled || !isActiveVoter}
+                  data-testid="vote-yes-button"
+                >
+                  Yes
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  sx={{
+                    width: '150px',
+                  }}
+                  endIcon={<ThumbDownRounded />}
+                  size="large"
+                  onClick={() => handleVote('no')}
+                  disabled={disabled || !isActiveVoter}
+                  data-testid="vote-no-button"
+                >
+                  No
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    width: '150px',
+                  }}
+                  endIcon={<DoDisturbRounded />}
+                  size="large"
+                  onClick={() => handleVote('abstain')}
+                  disabled={disabled || !isActiveVoter}
+                  data-testid="vote-abstain-button"
+                >
+                  Abstain
+                </Button>
+              </Box>
+            </Box>
+          )}
         </Box>
       )}
     </>
