@@ -10,7 +10,9 @@ export function middleware(request: NextRequest): Response {
   base-uri 'self';
   child-src 'self';
   connect-src 'self';
-  font-src 'self';
+  font-src 
+    'self'
+    https://fonts.googleapis.com;
   form-action 'self';
   frame-ancestors 'none';
   frame-src 'self' https://vercel.live/;
