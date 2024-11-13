@@ -17,3 +17,12 @@ export const downloadPollVotesInternalErrorHandler = [
     );
   }),
 ];
+
+export const downloadPollVotesNotConcludedHandler = [
+  http.post('/api/downloadPollVotes', async () => {
+    return HttpResponse.json(
+      { success: false, message: 'Poll is not concluded' },
+      { status: 500 },
+    );
+  }),
+];

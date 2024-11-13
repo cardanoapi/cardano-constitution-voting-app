@@ -1,7 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
+import { pollPhases } from '@/constants/pollPhases';
 import { Parser } from '@json2csv/plainjs';
 import * as Sentry from '@sentry/nextjs';
+
+import { pollDto } from '@/data/pollDto';
+import { pollVotesDto } from '@/data/pollVotesDto';
+import { workshopsDto } from '@/data/workshopsDto';
 
 /**
  * Generates excel file with a single poll's votes
@@ -28,18 +32,16 @@ const downloadPollVotes = async (
         .json({ success: false, message: 'Missing pollId' });
     }
 
-    const pollVotes = await prisma.poll_vote.findMany({
-      where: {
-        poll_id: BigInt(pollId),
-      },
-      include: {
-        poll: true,
-        poll_transaction: true,
-        user: true,
-      },
-    });
+    const poll = await pollDto(pollId);
+    if (poll?.status !== pollPhases.concluded) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Poll is not concluded' });
+    }
 
-    const workshops = await prisma.workshop.findMany();
+    const pollVotes = await pollVotesDto(pollId);
+
+    const workshops = await workshopsDto();
 
     const results: {
       user: string;
@@ -87,10 +89,7 @@ const downloadPollVotes = async (
     // Set headers to prompt download
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment');
-    res.setHeader(
-      'file-name',
-      `${pollVotes[0].poll.name || 'Unknown Poll'} votes.csv`,
-    );
+    res.setHeader('file-name', `${poll.name || 'Unknown Poll'} votes.csv`);
 
     return res.status(200).send(csv);
   } catch (err) {

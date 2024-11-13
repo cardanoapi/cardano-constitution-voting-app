@@ -9,7 +9,7 @@ import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
  * @returns The user data, null if error encountered
  */
 export async function userDto(userId: string): Promise<User | null> {
-  const user = await prisma.user.findFirst({
+  const user = await prisma.user.findUnique({
     where: {
       id: BigInt(userId),
     },
