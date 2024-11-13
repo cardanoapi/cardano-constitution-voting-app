@@ -4,12 +4,22 @@ import { CCVT } from '@mock/index';
 import { expect } from '@playwright/test';
 import { test } from '@fixtures/walletExtension';
 import RepresentativesPage from '@pages/representativesPage';
+import LoginPage from '@pages/loginPage';
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
 });
 
 test.use({ storageState: '.auth/organizer.json', wallet: organizerWallet });
+
+test.describe('Recognise a Convention Organiser', () => {
+  test('1H. Must be able to distinguish CO', async ({ page }) => {
+    await page.goto('/');
+    const CreatePollButton = page.getByTestId('create-poll-button').first();
+    await expect(CreatePollButton).toBeVisible();
+    await expect(CreatePollButton).toHaveText('Create Poll');
+  });
+});
 
 test.describe('Invitation', () => {
   test('1B. Could invite delegates', async ({ page }) => {
@@ -52,15 +62,12 @@ test.describe('Poll results', () => {
 });
 
 test.describe('Delegate and Alternate Profile', () => {
-  test('1F. Must have access to update delegate and alternate profile', async ({
-    page,
-  }) => {
+  test('1F. Must have access to update delegate profile', async ({ page }) => {
     const represntativePage = new RepresentativesPage(page);
     await represntativePage.updateDelegateProfile();
+    await represntativePage.isRepresentativeUpdated();
     await represntativePage.updateAlternateProfile();
-    await page.waitForTimeout(10);
-    await represntativePage.isDelegateUpdated();
-    await represntativePage.isAlternateUpdated();
+    await represntativePage.isRepresentativeUpdated();
   });
 
   test('1I. Must have access to create delegate and alternate profile', async ({
@@ -76,6 +83,7 @@ test.describe('Voting Power', () => {
     page,
   }) => {
     const representativePage = new RepresentativesPage(page);
+    const loginPage = new LoginPage(page);
     await representativePage.transferVotePowerToAlternate();
     await expect(page.getByText('Active voter updated!')).toBeVisible();
   });

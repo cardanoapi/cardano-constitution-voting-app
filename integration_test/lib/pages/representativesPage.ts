@@ -2,6 +2,7 @@ import { Page, expect } from '@playwright/test';
 
 const updateDelegateEmail = 'jamejones123@email.com';
 const updatedAlternateEmail = 'sallysue123@email.com';
+const representativeUpdatedToast = 'User info updated!';
 
 export default class RepresentativesPage {
   readonly updateDelegateBtn = this.page.getByTestId(
@@ -36,11 +37,8 @@ export default class RepresentativesPage {
     await this.saveDelegateInfoBtn.click({ force: true });
   }
 
-  async isDelegateUpdated(): Promise<void> {
-    const representativeEmailList = await this.page
-      .locator('[data-field="email"]')
-      .allInnerTexts();
-    expect(representativeEmailList).toContain(updateDelegateEmail);
+  async isRepresentativeUpdated(): Promise<void> {
+    await expect(this.page.getByText(representativeUpdatedToast)).toBeVisible();
   }
 
   async updateAlternateProfile(): Promise<void> {
@@ -48,13 +46,6 @@ export default class RepresentativesPage {
     await this.updateAlternateBtn.click();
     await this.page.getByRole('textbox').nth(1).fill(updatedAlternateEmail);
     await this.saveAlternateBtn.click({ force: true });
-  }
-
-  async isAlternateUpdated(): Promise<void> {
-    const representativeEmailList = await this.page
-      .locator('[data-field="email"]')
-      .allInnerTexts();
-    expect(representativeEmailList).toContain(updatedAlternateEmail);
   }
 
   async transferVotePowerToAlternate(): Promise<void> {

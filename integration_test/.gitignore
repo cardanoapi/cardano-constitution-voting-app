@@ -6,3 +6,4 @@ node_modules/
 .auth/
 allure-results/
 allure-report/
+../.auth/
