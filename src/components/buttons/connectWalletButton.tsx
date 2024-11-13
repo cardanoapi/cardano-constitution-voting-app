@@ -146,7 +146,11 @@ export function ConnectWalletButton(): JSX.Element {
         const user = await getUser(session.data.user.id);
         if (user.user) {
           setUser(user.user);
+        } else {
+          setUser(null);
         }
+      } else {
+        setUser(null);
       }
     }
     fetchUserData();
