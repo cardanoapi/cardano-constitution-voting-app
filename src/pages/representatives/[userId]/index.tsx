@@ -1,7 +1,13 @@
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { HowToVoteRounded } from '@mui/icons-material';
-import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Chip,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import type { Poll, PollVote, User, Workshop } from '@/types';
@@ -29,6 +35,14 @@ export default function Representative(props: Props): JSX.Element {
     props;
 
   const theme = useTheme();
+
+  const userWorkshop = workshops.find(
+    (workshop) => workshop.id === user.workshop_id,
+  );
+
+  const workshopActiveVoterId = userWorkshop?.active_voter_id;
+
+  const isUserActiveVoter = user.id === workshopActiveVoterId;
 
   return (
     <>
@@ -62,24 +76,36 @@ export default function Representative(props: Props): JSX.Element {
                   >
                     {user.name}
                   </Typography>
-                  {user.is_delegate && (
-                    <Typography
-                      variant="h4"
-                      fontWeight="600"
-                      data-testid="user-delegate"
-                    >
-                      DELEGATE
-                    </Typography>
-                  )}
-                  {user.is_alternate && (
-                    <Typography
-                      variant="h4"
-                      fontWeight="600"
-                      data-testid="user-alternate"
-                    >
-                      ALTERNATE
-                    </Typography>
-                  )}
+                  <Box display="flex" flexDirection="row" gap={1}>
+                    <Box sx={{ color: theme.palette.text.disabled }}>
+                      {isUserActiveVoter === true ? (
+                        <Chip
+                          variant="outlined"
+                          color="success"
+                          label="Active Voter"
+                        ></Chip>
+                      ) : (
+                        <Chip
+                          variant="outlined"
+                          label="Not an active voter"
+                        ></Chip>
+                      )}
+                    </Box>
+                    {user.is_delegate && (
+                      <Box>
+                        <Chip
+                          variant="outlined"
+                          color="primary"
+                          label="Delegate"
+                        ></Chip>
+                      </Box>
+                    )}
+                    {user.is_alternate && (
+                      <Box sx={{ color: theme.palette.text.disabled }}>
+                        <Chip variant="outlined" label="Alternate"></Chip>
+                      </Box>
+                    )}
+                  </Box>
                   <Box
                     display="flex"
                     flexDirection="row"
