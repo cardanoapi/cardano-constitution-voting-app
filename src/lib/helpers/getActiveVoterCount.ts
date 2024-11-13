@@ -11,7 +11,7 @@ export async function getActiveVoterCount(): Promise<{
   message: string;
 }> {
   try {
-    const response = await axios.get(`/api/getActiveVoterCount`, {
+    const response = await axios.get('/api/getActiveVoterCount', {
       headers: {
         'X-Custom-Header': 'intersect',
       },
