@@ -3,6 +3,8 @@ import { prisma } from '@/db';
 import { Parser } from '@json2csv/plainjs';
 import * as Sentry from '@sentry/nextjs';
 
+import { pollDto } from '@/data/pollDto';
+
 /**
  * Generates excel file with a single poll's votes
  * @param req - Request object
@@ -28,12 +30,18 @@ const downloadPollVotes = async (
         .json({ success: false, message: 'Missing pollId' });
     }
 
+    const poll = await pollDto(pollId);
+    if (poll?.status !== 'concluded') {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Poll is not concluded' });
+    }
+
     const pollVotes = await prisma.poll_vote.findMany({
       where: {
         poll_id: BigInt(pollId),
       },
       include: {
-        poll: true,
         poll_transaction: true,
         user: true,
       },
@@ -87,10 +95,7 @@ const downloadPollVotes = async (
     // Set headers to prompt download
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment');
-    res.setHeader(
-      'file-name',
-      `${pollVotes[0].poll.name || 'Unknown Poll'} votes.csv`,
-    );
+    res.setHeader('file-name', `${poll.name || 'Unknown Poll'} votes.csv`);
 
     return res.status(200).send(csv);
   } catch (err) {

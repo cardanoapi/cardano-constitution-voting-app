@@ -118,7 +118,9 @@ export default function ViewPoll(props: Props): JSX.Element {
               )}
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
-            <DownloadPollVotesButton pollId={pollId} />
+            {poll?.status === 'concluded' && (
+              <DownloadPollVotesButton pollId={pollId} />
+            )}
           </Box>
           <PollVoteCount pollId={poll?.id || ''} />
           <Grid container data-testid="poll-description">
