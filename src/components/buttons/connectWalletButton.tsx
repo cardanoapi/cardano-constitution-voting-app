@@ -1,5 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 import { walletOptions } from '@/constants/walletOptions';
+import { PersonRounded } from '@mui/icons-material';
 import CircleRounded from '@mui/icons-material/CircleRounded';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -9,7 +11,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 
+import { User } from '@/types';
+import { paths } from '@/paths';
 import { connectWallet } from '@/lib/connectWallet';
+import { getUser } from '@/lib/helpers/getUser';
 
 /**
  * A button to connect a wallet to a variety of cip-30 compatible wallets
@@ -19,9 +24,11 @@ export function ConnectWalletButton(): JSX.Element {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [connecting, setConnecting] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   const session = useSession();
   const theme = useTheme();
+  const router = useRouter();
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorEl(event.currentTarget);
@@ -31,6 +38,11 @@ export function ConnectWalletButton(): JSX.Element {
   function handleClose(): void {
     setAnchorEl(null);
     setOpen(false);
+  }
+
+  function handleVisitProfile(): void {
+    handleClose();
+    router.push(paths.representatives.representative + user?.id);
   }
 
   // dropdown menu to select Cardano wallet from available wallets in browser
@@ -85,6 +97,25 @@ export function ConnectWalletButton(): JSX.Element {
           'aria-labelledby': 'basic-button',
         }}
       >
+        {user && (
+          <MenuItem
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+            onClick={handleVisitProfile}
+          >
+            <Typography alignSelf="flex-start" color="rgba(255, 255, 255, 0.5)">
+              Logged in
+            </Typography>
+            <Box display="flex" flexDirection="row" gap={1} alignItems="center">
+              <PersonRounded color="success"></PersonRounded>
+              <Typography color={theme.palette.success.main}>
+                {user?.name}
+              </Typography>
+            </Box>
+          </MenuItem>
+        )}
         {session.status === 'authenticated' ? (
           <MenuItem
             sx={{
@@ -107,6 +138,19 @@ export function ConnectWalletButton(): JSX.Element {
       </Menu>
     );
   }, [anchorEl, open, connecting, session]);
+
+  // Lookup user information from session
+  useEffect(() => {
+    async function fetchUserData(): Promise<void> {
+      if (session.status === 'authenticated') {
+        const user = await getUser(session.data.user.id);
+        if (user.user) {
+          setUser(user.user);
+        }
+      }
+    }
+    fetchUserData();
+  }, [session.status]);
 
   return (
     <Box display="flex" flexDirection="row" gap={1} alignItems="center">
