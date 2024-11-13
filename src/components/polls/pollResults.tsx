@@ -38,7 +38,8 @@ const YesLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    border: `1px solid ${theme.palette.divider}`,
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
@@ -50,7 +51,8 @@ const NoLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    border: `1px solid ${theme.palette.divider}`,
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
@@ -62,7 +64,8 @@ const AbstainLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    border: `1px solid ${theme.palette.divider}`,
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
@@ -98,7 +101,7 @@ export function PollResults(props: Props): JSX.Element {
       <>
         {votes?.yes?.map(({ name, id }) => {
           return (
-            <Box key={id}>
+            <Box key={id} display="flex" flexDirection="row" gap={1}>
               <PollResultsVoter name={name} id={id} vote="yes" />
             </Box>
           );
@@ -112,7 +115,7 @@ export function PollResults(props: Props): JSX.Element {
       <>
         {votes?.no?.map(({ name, id }) => {
           return (
-            <Box key={id}>
+            <Box key={id} display="flex" flexDirection="row" gap={1}>
               <PollResultsVoter name={name} id={id} vote="no" />
             </Box>
           );
@@ -126,7 +129,7 @@ export function PollResults(props: Props): JSX.Element {
       <>
         {votes?.abstain?.map(({ name, id }) => {
           return (
-            <Box key={id}>
+            <Box key={id} display="flex" flexDirection="row" gap={1}>
               <PollResultsVoter name={name} id={id} vote="abstain" />
             </Box>
           );
