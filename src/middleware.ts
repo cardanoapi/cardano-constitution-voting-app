@@ -12,7 +12,7 @@ export function middleware(request: NextRequest): Response {
   connect-src 'self';
   font-src 
     'self'
-    https://fonts.googleapis.com;
+    https://fonts.gstatic.com/;
   form-action 'self';
   frame-ancestors 'none';
   frame-src 'self' https://vercel.live/;
@@ -27,7 +27,7 @@ export function middleware(request: NextRequest): Response {
   style-src 
     'self' 
     'unsafe-inline'
-    https://fonts.googleapis.com/;
+    https://fonts.gstatic.com/;
   upgrade-insecure-requests; 
   worker-src 'self';
 `;
