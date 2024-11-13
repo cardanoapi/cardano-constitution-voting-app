@@ -139,9 +139,6 @@ export default function ViewPoll(props: Props): JSX.Element {
               )}
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
-            {poll?.status === 'concluded' && (
-              <DownloadPollVotesButton pollId={pollId} />
-            )}
           </Box>
           <PollVoteCount pollId={poll?.id || ''} />
           <Grid container data-testid="poll-description">
@@ -218,9 +215,10 @@ export default function ViewPoll(props: Props): JSX.Element {
                     </Box>
                   )}
                   {/* Vote Results */}
-                  {poll.status === pollPhases.concluded && (
-                    <PollResults votes={pollResults} />
-                  )}
+                  {poll.status === pollPhases.concluded &&
+                    typeof pollId === 'string' && (
+                      <PollResults votes={pollResults} pollId={pollId} />
+                    )}
                 </Box>
               </Grid>
             )}

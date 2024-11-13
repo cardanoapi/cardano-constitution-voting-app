@@ -17,7 +17,10 @@ import Typography from '@mui/material/Typography';
 import { calculateWinner } from '@/lib/helpers/calculateWinner';
 import { PollResultsVoter } from '@/components/polls/pollResultsVoter';
 
+import { DownloadPollVotesButton } from '../buttons/downloadPollVotesButton';
+
 interface Props {
+  pollId: string;
   votes: {
     yes: {
       name: string;
@@ -79,7 +82,7 @@ const AbstainLinearProgress = styled(LinearProgress)(({ theme }) => ({
  * @returns Poll Results
  */
 export function PollResults(props: Props): JSX.Element {
-  const { votes } = props;
+  const { votes, pollId } = props;
 
   const theme = useTheme();
 
@@ -145,9 +148,13 @@ export function PollResults(props: Props): JSX.Element {
 
   return (
     <Box display="flex" flexDirection="column" gap={6} width="100%">
-      <Typography variant="h3" fontWeight="bold">
-        Results
-      </Typography>
+      <Box display="flex" flexDirection="row" gap={3} alignItems="center">
+        <Typography variant="h3" fontWeight="bold">
+          Results
+        </Typography>
+        <DownloadPollVotesButton pollId={pollId} />
+      </Box>
+
       <Typography
         variant="h3"
         fontWeight="bold"
@@ -155,6 +162,7 @@ export function PollResults(props: Props): JSX.Element {
       >
         {winningOption === 'yes' ? 'Approved' : 'Not Approved'}
       </Typography>
+
       <Box display="flex" flexDirection="column" gap={6} width="100%">
         <Box
           display="flex"
