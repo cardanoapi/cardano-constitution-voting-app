@@ -20,7 +20,8 @@ export function middleware(request: NextRequest): Response {
     'self' 
     ${isProd ? '' : "'unsafe-eval'"}  
     https://va.vercel-scripts.com/v1/script.debug.js 
-    https://vercel.live/_next-live/feedback/;
+    https://vercel.live/_next-live/feedback/
+    https://fonts.googleapis.com/;
   script-src-attr 'none';
   style-src 'self' 'unsafe-inline';
   upgrade-insecure-requests; 
