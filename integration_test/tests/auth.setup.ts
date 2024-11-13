@@ -9,7 +9,7 @@ import { createAuth } from '@helpers/auth';
 
 const organizerAuthFile = '.auth/organizer.json';
 const delegateAuthFile = '.auth/delegate.json';
-const alternateAuthFile = '.auth/organizer.json';
+const alternateAuthFile = '.auth/alternate.json';
 
 setup.beforeEach(async () => {
   await setAllureEpic('Setup');
