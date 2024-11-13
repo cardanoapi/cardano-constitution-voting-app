@@ -34,7 +34,7 @@ interface Props {
   poll: Poll | null;
   representatives: User[];
   workshops: Workshop[];
-  pollResults: {
+  pollResultsSSR: {
     yes: {
       name: string;
       id: string;
@@ -52,9 +52,10 @@ interface Props {
 }
 
 export default function ViewPoll(props: Props): JSX.Element {
-  const { representatives, workshops, pollResults, polls } = props;
+  const { representatives, workshops, pollResultsSSR, polls } = props;
   let { poll } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pollResults, setPollResults] = useState(pollResultsSSR);
 
   const session = useSession();
   const router = useRouter();
@@ -76,6 +77,26 @@ export default function ViewPoll(props: Props): JSX.Element {
   const updateIsSubmitting = useCallback((value: boolean) => {
     setIsSubmitting(value);
   }, []);
+
+  const updatePollResults = useCallback(
+    (newPollResults: {
+      yes: {
+        name: string;
+        id: string;
+      }[];
+      no: {
+        name: string;
+        id: string;
+      }[];
+      abstain: {
+        name: string;
+        id: string;
+      }[];
+    }) => {
+      setPollResults(newPollResults);
+    },
+    [],
+  );
 
   if (data && data.poll) {
     poll = data.poll;
@@ -167,6 +188,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                               pollId={pollId}
                               isSubmitting={isSubmitting}
                               setIsSubmitting={updateIsSubmitting}
+                              updatePollResults={updatePollResults}
                             />
                           )}
                           <DeletePollButton
@@ -226,7 +248,7 @@ export const getServerSideProps = async (
     poll: Poll | null;
     representatives: User[];
     workshops: Workshop[];
-    pollResults: {
+    pollResultsSSR: {
       [key: string]: {
         name: string;
         id: string;
@@ -241,7 +263,7 @@ export const getServerSideProps = async (
         poll: null,
         representatives: [],
         workshops: [],
-        pollResults: {},
+        pollResultsSSR: {},
         polls: [],
       },
     };
@@ -252,7 +274,7 @@ export const getServerSideProps = async (
   const poll = await pollDto(pollId);
   const representatives = await representativesDto();
   const workshops = await workshopsDto();
-  const pollResults = await pollResultsDto(pollId);
+  const pollResultsSSR = await pollResultsDto(pollId);
   const polls = await pollsDto();
 
   return {
@@ -260,7 +282,7 @@ export const getServerSideProps = async (
       poll: poll,
       representatives: representatives,
       workshops: workshops,
-      pollResults: pollResults,
+      pollResultsSSR: pollResultsSSR,
       polls: polls,
     },
   };
