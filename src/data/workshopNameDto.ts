@@ -8,7 +8,7 @@ import { prisma } from '@/db';
 export async function workshopNameDto(
   workshopId: string,
 ): Promise<string | null> {
-  const workshop = await prisma.workshop.findFirst({
+  const workshop = await prisma.workshop.findUnique({
     where: {
       id: BigInt(workshopId),
     },
