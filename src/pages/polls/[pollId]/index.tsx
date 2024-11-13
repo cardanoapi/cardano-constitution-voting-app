@@ -19,6 +19,7 @@ import { pollsDto } from '@/data/pollsDto';
 import { representativesDto } from '@/data/representativesDto';
 import { workshopsDto } from '@/data/workshopsDto';
 import { getPoll } from '@/lib/helpers/getPoll';
+import { getPollResults } from '@/lib/helpers/getPollResults';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
 import { DownloadPollVotesButton } from '@/components/buttons/downloadPollVotesButton';
@@ -67,6 +68,10 @@ export default function ViewPoll(props: Props): JSX.Element {
     queryFn: async () => {
       if (typeof pollId === 'string') {
         const data = await getPoll(pollId);
+        const pollResults = await getPollResults(pollId);
+        if (pollResults.votes) {
+          setPollResults(pollResults.votes);
+        }
         return data;
       }
     },
