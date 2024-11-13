@@ -27,7 +27,7 @@ export function middleware(request: NextRequest): Response {
   style-src 
     'self' 
     'unsafe-inline'
-    https://fonts.gstatic.com/;
+    https://fonts.googleapis.com;
   upgrade-insecure-requests; 
   worker-src 'self';
 `;
