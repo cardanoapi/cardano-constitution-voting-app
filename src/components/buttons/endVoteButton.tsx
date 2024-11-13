@@ -3,19 +3,38 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { endVoting } from '@/lib/helpers/endVoting';
+import { getPollResults } from '@/lib/helpers/getPollResults';
 
 interface Props {
   pollId: string | string[] | undefined;
   isSubmitting: boolean;
   setIsSubmitting: (value: boolean) => void;
+  updatePollResults: (newPollResults: {
+    yes: {
+      name: string;
+      id: string;
+    }[];
+    no: {
+      name: string;
+      id: string;
+    }[];
+    abstain: {
+      name: string;
+      id: string;
+    }[];
+  }) => void;
 }
 
 /**
  * A button for workshop coordinators to end voting for a poll
+ * @param pollId - The pollId of the poll to end voting for
+ * @param isSubmitting - Whether the button is in a submitting state
+ * @param setIsSubmitting - Function to set the submitting state
+ * @param updatePollResults - Function to update the poll results after voting ends
  * @returns End Voting Button
  */
 export function EndVoteButton(props: Props): JSX.Element {
-  const { pollId, isSubmitting, setIsSubmitting } = props;
+  const { pollId, isSubmitting, setIsSubmitting, updatePollResults } = props;
 
   const session = useSession();
 
@@ -30,6 +49,12 @@ export function EndVoteButton(props: Props): JSX.Element {
     if (result.succeeded === false) {
       toast.error(result.message);
     } else {
+      const pollResults = await getPollResults(pollId);
+      if (!pollResults.votes) {
+        toast.error('Error fetching poll results');
+      } else {
+        updatePollResults(pollResults.votes);
+      }
       toast.success('Voting ended!');
     }
     setIsSubmitting(false);
