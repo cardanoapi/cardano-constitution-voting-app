@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import { Parser } from '@json2csv/plainjs';
 import * as Sentry from '@sentry/nextjs';
+
+import { userDto } from '@/data/userDto';
+import { userVotesForDownloadDto } from '@/data/userVotesForDownloadDto';
+import { workshopNameDto } from '@/data/workshopNameDto';
 
 /**
  * Generates excel file with a single delegate's votes
@@ -28,30 +31,17 @@ const downloadUserVotes = async (
         .json({ success: false, message: 'Missing userId' });
     }
 
-    const userVotes = await prisma.poll_vote.findMany({
-      where: {
-        user_id: BigInt(userId),
-        poll: {
-          status: 'concluded',
-        },
-      },
-      include: {
-        poll: true,
-        poll_transaction: true,
-      },
-    });
+    const userVotes = await userVotesForDownloadDto(userId);
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: BigInt(userId),
-      },
-    });
+    const user = await userDto(userId);
 
-    const workshop = await prisma.workshop.findUnique({
-      where: {
-        id: user?.workshop_id,
-      },
-    });
+    let workshopName = 'Unknown Workshop';
+    if (user?.workshop_id) {
+      const name = await workshopNameDto(user.workshop_id);
+      if (name) {
+        workshopName = name;
+      }
+    }
 
     const results: {
       poll: string;
@@ -82,7 +72,7 @@ const downloadUserVotes = async (
     res.setHeader('Content-Disposition', 'attachment');
     res.setHeader(
       'file-name',
-      `${user?.name} - ${workshop?.name} - ${user?.is_delegate ? 'Delegate' : 'Alternate'} Votes.csv`,
+      `${user?.name} - ${workshopName} - ${user?.is_delegate ? 'Delegate' : 'Alternate'} Votes.csv`,
     );
 
     return res.status(200).send(csv);
