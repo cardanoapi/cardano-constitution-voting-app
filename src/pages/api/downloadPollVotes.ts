@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { pollPhases } from '@/constants/pollPhases';
 import { Parser } from '@json2csv/plainjs';
 import * as Sentry from '@sentry/nextjs';
 
@@ -32,7 +33,7 @@ const downloadPollVotes = async (
     }
 
     const poll = await pollDto(pollId);
-    if (poll?.status !== 'concluded') {
+    if (poll?.status !== pollPhases.concluded) {
       return res
         .status(400)
         .json({ success: false, message: 'Poll is not concluded' });
