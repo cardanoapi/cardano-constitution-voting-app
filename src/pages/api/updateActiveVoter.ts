@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/nextjs';
 import { getServerSession } from 'next-auth';
 
 import { checkIfCO } from '@/lib/checkIfCO';
+import { checkIfVoting } from '@/lib/checkIfVoting';
 
 type Data = {
   userId: string;
@@ -45,9 +46,17 @@ export default async function updateActiveVoter(
       });
     }
 
+    const isVoting = await checkIfVoting();
+    if (isVoting) {
+      return res.status(401).json({
+        userId: BigInt(-1).toString(),
+        message:
+          'You cannot update user information while a Poll is actively voting.',
+      });
+    }
+
     const { workshopId, activeVoterId } = req.body;
 
-    // TODO: Additional security step of verifying coordinator's signature before creating poll?
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
 
     // validate workshop id is provided
