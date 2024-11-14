@@ -72,7 +72,7 @@ export function PollList(props: Props): JSX.Element {
     );
   } else {
     return (
-      <Typography variant="h4" textAlign="center">
+      <Typography variant="h4" textAlign="center" fontWeight="bold">
         No polls yet.
       </Typography>
     );

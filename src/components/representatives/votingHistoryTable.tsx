@@ -86,7 +86,26 @@ export function VotingHistoryTable(props: Props): JSX.Element {
           </Typography>
           <DownloadUserVotesButton userId={userId} />
         </Box>
-        <DataGrid rows={polls} columns={columns} />
+        <Box
+          sx={{
+            fontFamily: 'Inter',
+          }}
+        >
+          <DataGrid
+            rows={polls}
+            columns={columns}
+            sx={{
+              '.MuiDataGrid-columnSeparator': {
+                display: 'none',
+              },
+              '.MuiDataGrid-columnHeader': {
+                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                fontFamily: 'Montserrat',
+                fontSize: '1.2rem',
+              },
+            }}
+          />
+        </Box>
       </Box>
     );
   } else {
