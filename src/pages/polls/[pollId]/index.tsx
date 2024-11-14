@@ -136,6 +136,11 @@ export default function ViewPoll(props: Props): JSX.Element {
       </Head>
       <main>
         <Box display="flex" flexDirection="column" gap={3}>
+          {poll?.is_archived && (
+            <Typography variant="h1" fontWeight="bold" color="error">
+              Archived
+            </Typography>
+          )}
           <Box
             display="flex"
             flexDirection="row"
