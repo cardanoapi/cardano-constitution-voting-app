@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { walletOptions } from '@/constants/walletOptions';
-import { PersonRounded } from '@mui/icons-material';
+import PersonRounded from '@mui/icons-material/PersonRounded';
 import CircleRounded from '@mui/icons-material/CircleRounded';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 
-import { User } from '@/types';
+import type { User } from '@/types';
 import { paths } from '@/paths';
 import { connectWallet } from '@/lib/connectWallet';
 import { getUser } from '@/lib/helpers/getUser';
