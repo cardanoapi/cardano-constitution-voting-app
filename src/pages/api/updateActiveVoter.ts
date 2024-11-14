@@ -51,7 +51,7 @@ export default async function updateActiveVoter(
       return res.status(401).json({
         userId: BigInt(-1).toString(),
         message:
-          'You cannot update user information while a Poll is actively voting.',
+          'You cannot change the active voter while a Poll is actively voting.',
       });
     }
 
