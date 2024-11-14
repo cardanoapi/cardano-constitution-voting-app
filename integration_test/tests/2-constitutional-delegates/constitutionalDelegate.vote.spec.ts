@@ -26,7 +26,9 @@ test.describe('Delegate Vote', () => {
     await expect(page).toHaveTitle(CCVT.title);
   });
 
-  test('2H. Should be able to change vote during open poll', async ({ page }) => {
+  test('2H. Should be able to change vote during open poll', async ({
+    page,
+  }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
@@ -35,6 +37,4 @@ test.describe('Delegate Vote', () => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
-
 });
-

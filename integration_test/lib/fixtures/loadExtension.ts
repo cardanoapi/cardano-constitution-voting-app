@@ -5,7 +5,6 @@ import {
 import environments from '@constants/environments';
 import { Page } from '@playwright/test';
 
-
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import path = require('path');
 

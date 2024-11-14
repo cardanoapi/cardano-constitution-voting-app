@@ -7,19 +7,21 @@ test.beforeEach(async () => {
 });
 
 test.describe('View Voter Profile', () => {
-
   test('4C. Must be able to view voters profile.', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
 
-
-  test('4D. Must be able to view delegate workspace name in profile.', async ({ page }) => {
+  test('4D. Must be able to view delegate workspace name in profile.', async ({
+    page,
+  }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
 
-  test('4E. Could associate email with delegate profiles.', async ({ page }) => {
+  test('4E. Could associate email with delegate profiles.', async ({
+    page,
+  }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
@@ -29,10 +31,10 @@ test.describe('View Voter Profile', () => {
     await expect(page).toHaveTitle(CCVT.title);
   });
 
-  test('4I. Should be able to view public information of voter.', async ({ page }) => {
+  test('4I. Should be able to view public information of voter.', async ({
+    page,
+  }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
-
 });
-

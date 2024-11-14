@@ -7,11 +7,10 @@ test.beforeEach(async () => {
 });
 
 test.describe('View Poll Status', () => {
-
-  test('4G. Must be able to view vote result and its count.', async ({ page }) => {
+  test('4G. Must be able to view vote result and its count.', async ({
+    page,
+  }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
-
 });
-

@@ -1,4 +1,4 @@
-import { organizerWallet } from '@constants/staticWallets';
+import { delegateWallet, organizerWallet } from '@constants/staticWallets';
 import { setAllureEpic } from '@helpers/allure';
 import { CCVT } from '@mock/index';
 import { expect } from '@playwright/test';
@@ -21,6 +21,24 @@ test.describe('Recognise a Convention Organiser', () => {
   });
 });
 
+test.describe('Polls', () => {
+  test('1XX, Can create poll with valid data', async ({ page, browser }) => {
+    await page.goto('/polls/new');
+    await page
+      .locator('[data-testid="poll-name-input"] input')
+      .fill('Dummy Test Poll');
+    await page
+      .locator('[data-testid="poll-description-input"] textarea')
+      .first()
+      .fill('Test Poll Description');
+    await page.getByTestId('create-poll-button').click();
+
+    await expect(page.getByText('Dummy Test Poll')).toBeVisible();
+    await expect(
+      page.getByTestId('poll-status-chip').getByText('Pending')
+    ).toBeVisible();
+  });
+});
 test.describe('Invitation', () => {
   test('1B. Could invite delegates', async ({ page }) => {
     await page.goto('/');

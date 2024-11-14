@@ -6,4 +6,3 @@ export function isMobile(page: Page): boolean {
 
   return false;
 }
-

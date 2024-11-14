@@ -7,11 +7,8 @@ test.beforeEach(async () => {
 });
 
 test.describe('View Vote Status', () => {
-
   test('4H. Should be able to view poll status', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
-
 });
-

@@ -3,7 +3,6 @@ import { Page, expect } from '@playwright/test';
 const updateDelegateEmail = 'jamejones123@email.com';
 const updatedAlternateEmail = 'sallysue123@email.com';
 const representativeUpdatedToast = 'User info updated!';
-
 export default class RepresentativesPage {
   readonly updateDelegateBtn = this.page.getByTestId(
     'edit-representative-info-2'

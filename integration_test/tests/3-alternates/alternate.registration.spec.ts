@@ -7,11 +7,10 @@ test.beforeEach(async () => {
 });
 
 test.describe('Alternate Registration', () => {
-
-  test('3A. Must be able to view their registration status', async ({ page }) => {
+  test('3A. Must be able to view their registration status', async ({
+    page,
+  }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
   });
-
 });
-

@@ -10,7 +10,7 @@
       "@pages/*": ["lib/pages/*"],
       "@constants/*": ["lib/constants/*"],
       "@datafactory/*": ["lib/datafactory/*"],
-      "@types": ["lib/types.ts"],
+      "@types": ["lib/types.ts"]
     }
   }
 }
