@@ -9,7 +9,10 @@ export function middleware(request: NextRequest): Response {
   default-src 'self';
   base-uri 'self';
   child-src 'self';
-  connect-src 'self';
+  connect-src 
+    'self' 
+    https://tx.clarity.staging.mlabs.city/ 
+    https://tx.clarity-mainnet-new.staging.mlabs.city/;
   font-src 'self';
   form-action 'self';
   frame-ancestors 'none';
