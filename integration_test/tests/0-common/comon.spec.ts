@@ -8,7 +8,7 @@ import { faker } from '@faker-js/faker';
 
 
 test.beforeEach(async () => {
-    await setAllureEpic('1. Convention Organizers');
+    await setAllureEpic('0. All Users');
 });
 
 test.use({ storageState: '.auth/organizer.json', wallet: organizerWallet });
