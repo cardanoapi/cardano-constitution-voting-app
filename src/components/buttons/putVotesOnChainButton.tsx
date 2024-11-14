@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { addTxToPoll } from '@/lib/helpers/addTxToPoll';
+import { addTxToPollVotes } from '@/lib/helpers/addTxToPollVotes';
 import { getTxMetadata } from '@/lib/helpers/getTxMetadata';
 import { postVotesOnChain } from '@/lib/postVotesOnChain';
 
@@ -38,12 +39,22 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
       // For loop required as they metadata may be broken up into multiple transactions
       for (const metadata of Object.values(response.metadata)) {
         // Post votes on chain
-        txHash = await postVotesOnChain(metadata);
+        txHash = await postVotesOnChain(metadata.metadata);
         if (txHash) {
           // Add txHash to poll
           const addTxResponse = await addTxToPoll(pollId, txHash.submitTxId);
-          if (!addTxResponse.succeeded) {
+          if (addTxResponse.pollTransactionId === '-1') {
             toast.error(addTxResponse.message);
+            break;
+          }
+          // Add txHash to poll votes
+          const addTxToVotesResponse = await addTxToPollVotes(
+            metadata.userIds,
+            pollId,
+            addTxResponse.pollTransactionId,
+          );
+          if (!addTxToVotesResponse.succeeded) {
+            toast.error(addTxToVotesResponse.message);
             break;
           }
         } else {

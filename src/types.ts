@@ -36,6 +36,9 @@ export interface PollVote {
 
 export type Metadata = {
   [key: number]: {
-    [key: string]: string[];
-  }[];
+    metadata: {
+      [key: string]: string[];
+    }[];
+    userIds: string[];
+  };
 };

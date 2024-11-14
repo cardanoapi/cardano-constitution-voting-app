@@ -9,16 +9,16 @@ import { getServerSession } from 'next-auth';
 import { checkIfCO } from '@/lib/checkIfCO';
 
 type Data = {
-  pollTransactionId: string;
+  success: boolean;
   message: string;
 };
 /**
- * Adds a TX ID to a poll
+ * Adds a TX ID to all user votes in a poll
  * @returns success - True if the TX was successfully added, false otherwise
  * @returns Message - An error message if the TX was not successfully added
  * @returns Status - 200 if successful, 400 if failed from user input, 500 if failed from an internal error
  */
-export default async function addTxToPoll(
+export default async function addTxToPollVotes(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
@@ -27,13 +27,13 @@ export default async function addTxToPoll(
       res.setHeader('Allow', 'POST');
       return res
         .status(405)
-        .json({ pollTransactionId: '-1', message: 'Method not allowed' });
+        .json({ success: false, message: 'Method not allowed' });
     }
 
     const session = await getServerSession(req, res, authOptions);
     if (!session) {
       return res.status(401).json({
-        pollTransactionId: '-1',
+        success: false,
         message: 'User is not logged in',
       });
     }
@@ -42,20 +42,37 @@ export default async function addTxToPoll(
     const isCO = await checkIfCO(stakeAddress);
     if (!isCO) {
       return res.status(401).json({
-        pollTransactionId: '-1',
+        success: false,
         message: 'User is not a convention organizer',
       });
     }
 
-    const { pollId, txId } = req.body;
+    const { userIds, pollId, pollTransactionId } = req.body;
+
+    if (!userIds) {
+      return res.status(400).json({
+        success: false,
+        message: 'User IDs must be provided.',
+      });
+    }
+
+    for (const userId of userIds) {
+      if (typeof userId !== 'string') {
+        return res.status(400).json({
+          success: false,
+          message: 'User IDs must be strings.',
+        });
+      }
+    }
+
     if (
       !pollId ||
       typeof pollId !== 'string' ||
-      !txId ||
-      typeof txId !== 'string'
+      !pollTransactionId ||
+      typeof pollTransactionId !== 'string'
     ) {
       return res.status(400).json({
-        pollTransactionId: '-1',
+        success: false,
         message: 'Poll ID and TX ID must be provided.',
       });
     }
@@ -67,26 +84,30 @@ export default async function addTxToPoll(
     });
     if (!poll || poll.status !== pollPhases.concluded) {
       return res.status(400).json({
-        pollTransactionId: '-1',
+        success: false,
         message: 'Poll does not exist or is not concluded.',
       });
     }
 
-    const pollTransaction = await prisma.poll_transaction.create({
-      data: {
-        poll_id: BigInt(pollId),
-        transaction_id: txId,
-      },
-    });
+    for (const userId of userIds) {
+      await prisma.poll_vote.update({
+        where: {
+          poll_id_user_id: {
+            poll_id: BigInt(pollId),
+            user_id: BigInt(userId),
+          },
+        },
+        data: {
+          poll_transaction_id: BigInt(pollTransactionId),
+        },
+      });
+    }
 
-    return res.status(200).json({
-      pollTransactionId: String(pollTransaction.id),
-      message: 'TX ID saved',
-    });
+    return res.status(200).json({ success: true, message: 'TX ID saved' });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({
-      pollTransactionId: '-1',
+      success: false,
       message: 'Error saving TX ID.',
     });
   }

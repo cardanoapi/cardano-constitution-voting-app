@@ -72,16 +72,21 @@ export default async function getTxMetadata(
     const metadata: Metadata = {};
 
     let i = 0;
-    let temporaryArray: { [key: string]: string[] }[] = []; // Temporary array to store metadata for a single transaction
+    let temporaryMetadataArray: { [key: string]: string[] }[] = []; // Temporary array to store metadata for a single transaction
+    let temporaryUserArray: string[] = []; // Temporary array to store user IDs that are included in a single transaction
     for (const vote of pollVotes) {
       // First, check how large the bytes of the temporary array is
-      const bytes = getBytesOfArray(temporaryArray);
+      const bytes = getBytesOfArray(temporaryMetadataArray);
       // Limit is set to 10 KB right now. Cardano TX limit is 16KB. This is to be safe. If the limit is reached, create a new entry in the metadata object.
       // Not entirely sure what the limit should be. However, I would rather the CO have to sign multiple transactions than have the TX building fail.
       if (bytes > 10000) {
-        metadata[i] = temporaryArray;
+        metadata[i] = {
+          metadata: temporaryMetadataArray,
+          userIds: temporaryUserArray,
+        };
         i++;
-        temporaryArray = [];
+        temporaryMetadataArray = [];
+        temporaryUserArray = [];
       }
       // A given value in the metadata object can only be 64 bytes. If it is larger, it must be split into an array of strings.
       const value = splitStringByBytes(
@@ -89,12 +94,16 @@ export default async function getTxMetadata(
         64,
       );
       // The key is the user's name. Their name will get cut off at 64 bytes to ensure the value is not too large.
-      temporaryArray.push({ [vote.user.name.slice(0, 64)]: value });
+      temporaryMetadataArray.push({ [vote.user.name.slice(0, 64)]: value });
+      temporaryUserArray.push(vote.user.id);
     }
 
     // If there are any remaining entries in the temporary array, add them to the metadata object
-    if (temporaryArray.length > 0) {
-      metadata[i] = temporaryArray;
+    if (temporaryMetadataArray.length > 0) {
+      metadata[i] = {
+        metadata: temporaryMetadataArray,
+        userIds: temporaryUserArray,
+      };
     }
 
     return res
