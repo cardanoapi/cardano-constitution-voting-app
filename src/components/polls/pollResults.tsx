@@ -15,9 +15,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { calculateWinner } from '@/lib/helpers/calculateWinner';
+import { DownloadPollVotesButton } from '@/components/buttons/downloadPollVotesButton';
 import { PollResultsVoter } from '@/components/polls/pollResultsVoter';
-
-import { DownloadPollVotesButton } from '../buttons/downloadPollVotesButton';
 
 interface Props {
   pollId: string;
