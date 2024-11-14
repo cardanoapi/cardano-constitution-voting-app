@@ -33,3 +33,9 @@ export interface PollVote {
   hashed_message: string;
   poll_transaction_id: string | null;
 }
+
+export type Metadata = {
+  [key: number]: {
+    [key: string]: string[];
+  }[];
+};

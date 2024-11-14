@@ -23,6 +23,7 @@ import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
 import { DownloadPollVotesButton } from '@/components/buttons/downloadPollVotesButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
+import { PutVotesOnChainButton } from '@/components/buttons/putVotesOnChainButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollResults } from '@/components/polls/pollResults';
@@ -193,6 +194,14 @@ export default function ViewPoll(props: Props): JSX.Element {
                               updatePollResults={updatePollResults}
                             />
                           )}
+                          {poll.status === pollPhases.concluded &&
+                            !poll.summary_tx_id && (
+                              <PutVotesOnChainButton
+                                pollId={pollId}
+                                isSubmitting={isSubmitting}
+                                setIsSubmitting={updateIsSubmitting}
+                              />
+                            )}
                           <DeletePollButton
                             pollId={pollId}
                             isSubmitting={isSubmitting}
