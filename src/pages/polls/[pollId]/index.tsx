@@ -27,6 +27,7 @@ import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
+import { CoordinatorViewVotes } from '@/components/polls/coordinatorViewVotes';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollResults } from '@/components/polls/pollResults';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
@@ -120,8 +121,6 @@ export default function ViewPoll(props: Props): JSX.Element {
     toast.error(data?.message || error?.message || 'Error fetching poll');
   }
 
-  console.log('poll results', pollResults);
-
   return (
     <>
       <Head>
@@ -199,20 +198,12 @@ export default function ViewPoll(props: Props): JSX.Element {
                             />
                           )}
                           {poll.status === pollPhases.voting && (
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              gap={1}
-                              alignItems="center"
-                            >
-                              <EndVoteButton
-                                pollId={pollId}
-                                isSubmitting={isSubmitting}
-                                setIsSubmitting={updateIsSubmitting}
-                                updatePollResults={updatePollResults}
-                              />
-                              {/* <CoordinatorViewVotes /> */}
-                            </Box>
+                            <EndVoteButton
+                              pollId={pollId}
+                              isSubmitting={isSubmitting}
+                              setIsSubmitting={updateIsSubmitting}
+                              updatePollResults={updatePollResults}
+                            />
                           )}
                           <DeletePollButton
                             pollId={pollId}
@@ -222,6 +213,16 @@ export default function ViewPoll(props: Props): JSX.Element {
                         </Box>
                       </>
                     )}
+                    {session.data?.user.isCoordinator &&
+                      poll.status === pollPhases.voting && (
+                        <Box display="flex">
+                          <CoordinatorViewVotes
+                            votes={pollResults}
+                            workshops={workshops}
+                            representatives={representatives}
+                          />
+                        </Box>
+                      )}
                   </Box>
                   {/* Delegate Voting Buttons */}
                   {poll.status === pollPhases.voting && (
