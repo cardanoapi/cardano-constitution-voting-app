@@ -2,20 +2,26 @@ import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
- * Deletes a poll from the database
- * @param pollId - The ID of the poll to delete
- * @returns { succeeded: boolean, message: string } - True if the poll voting was successfully deleted, false otherwise with a message
+ * Archives a poll in the database
+ * @param pollId - The ID of the poll to archive
+ * @returns { succeeded: boolean, message: string } - True if the poll voting was successfully archived, false otherwise with a message
  */
 export async function deletePoll(
   pollId: string,
 ): Promise<{ succeeded: boolean; message: string }> {
   try {
-    const response = await axios.delete(`/api/deletePoll/${pollId}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Custom-Header': 'intersect',
+    const response = await axios.post(
+      '/api/archivePoll',
+      {
+        pollId: pollId,
       },
-    });
+      {
+        headers: {
+          'X-Custom-Header': 'intersect',
+        },
+        responseType: 'blob',
+      },
+    );
     const data = await response.data;
     if (response.status === 200) {
       return { succeeded: true, message: 'Poll Deleted' };
