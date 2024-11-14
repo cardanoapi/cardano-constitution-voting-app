@@ -15,6 +15,7 @@ model poll {
   summary_tx_id    String?            @unique @db.VarChar(255)
   poll_transaction poll_transaction[]
   poll_vote        poll_vote[]
+  is_archived      Boolean            @default(false)
 }
 
 model poll_transaction {
