@@ -5,6 +5,29 @@ import { expect } from '@playwright/test';
 import { test } from '@fixtures/walletExtension';
 import RepresentativesPage from '@pages/representativesPage';
 import LoginPage from '@pages/loginPage';
+import { types } from 'util';
+
+const workshopInfo = [
+  {
+    name: 'Dubai',
+    delegate_id: BigInt(2),
+    alternate_id: BigInt(5),
+    active_vote_id: BigInt(2),
+  },
+  {
+    name: 'Singapore',
+    delegate_id: BigInt(4),
+    alternate_id: BigInt(3),
+    active_vote_id: BigInt(3),
+  },
+  { name: 'Convention Organizer' },
+  {
+    name: 'Buenos Aires',
+    delegate_id: BigInt(8),
+    alternate_id: BigInt(7),
+    active_vote_id: BigInt(8),
+  },
+];
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -76,6 +99,44 @@ test.describe('Poll results', () => {
   test('1M. Must close polls once voting is completed.', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(CCVT.title);
+  });
+});
+
+test.describe('Delegates and Alternates Grouped together', () => {
+  test('1N. Should have corresponding workspace delegate and alternate in a same row', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await expect(page.getByRole('row').first()).toBeVisible();
+    const delegate = await page.getByRole('gridcell').nth(1).innerText();
+    const alternate = await page.getByRole('gridcell').nth(2).innerText();
+    const delegatesList = await page
+      .locator('[data-testid^="delegate-name-"]')
+      .allInnerTexts();
+    const alternateList = await page
+      .locator('[data-testid^="alternate-name-"]')
+      .allInnerTexts();
+    expect(delegatesList).toContain(delegate);
+    expect(alternateList).toContain(alternate);
+  });
+
+  test('1O. Should have workspace_name ordered alphabetically', async ({
+    page,
+  }) => {
+    const workspaceNames = [];
+    await page.goto('/');
+    await expect(page.getByRole('row').first()).toBeVisible();
+    const rows = await page.getByRole('row').all();
+    rows.shift();
+    for (const row of rows) {
+      const workspace = (await row.allInnerTexts())[0].split('\n')[0];
+      workspaceNames.push(workspace);
+    }
+    expect(
+      workspaceNames.every(
+        (word, i) => i === 0 || workspaceNames[i - 1].localeCompare(word) <= 0
+      )
+    );
   });
 });
 
