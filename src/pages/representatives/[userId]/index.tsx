@@ -1,7 +1,13 @@
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { HowToVoteRounded } from '@mui/icons-material';
-import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Chip,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import type { Poll, PollVote, User, Workshop } from '@/types';
@@ -22,11 +28,19 @@ interface Props {
   workshops: Workshop[];
   workshopName: string | null;
   polls: Poll[];
+  isActiveVoter: boolean;
 }
 
 export default function Representative(props: Props): JSX.Element {
-  const { user, userVotes, representatives, workshops, workshopName, polls } =
-    props;
+  const {
+    user,
+    userVotes,
+    representatives,
+    workshops,
+    workshopName,
+    polls,
+    isActiveVoter,
+  } = props;
 
   const theme = useTheme();
 
@@ -62,24 +76,36 @@ export default function Representative(props: Props): JSX.Element {
                   >
                     {user.name}
                   </Typography>
-                  {user.is_delegate && (
-                    <Typography
-                      variant="h4"
-                      fontWeight="600"
-                      data-testid="user-delegate"
-                    >
-                      DELEGATE
-                    </Typography>
-                  )}
-                  {user.is_alternate && (
-                    <Typography
-                      variant="h4"
-                      fontWeight="600"
-                      data-testid="user-alternate"
-                    >
-                      ALTERNATE
-                    </Typography>
-                  )}
+                  <Box display="flex" flexDirection="row" gap={1}>
+                    <Box sx={{ color: theme.palette.text.disabled }}>
+                      {isActiveVoter === true ? (
+                        <Chip
+                          variant="outlined"
+                          color="success"
+                          label="Active Voter"
+                        ></Chip>
+                      ) : (
+                        <Chip
+                          variant="outlined"
+                          label="Not an active voter"
+                        ></Chip>
+                      )}
+                    </Box>
+                    {user.is_delegate && (
+                      <Box>
+                        <Chip
+                          variant="outlined"
+                          color="primary"
+                          label="Delegate"
+                        ></Chip>
+                      </Box>
+                    )}
+                    {user.is_alternate && (
+                      <Box sx={{ color: theme.palette.text.disabled }}>
+                        <Chip variant="outlined" label="Alternate"></Chip>
+                      </Box>
+                    )}
+                  </Box>
                   <Box
                     display="flex"
                     flexDirection="row"
@@ -157,6 +183,7 @@ export const getServerSideProps = async (
     workshops: Workshop[];
     workshopName: string | null;
     polls: Poll[];
+    isActiveVoter: boolean;
   };
 }> => {
   if (!context.params) {
@@ -168,6 +195,7 @@ export const getServerSideProps = async (
         workshops: [],
         workshopName: '',
         polls: [],
+        isActiveVoter: false,
       },
     };
   }
@@ -183,6 +211,7 @@ export const getServerSideProps = async (
         workshops: [],
         workshopName: '',
         polls: [],
+        isActiveVoter: false,
       },
     };
   }
@@ -193,6 +222,14 @@ export const getServerSideProps = async (
   const workshopName = await workshopNameDto(user.workshop_id);
   const polls = await pollsDto();
 
+  const userWorkshop = workshops.find(
+    (workshop) => workshop.id === user.workshop_id,
+  );
+
+  const workshopActiveVoterId = userWorkshop?.active_voter_id;
+
+  const isUserActiveVoter = user.id === workshopActiveVoterId;
+
   return {
     props: {
       user: user,
@@ -201,6 +238,7 @@ export const getServerSideProps = async (
       workshops: workshops,
       workshopName: workshopName,
       polls: polls,
+      isActiveVoter: isUserActiveVoter,
     },
   };
 };
