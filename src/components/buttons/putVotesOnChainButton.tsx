@@ -1,7 +1,9 @@
+import type { TransactionSubmitResult } from '@claritydao/clarity-backend';
 import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
+import { addTxToPoll } from '@/lib/helpers/addTxToPoll';
 import { getTxMetadata } from '@/lib/helpers/getTxMetadata';
 import { postVotesOnChain } from '@/lib/postVotesOnChain';
 
@@ -32,11 +34,22 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
     // Put votes on-chain
     const response = await getTxMetadata(pollId);
     if (response.metadata) {
-      let txHash = null;
+      let txHash: false | TransactionSubmitResult = false;
       // For loop required as they metadata may be broken up into multiple transactions
       for (const metadata of Object.values(response.metadata)) {
         // Post votes on chain
         txHash = await postVotesOnChain(metadata);
+        if (txHash) {
+          // Add txHash to poll
+          const addTxResponse = await addTxToPoll(pollId, txHash.submitTxId);
+          if (!addTxResponse.succeeded) {
+            toast.error(addTxResponse.message);
+            break;
+          }
+        } else {
+          toast.error('Error posting votes on-chain. Please try again.');
+          break;
+        }
       }
       if (txHash) {
         toast.success('Votes posted on-chain!');
