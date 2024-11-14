@@ -120,6 +120,8 @@ export default function ViewPoll(props: Props): JSX.Element {
     toast.error(data?.message || error?.message || 'Error fetching poll');
   }
 
+  console.log('poll results', pollResults);
+
   return (
     <>
       <Head>
@@ -197,12 +199,20 @@ export default function ViewPoll(props: Props): JSX.Element {
                             />
                           )}
                           {poll.status === pollPhases.voting && (
-                            <EndVoteButton
-                              pollId={pollId}
-                              isSubmitting={isSubmitting}
-                              setIsSubmitting={updateIsSubmitting}
-                              updatePollResults={updatePollResults}
-                            />
+                            <Box
+                              display="flex"
+                              flexDirection="column"
+                              gap={1}
+                              alignItems="center"
+                            >
+                              <EndVoteButton
+                                pollId={pollId}
+                                isSubmitting={isSubmitting}
+                                setIsSubmitting={updateIsSubmitting}
+                                updatePollResults={updatePollResults}
+                              />
+                              {/* <CoordinatorViewVotes /> */}
+                            </Box>
                           )}
                           <DeletePollButton
                             pollId={pollId}

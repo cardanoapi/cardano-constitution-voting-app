@@ -1,13 +1,32 @@
+import { NextApiRequest, NextApiResponse } from 'next/types';
 import { prisma } from '@/db';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth';
 
 import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
 
+type Data = {
+  votes: {
+    [key: string]: {
+      name: string;
+      id: string;
+    }[];
+  } | null;
+  message: string;
+};
+
 /**
  * Gets and formats the results of a concluded poll
+ * @param req - NextApiRequest
+ * @param res - NextApiResponse
  * @param pollId - The ID of the poll to get results for
  * @returns Results of the poll
  */
-export async function pollResultsDto(pollId: string): Promise<{
+export async function pollResultsDto(
+  pollId: string,
+  req?: NextApiRequest,
+  res?: NextApiResponse<Data>,
+): Promise<{
   yes: {
     name: string;
     id: string;
@@ -21,23 +40,51 @@ export async function pollResultsDto(pollId: string): Promise<{
     id: string;
   }[];
 }> {
-  const votes = await prisma.poll_vote.findMany({
-    where: {
-      poll_id: BigInt(pollId),
-      poll: {
-        status: 'concluded',
+  // allow convention organizer to see votes, everyone else can see concluded votes only
+  let isOrganizer = false;
+  if (!req || !res) {
+    isOrganizer = false;
+  } else {
+    const session = await getServerSession(req, res, authOptions);
+    if (session?.user.isCoordinator) {
+      isOrganizer = true;
+    }
+  }
+  let votes;
+  if (isOrganizer) {
+    votes = await prisma.poll_vote.findMany({
+      where: {
+        poll_id: BigInt(pollId),
       },
-    },
-    select: {
-      user_id: true,
-      vote: true,
-      user: {
-        select: {
-          name: true,
+      select: {
+        user_id: true,
+        vote: true,
+        user: {
+          select: {
+            name: true,
+          },
         },
       },
-    },
-  });
+    });
+  } else {
+    votes = await prisma.poll_vote.findMany({
+      where: {
+        poll_id: BigInt(pollId),
+        poll: {
+          status: 'concluded',
+        },
+      },
+      select: {
+        user_id: true,
+        vote: true,
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
 
   const convertedVotes = convertBigIntsToStrings(votes);
 

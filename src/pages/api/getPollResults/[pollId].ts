@@ -42,17 +42,17 @@ export default async function getPollResults(
       });
     }
 
-    const votes = await pollResultsDto(pollId);
+    const votes = await pollResultsDto(pollId, req, res);
 
     return res.status(200).json({
       votes: votes,
-      message: 'Poll vote count retrieved',
+      message: 'Poll votes retrieved',
     });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({
       votes: null,
-      message: 'Error getting Poll Vote Count.',
+      message: 'Error getting Poll Results.',
     });
   }
 }
