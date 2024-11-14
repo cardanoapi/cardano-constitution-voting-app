@@ -278,22 +278,38 @@ export function ManageActivePowerTable(): JSX.Element {
       <Typography variant="h5" fontWeight="600">
         Manage Active Voters
       </Typography>
-      <DataGrid
-        rows={workshops}
-        columns={columns}
-        editMode="row"
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-        slots={{ toolbar: GridToolbar }}
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-          },
+      <Box
+        sx={{
+          fontFamily: 'Inter',
         }}
-        sortModel={[{ field: 'name', sort: 'asc' }]}
-      />
+      >
+        <DataGrid
+          rows={workshops}
+          columns={columns}
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: true,
+            },
+          }}
+          sortModel={[{ field: 'name', sort: 'asc' }]}
+          sx={{
+            '.MuiDataGrid-columnSeparator': {
+              display: 'none',
+            },
+            '.MuiDataGrid-columnHeader': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+              fontFamily: 'Montserrat',
+              fontSize: '1.2rem',
+            },
+          }}
+        />
+      </Box>
     </Box>
   );
 }

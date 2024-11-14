@@ -9,23 +9,26 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { castVote } from '@/lib/helpers/castVote';
-import { getActiveVoterFromUserId } from '@/lib/helpers/getActiveVoterFromUserId';
 import { getPollVote } from '@/lib/helpers/getPollVote';
 
 interface Props {
   pollId: string;
   disabled: boolean;
   setDisabled: (value: boolean) => void;
+  isActiveVoter: boolean;
 }
 
 /**
  * Yes, No, Abstain buttons to vote on a poll
+ * @param pollId - The ID of the poll
+ * @param disabled - Whether the buttons are disabled
+ * @param setDisabled - Function to set the disabled state
+ * @param isActiveVoter - Whether the user is the active voter
  * @returns Vote on Poll Buttons
  */
 export function VoteOnPollButtons(props: Props): JSX.Element {
-  const { pollId, disabled, setDisabled } = props;
+  const { pollId, disabled, setDisabled, isActiveVoter } = props;
   const [vote, setVote] = useState('');
-  const [activeVoter, setActiveVoter] = useState('');
 
   const session = useSession();
   const theme = useTheme();
@@ -59,21 +62,6 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
       getVote();
     }
   }, [session.data?.user.id, pollId, disabled]);
-
-  // get the active voter from this workshop
-  useEffect(() => {
-    async function getActiveVoter(): Promise<void> {
-      if (session.data?.user.id) {
-        const activeVoter = await getActiveVoterFromUserId(
-          session.data?.user.id,
-        );
-        setActiveVoter(activeVoter.activeVoterId);
-      }
-    }
-    getActiveVoter();
-  }, [pollId]);
-
-  const isActiveVoter = activeVoter === session.data?.user.id;
 
   return (
     <>

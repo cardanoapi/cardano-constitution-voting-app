@@ -4,24 +4,27 @@ import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { CircularProgress } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
+import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import type { Poll, User, Workshop } from '@/types';
+import { activeVoterDto } from '@/data/activeVoterDto';
 import { pollDto } from '@/data/pollDto';
 import { pollResultsDto } from '@/data/pollResultsDto';
 import { pollsDto } from '@/data/pollsDto';
 import { representativesDto } from '@/data/representativesDto';
 import { workshopsDto } from '@/data/workshopsDto';
 import { getPoll } from '@/lib/helpers/getPoll';
+import { getPollResults } from '@/lib/helpers/getPollResults';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
-import { DownloadPollVotesButton } from '@/components/buttons/downloadPollVotesButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { PutVotesOnChainButton } from '@/components/buttons/putVotesOnChainButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
@@ -50,10 +53,17 @@ interface Props {
     }[];
   };
   polls: Poll[];
+  workshopActiveVoterId: string;
 }
 
 export default function ViewPoll(props: Props): JSX.Element {
-  const { representatives, workshops, pollResultsSSR, polls } = props;
+  const {
+    representatives,
+    workshops,
+    pollResultsSSR,
+    polls,
+    workshopActiveVoterId,
+  } = props;
   let { poll } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pollResults, setPollResults] = useState(pollResultsSSR);
@@ -68,6 +78,10 @@ export default function ViewPoll(props: Props): JSX.Element {
     queryFn: async () => {
       if (typeof pollId === 'string') {
         const data = await getPoll(pollId);
+        const pollResults = await getPollResults(pollId);
+        if (pollResults.votes) {
+          setPollResults(pollResults.votes);
+        }
         return data;
       }
     },
@@ -140,9 +154,6 @@ export default function ViewPoll(props: Props): JSX.Element {
               )}
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
-            {poll?.status === 'concluded' && (
-              <DownloadPollVotesButton pollId={pollId} />
-            )}
           </Box>
           <PollVoteCount pollId={poll?.id || ''} />
           <Grid container data-testid="poll-description">
@@ -223,13 +234,17 @@ export default function ViewPoll(props: Props): JSX.Element {
                         pollId={poll.id}
                         disabled={isSubmitting}
                         setDisabled={updateIsSubmitting}
+                        isActiveVoter={
+                          workshopActiveVoterId === session.data?.user.id
+                        }
                       />
                     </Box>
                   )}
                   {/* Vote Results */}
-                  {poll.status === pollPhases.concluded && (
-                    <PollResults votes={pollResults} />
-                  )}
+                  {poll.status === pollPhases.concluded &&
+                    typeof pollId === 'string' && (
+                      <PollResults votes={pollResults} pollId={pollId} />
+                    )}
                 </Box>
               </Grid>
             )}
@@ -266,6 +281,7 @@ export const getServerSideProps = async (
       }[];
     };
     polls: Poll[];
+    workshopActiveVoterId: string;
   };
 }> => {
   if (!context.params) {
@@ -276,11 +292,22 @@ export const getServerSideProps = async (
         workshops: [],
         pollResultsSSR: {},
         polls: [],
+        workshopActiveVoterId: '',
       },
     };
   }
 
   const { pollId } = context.params;
+
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  let workshopActiveVoterId = '';
+  if (session) {
+    const activeVoterId = await activeVoterDto(session.user.id);
+    if (activeVoterId) {
+      workshopActiveVoterId = activeVoterId;
+    }
+  }
 
   const poll = await pollDto(pollId);
   const representatives = await representativesDto();
@@ -295,6 +322,7 @@ export const getServerSideProps = async (
       workshops: workshops,
       pollResultsSSR: pollResultsSSR,
       polls: polls,
+      workshopActiveVoterId: workshopActiveVoterId,
     },
   };
 };

@@ -29,6 +29,9 @@ export async function pollVotesDto(pollId: string): Promise<
   const pollVotes = await prisma.poll_vote.findMany({
     where: {
       poll_id: BigInt(pollId),
+      poll: {
+        status: 'concluded',
+      },
     },
     include: {
       poll_transaction: {

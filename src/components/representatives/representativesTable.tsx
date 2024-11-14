@@ -30,6 +30,9 @@ export function RepresentativesTable(props: Props): JSX.Element {
       headerName: 'Name',
       minWidth: 125,
       flex: 1,
+      renderCell: (params): JSX.Element => {
+        return <Typography fontWeight="500">{params.row.name}</Typography>;
+      },
     },
     {
       field: 'Delegate',
@@ -58,6 +61,17 @@ export function RepresentativesTable(props: Props): JSX.Element {
               gap={{
                 xs: 0,
                 sm: 1,
+              }}
+              sx={{
+                height: '100%',
+                justifyContent: {
+                  xs: 'center',
+                  sm: 'flex-start',
+                },
+                alignItems: {
+                  xs: 'flex-start',
+                  sm: 'center',
+                },
               }}
             >
               <Typography color={delegateId === activeVoterId ? 'success' : ''}>
@@ -96,6 +110,17 @@ export function RepresentativesTable(props: Props): JSX.Element {
               gap={{
                 xs: 0,
                 sm: 1,
+              }}
+              sx={{
+                height: '100%',
+                justifyContent: {
+                  xs: 'center',
+                  sm: 'flex-start',
+                },
+                alignItems: {
+                  xs: 'flex-start',
+                  sm: 'center',
+                },
               }}
             >
               <Typography
@@ -138,6 +163,17 @@ export function RepresentativesTable(props: Props): JSX.Element {
                 xs: 0,
                 sm: 1,
               }}
+              sx={{
+                height: '100%',
+                justifyContent: {
+                  xs: 'center',
+                  sm: 'flex-start',
+                },
+                alignItems: {
+                  xs: 'flex-start',
+                  sm: 'center',
+                },
+              }}
             >
               <Typography noWrap>{activeVoter?.name}</Typography>
               <LaunchRounded fontSize="small" />
@@ -151,30 +187,53 @@ export function RepresentativesTable(props: Props): JSX.Element {
   if (representatives.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={1} width="100%">
-        <Typography variant="h6" fontWeight="600" textAlign="center">
+        <Typography variant="h5" fontWeight="600" textAlign="center">
           Representatives
         </Typography>
-        <DataGrid
-          rows={workshops}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 100,
+        <Box
+          sx={{
+            fontFamily: 'Inter',
+          }}
+        >
+          <DataGrid
+            rows={workshops.filter(
+              (workshop) => workshop.name !== 'Convention Organizer',
+            )}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 100,
+                },
               },
-            },
-          }}
-          pageSizeOptions={[25, 50, 100]}
-          columnVisibilityModel={{
-            id: false,
-          }}
-          sortModel={[
-            {
-              field: 'name',
-              sort: 'asc',
-            },
-          ]}
-        />
+            }}
+            pageSizeOptions={[25, 50, 100]}
+            columnVisibilityModel={{
+              id: false,
+            }}
+            sortModel={[
+              {
+                field: 'name',
+                sort: 'asc',
+              },
+            ]}
+            sx={{
+              '.MuiDataGrid-columnSeparator': {
+                display: 'none',
+              },
+              '.MuiDataGrid-columnHeader': {
+                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                fontFamily: 'Montserrat',
+                fontSize: '1.2rem',
+              },
+              '.MuiDataGrid-cell': {
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              },
+            }}
+          />
+        </Box>
       </Box>
     );
   } else {
