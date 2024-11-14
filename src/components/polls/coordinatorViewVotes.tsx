@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-import { User, Workshop } from '@/types';
+import type { User, Workshop } from '@/types';
 
 interface Props {
   votes: {
