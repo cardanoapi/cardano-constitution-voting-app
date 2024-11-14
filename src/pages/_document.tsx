@@ -6,12 +6,7 @@ export default function Document(): JSX.Element {
     <>
       <CssBaseline enableColorScheme />
       <Html lang="en">
-        <Head>
-          <script
-            type="text/javascript"
-            src="/cardano-dapp-connector-bridge.min.js"
-          ></script>
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />
