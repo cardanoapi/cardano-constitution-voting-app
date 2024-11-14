@@ -1,10 +1,9 @@
-import { delegateWallet, organizerWallet } from '@constants/staticWallets';
+import { organizerWallet } from '@constants/staticWallets';
 import { setAllureEpic } from '@helpers/allure';
 import { CCVT } from '@mock/index';
 import { expect } from '@playwright/test';
 import { test } from '@fixtures/walletExtension';
 import RepresentativesPage from '@pages/representativesPage';
-import LoginPage from '@pages/loginPage';
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -22,7 +21,7 @@ test.describe('Recognise a Convention Organiser', () => {
 });
 
 test.describe('Polls', () => {
-  test('1XX, Can create poll with valid data', async ({ page, browser }) => {
+  test('1P, Can create poll with valid data', async ({ page }) => {
     await page.goto('/polls/new');
     await page
       .locator('[data-testid="poll-name-input"] input')
