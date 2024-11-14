@@ -4,6 +4,8 @@ import { CCVT } from '@mock/index';
 import { expect } from '@playwright/test';
 import { test } from '@fixtures/walletExtension';
 import RepresentativesPage from '@pages/representativesPage';
+import HomePage from '@pages/homePage';
+import { faker } from '@faker-js/faker';
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -22,22 +24,19 @@ test.describe('Recognise a Convention Organiser', () => {
 
 test.describe('Polls', () => {
   test('1P, Can create poll with valid data', async ({ page }) => {
-    await page.goto('/polls/new');
-    await page
-      .locator('[data-testid="poll-name-input"] input')
-      .fill('Dummy Test Poll');
-    await page
-      .locator('[data-testid="poll-description-input"] textarea')
-      .first()
-      .fill('Test Poll Description');
-    await page.getByTestId('create-poll-button').click();
+    await page.goto('/');
+    const homePage = new HomePage(page);
+    const pollName = faker.commerce.productName();
+    const pollDescription = faker.commerce.productDescription();
+    await homePage.createPoll(pollName, pollDescription);
 
-    await expect(page.getByText('Dummy Test Poll')).toBeVisible();
+    await expect(page.getByText(pollName)).toBeVisible();
     await expect(
       page.getByTestId('poll-status-chip').getByText('Pending')
     ).toBeVisible();
   });
 });
+
 test.describe('Invitation', () => {
   test('1B. Could invite delegates', async ({ page }) => {
     await page.goto('/');
