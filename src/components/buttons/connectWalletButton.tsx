@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { walletOptions } from '@/constants/walletOptions';
-import PersonRounded from '@mui/icons-material/PersonRounded';
 import CircleRounded from '@mui/icons-material/CircleRounded';
+import PersonRounded from '@mui/icons-material/PersonRounded';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -28,7 +28,6 @@ export function ConnectWalletButton(): JSX.Element {
 
   const session = useSession();
   const theme = useTheme();
-  const router = useRouter();
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorEl(event.currentTarget);
@@ -38,11 +37,6 @@ export function ConnectWalletButton(): JSX.Element {
   function handleClose(): void {
     setAnchorEl(null);
     setOpen(false);
-  }
-
-  function handleVisitProfile(): void {
-    handleClose();
-    router.push(paths.representatives.representative + user?.id);
   }
 
   // dropdown menu to select Cardano wallet from available wallets in browser
@@ -98,23 +92,38 @@ export function ConnectWalletButton(): JSX.Element {
         }}
       >
         {user && (
-          <MenuItem
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
+          <Link
+            href={paths.representatives.representative + user?.id}
+            onClick={handleClose}
+            style={{
+              textDecoration: 'none',
             }}
-            onClick={handleVisitProfile}
           >
-            <Typography alignSelf="flex-start" color="rgba(255, 255, 255, 0.5)">
-              Logged in
-            </Typography>
-            <Box display="flex" flexDirection="row" gap={1} alignItems="center">
-              <PersonRounded color="success"></PersonRounded>
-              <Typography color={theme.palette.success.main}>
-                {user?.name}
+            <MenuItem
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <Typography
+                alignSelf="flex-start"
+                color="rgba(255, 255, 255, 0.5)"
+              >
+                Logged in
               </Typography>
-            </Box>
-          </MenuItem>
+              <Box
+                display="flex"
+                flexDirection="row"
+                gap={1}
+                alignItems="center"
+              >
+                <PersonRounded color="success"></PersonRounded>
+                <Typography color={theme.palette.success.main}>
+                  {user?.name}
+                </Typography>
+              </Box>
+            </MenuItem>
+          </Link>
         )}
         {session.status === 'authenticated' ? (
           <MenuItem
