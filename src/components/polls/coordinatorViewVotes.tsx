@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridRowModel } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import { User, Workshop } from '@/types';
 
@@ -25,10 +25,9 @@ interface Props {
 
 export function CoordinatorViewVotes(props: Props): JSX.Element {
   const { votes, workshops, representatives } = props;
-  const [rows, setRows] = useState<GridRowModel[]>([]);
 
-  useEffect(() => {
-    const workshopsWithVotes = workshops.map((workshop) => {
+  const workshopsWithVotes = useMemo(() => {
+    return workshops.map((workshop) => {
       const activeVoterId = workshop.active_voter_id;
       let activeVoterVote;
       if (activeVoterId) {
@@ -50,13 +49,13 @@ export function CoordinatorViewVotes(props: Props): JSX.Element {
         activeVoterName,
       };
     });
+  }, [representatives, votes.abstain, votes.no, votes.yes, workshops]);
 
-    setRows(
-      workshopsWithVotes
-        .filter((workshop) => workshop.name !== 'Convention Organizer')
-        .sort((a, b) => a.name.localeCompare(b.name)),
-    );
-  }, [votes, workshops, representatives]);
+  const rows = useMemo(() => {
+    return workshopsWithVotes
+      .filter((workshop) => workshop.name !== 'Convention Organizer')
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [workshopsWithVotes]);
 
   const columns: GridColDef[] = useMemo(() => {
     return [
