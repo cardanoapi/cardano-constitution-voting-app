@@ -7,37 +7,13 @@ import RepresentativesPage from '@pages/representativesPage';
 import HomePage from '@pages/homePage';
 import { faker } from '@faker-js/faker';
 
-const workshopInfo = [
-  {
-    name: 'Dubai',
-    delegate_id: BigInt(2),
-    alternate_id: BigInt(5),
-    active_vote_id: BigInt(2),
-  },
-  {
-    name: 'Singapore',
-    delegate_id: BigInt(4),
-    alternate_id: BigInt(3),
-    active_vote_id: BigInt(3),
-  },
-  { name: 'Convention Organizer' },
-  {
-    name: 'Buenos Aires',
-    delegate_id: BigInt(8),
-    alternate_id: BigInt(7),
-    active_vote_id: BigInt(8),
-  },
-];
-
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
 });
 
 test.use({ storageState: '.auth/organizer.json', wallet: organizerWallet });
 
-
 test.describe('Polls', () => {
-
   /**
    * Description
    * The Convention Voting Tool (CVT) recognises a Convention Organiser (CO)
@@ -48,7 +24,9 @@ test.describe('Polls', () => {
    * Acceptance Criteria
    * Given that I am a CO with my wallet connected, When I go to the homepage, Then I see the "create poll" button
    */
-  test('1A. Given connected as CO can see create poll button', async ({ page }) => {
+  test('1A. Given connected as CO can see create poll button', async ({
+    page,
+  }) => {
     await page.goto('/');
     const CreatePollButton = page.getByTestId('create-poll-button').first();
     await expect(CreatePollButton).toBeVisible();
@@ -64,17 +42,20 @@ test.describe('Polls', () => {
    * Acceptance Criteria
    * Given that I am a CO on the homepage with my wallet connected, when I click the "create poll" button, Then I will go to the create poll page
    */
-  test('1B, Given connected as CO can create a new poll', async ({ page, browser }) => {
-      await page.goto('/');
-      const homePage = new HomePage(page);
-      const pollName = faker.commerce.productName();
-      const pollDescription = faker.commerce.productDescription();
-      await homePage.createPoll(pollName, pollDescription);
+  test('1B, Given connected as CO can create a new poll', async ({
+    page,
+    browser,
+  }) => {
+    await page.goto('/');
+    const homePage = new HomePage(page);
+    const pollName = faker.commerce.productName();
+    const pollDescription = faker.commerce.productDescription();
+    await homePage.createPoll(pollName, pollDescription);
 
-      await expect(page.getByText(pollName)).toBeVisible();
-      await expect(
-          page.getByTestId('poll-status-chip').getByText('Pending')
-      ).toBeVisible();
+    await expect(page.getByText(pollName)).toBeVisible();
+    await expect(
+      page.getByTestId('poll-status-chip').getByText('Pending')
+    ).toBeVisible();
   });
 
   /**
@@ -84,8 +65,18 @@ test.describe('Polls', () => {
    *
    * Acceptance Criteria: Given that I am a CO on the poll's page, and the poll is in 'pending' status, then when I click the "open poll" button then the poll is opened.
    */
-  test('1C, Given connected as CO can open  poll', async ({ page, browser }) => {
-      throw new Error("Not Implemented")
+  test('1C, Given connected as CO can open  poll', async ({
+    page,
+    browser,
+  }) => {
+    await page.goto('/');
+    const homePage = new HomePage(page);
+    await homePage.deleteOpenPollCards();
+
+    await homePage.createPoll();
+    await page.getByTestId('begin-vote-button').click();
+
+    await expect(page.getByText('Poll voting is open!')).toBeVisible();
   });
   /**
    * Description: If a poll is open then a CO can close it
@@ -94,9 +85,11 @@ test.describe('Polls', () => {
    *
    * Acceptance Criteria: Given that I am a CO on the page of a poll that is in "Open" status, when I click "Close Poll" then the poll is closed.
    */
-  test('1D, Given connected as CO can create a new poll', async ({ page, browser }) => {
-    throw new Error("Not Implemented")
-
+  test('1D, Given connected as CO can create a new poll', async ({
+    page,
+    browser,
+  }) => {
+    throw new Error('Not Implemented');
   });
   /**
    * Description: Once a poll has been closed to voting it cannot be re-opened, and no further votes will be accepted.
@@ -105,12 +98,13 @@ test.describe('Polls', () => {
    *
    * Acceptance Criteria: Given that I am on the page of a closed poll, then there is no button or any other way for me to re-open it.
    */
-  test('1E, Given connected as CO can create a new poll', async ({ page, browser }) => {
-    throw new Error("Not Implemented")
-
+  test('1E, Given connected as CO can create a new poll', async ({
+    page,
+    browser,
+  }) => {
+    throw new Error('Not Implemented');
   });
 });
-
 
 test.describe('User Info', () => {
   test('1N. Should have corresponding workspace delegate and alternate in a same row', async ({
@@ -149,16 +143,16 @@ test.describe('User Info', () => {
     );
   });
   // As a convention organiser, I want to be able to update the profile information of a delegate (or alternate) to correct any error or omission.
-  test('1-Org-Invite: 9. Convention organisers can update delegate profile information ', async ({ page }) => {
+  test('1-Org-Invite: 9. Convention organisers can update delegate profile information ', async ({
+    page,
+  }) => {
     const represntativePage = new RepresentativesPage(page);
     await represntativePage.updateDelegateProfile();
     await represntativePage.isRepresentativeUpdated();
     await represntativePage.updateAlternateProfile();
     await represntativePage.isRepresentativeUpdated();
   });
-
 });
-
 
 test.describe('Voting Power', () => {
   test('1D. Should be able to switch active voting power between delegate and alternate.', async ({

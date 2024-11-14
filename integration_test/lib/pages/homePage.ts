@@ -15,9 +15,11 @@ export default class HomePage {
     '[data-testid="poll-name-input"] input'
   ); //BUG incorrect position of testid
 
-  readonly pollDescriptionInput = this.page.locator(
-    '[data-testid="poll-description-input"] textarea'
-  ).first();
+  readonly pollDescriptionInput = this.page
+    .locator('[data-testid="poll-description-input"] textarea')
+    .first();
+
+  readonly pollCard = this.page.locator('[data-testid^="poll-card-"]');
 
   constructor(private readonly page: Page) {}
 
@@ -38,5 +40,23 @@ export default class HomePage {
 
     const currentPageUrl = this.page.url();
     return extractPollIdFromUrl(currentPageUrl);
+  }
+
+  async deleteOpenPollCards() {
+    await this.page.waitForTimeout(2_000);
+    const pollCards = await this.pollCard.all();
+    if (pollCards.length > 0) {
+      for (const pollCard of pollCards) {
+        const pollCardInnerTexts = await pollCard.innerText();
+        console.log(pollCardInnerTexts);
+        if (
+          pollCardInnerTexts.includes('Voting') ||
+          pollCardInnerTexts.includes('Pending')
+        ) {
+          await pollCard.click();
+          await this.page.getByTestId('delete-poll-button').click();
+        }
+      }
+    }
   }
 }
