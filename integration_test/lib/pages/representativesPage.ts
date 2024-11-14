@@ -47,22 +47,18 @@ export default class RepresentativesPage {
     await this.saveAlternateBtn.click({ force: true });
   }
 
-  async transferVotePowerToAlternate(): Promise<void> {
+  async switchVotingPower(): Promise<void> {
     await this.goto();
     await this.transferVotingPowerBtn.click();
+    const currentActiveVoter = await this.page
+      .getByRole('combobox')
+      .nth(1)
+      .innerText();
     await this.page.getByRole('combobox').nth(1).click();
     await this.page
-      .getByRole('option', { name: 'Alternate' })
-      .click({ force: true });
-    await this.saveUpdatedVotingPowerBtn.click();
-  }
-
-  async transferVotePowerToDelegate(): Promise<void> {
-    await this.goto();
-    await this.transferVotingPowerBtn.click();
-    await this.page.getByRole('combobox').nth(1).click();
-    await this.page
-      .getByRole('option', { name: 'Delegate' })
+      .getByRole('option', {
+        name: currentActiveVoter === 'Delegate' ? 'Alternate' : 'Delegate',
+      })
       .click({ force: true });
     await this.saveUpdatedVotingPowerBtn.click();
   }

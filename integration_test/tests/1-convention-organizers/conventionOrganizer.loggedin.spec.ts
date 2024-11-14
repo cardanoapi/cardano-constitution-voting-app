@@ -5,29 +5,6 @@ import { expect } from '@playwright/test';
 import { test } from '@fixtures/walletExtension';
 import RepresentativesPage from '@pages/representativesPage';
 import LoginPage from '@pages/loginPage';
-import { types } from 'util';
-
-const workshopInfo = [
-  {
-    name: 'Dubai',
-    delegate_id: BigInt(2),
-    alternate_id: BigInt(5),
-    active_vote_id: BigInt(2),
-  },
-  {
-    name: 'Singapore',
-    delegate_id: BigInt(4),
-    alternate_id: BigInt(3),
-    active_vote_id: BigInt(3),
-  },
-  { name: 'Convention Organizer' },
-  {
-    name: 'Buenos Aires',
-    delegate_id: BigInt(8),
-    alternate_id: BigInt(7),
-    active_vote_id: BigInt(8),
-  },
-];
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -158,12 +135,11 @@ test.describe('Delegate and Alternate Profile', () => {
 });
 
 test.describe('Voting Power', () => {
-  test('1D. Should transfer voting power from delegate to alternate.', async ({
+  test('1D. Should be able to switch active voting power between delegate and alternate.', async ({
     page,
   }) => {
     const representativePage = new RepresentativesPage(page);
-    const loginPage = new LoginPage(page);
-    await representativePage.transferVotePowerToAlternate();
+    await representativePage.switchVotingPower();
     await expect(page.getByText('Active voter updated!')).toBeVisible();
   });
 
@@ -171,7 +147,7 @@ test.describe('Voting Power', () => {
     page,
   }) => {
     const representativePage = new RepresentativesPage(page);
-    await representativePage.transferVotePowerToDelegate();
+    await representativePage.switchVotingPower();
     await expect(page.getByText('Active voter updated!')).toBeVisible();
   });
 });
