@@ -6,8 +6,8 @@ export const setAllureEpic = async (groupName: string): Promise<void> => {
   const browser = await chromium.launch();
   const page = await browser.newPage();
   if (isMobile(page)) {
-    await allure.epic('2. Miscellaneous');
-    await allure.story('2A. Should be accessible from mobile');
+    await allure.epic('6. Miscellaneous');
+    await allure.story('6A. Should be accessible from mobile');
   } else {
     await allure.epic(groupName);
   }
