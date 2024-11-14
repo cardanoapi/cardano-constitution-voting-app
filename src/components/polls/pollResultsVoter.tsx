@@ -52,7 +52,10 @@ export function PollResultsVoter(props: Props): JSX.Element {
             </Box>
           }
         >
-          <Typography color="warning" fontWeight="700">
+          <Typography
+            color={vote === 'yes' ? 'success' : vote === 'no' ? 'warning' : ''}
+            fontWeight="700"
+          >
             {name.split(' ')[0][0]}
             {name.split(' ')[1][0]}
           </Typography>

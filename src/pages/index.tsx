@@ -38,21 +38,6 @@ export default function Home(props: Props): JSX.Element {
         />
       </Head>
       <main>
-        {session.data?.user.isCoordinator && (
-          <Box display="flex" flexDirection="row" gap={4}>
-            <Link href={paths.polls.new} data-testid="create-poll-button">
-              <Button variant="contained">Create Poll</Button>
-            </Link>
-            <Link
-              href={paths.representatives.manage}
-              data-testid="create-poll-button"
-            >
-              <Button variant="contained" color="secondary">
-                Manage Users
-              </Button>
-            </Link>
-          </Box>
-        )}
         <Box display="flex" flexDirection="column" gap={4} alignItems="center">
           <Box
             display="flex"
@@ -60,6 +45,21 @@ export default function Home(props: Props): JSX.Element {
             alignItems="center"
             gap={3}
           >
+            {session.data?.user.isCoordinator && (
+              <Box display="flex" flexDirection="row" gap={4}>
+                <Link href={paths.polls.new} data-testid="create-poll-button">
+                  <Button variant="contained">Create Poll</Button>
+                </Link>
+                <Link
+                  href={paths.representatives.manage}
+                  data-testid="create-poll-button"
+                >
+                  <Button variant="contained" color="secondary">
+                    Manage Users
+                  </Button>
+                </Link>
+              </Box>
+            )}
             <Typography variant="h3" fontWeight="bold" textAlign="center">
               Welcome to the Constitutional Convention Voting Tool
             </Typography>

@@ -15,9 +15,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { calculateWinner } from '@/lib/helpers/calculateWinner';
+import { DownloadPollVotesButton } from '@/components/buttons/downloadPollVotesButton';
 import { PollResultsVoter } from '@/components/polls/pollResultsVoter';
 
 interface Props {
+  pollId: string;
   votes: {
     yes: {
       name: string;
@@ -38,7 +40,8 @@ const YesLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    border: `1px solid ${theme.palette.divider}`,
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
@@ -50,7 +53,8 @@ const NoLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    border: `1px solid ${theme.palette.divider}`,
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
@@ -62,7 +66,8 @@ const AbstainLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    border: `1px solid ${theme.palette.divider}`,
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
@@ -76,7 +81,8 @@ const AbstainLinearProgress = styled(LinearProgress)(({ theme }) => ({
  * @returns Poll Results
  */
 export function PollResults(props: Props): JSX.Element {
-  const { votes } = props;
+  const { votes, pollId } = props;
+
   const [winningOption, setWinningOption] = useState('');
 
   const theme = useTheme();
@@ -99,7 +105,7 @@ export function PollResults(props: Props): JSX.Element {
       <>
         {votes?.yes?.map(({ name, id }) => {
           return (
-            <Box key={id}>
+            <Box key={id} display="flex" flexDirection="row" gap={1}>
               <PollResultsVoter name={name} id={id} vote="yes" />
             </Box>
           );
@@ -113,7 +119,7 @@ export function PollResults(props: Props): JSX.Element {
       <>
         {votes?.no?.map(({ name, id }) => {
           return (
-            <Box key={id}>
+            <Box key={id} display="flex" flexDirection="row" gap={1}>
               <PollResultsVoter name={name} id={id} vote="no" />
             </Box>
           );
@@ -127,7 +133,7 @@ export function PollResults(props: Props): JSX.Element {
       <>
         {votes?.abstain?.map(({ name, id }) => {
           return (
-            <Box key={id}>
+            <Box key={id} display="flex" flexDirection="row" gap={1}>
               <PollResultsVoter name={name} id={id} vote="abstain" />
             </Box>
           );
@@ -148,18 +154,21 @@ export function PollResults(props: Props): JSX.Element {
 
   return (
     <Box display="flex" flexDirection="column" gap={6} width="100%">
-      <Typography variant="h3" fontWeight="bold">
-        Results
-      </Typography>
+      <Box display="flex" flexDirection="row" gap={3} alignItems="center">
+        <Typography variant="h3" fontWeight="bold">
+          Results
+        </Typography>
+        <DownloadPollVotesButton pollId={pollId} />
+      </Box>
+
       <Typography
         variant="h3"
         fontWeight="bold"
         color={winningOption === 'yes' ? 'success' : 'warning'}
       >
-        {winningOption === 'yes'
-          ? 'Constitution Approved'
-          : 'Constitution Not Approved'}
+        {winningOption === 'yes' ? 'Approved' : 'Not Approved'}
       </Typography>
+
       <Box display="flex" flexDirection="column" gap={6} width="100%">
         <Box
           display="flex"

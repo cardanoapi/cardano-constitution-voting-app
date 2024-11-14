@@ -25,7 +25,6 @@ import { getPoll } from '@/lib/helpers/getPoll';
 import { getPollResults } from '@/lib/helpers/getPollResults';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
-import { DownloadPollVotesButton } from '@/components/buttons/downloadPollVotesButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
@@ -154,9 +153,6 @@ export default function ViewPoll(props: Props): JSX.Element {
               )}
             </Typography>
             {poll && <PollStatusChip status={poll.status} />}
-            {poll?.status === 'concluded' && (
-              <DownloadPollVotesButton pollId={pollId} />
-            )}
           </Box>
           <PollVoteCount pollId={poll?.id || ''} />
           <Grid container data-testid="poll-description">
@@ -236,9 +232,10 @@ export default function ViewPoll(props: Props): JSX.Element {
                     </Box>
                   )}
                   {/* Vote Results */}
-                  {poll.status === pollPhases.concluded && (
-                    <PollResults votes={pollResults} />
-                  )}
+                  {poll.status === pollPhases.concluded &&
+                    typeof pollId === 'string' && (
+                      <PollResults votes={pollResults} pollId={pollId} />
+                    )}
                 </Box>
               </Grid>
             )}

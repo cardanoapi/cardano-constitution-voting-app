@@ -10,7 +10,9 @@ export function middleware(request: NextRequest): Response {
   base-uri 'self';
   child-src 'self';
   connect-src 'self';
-  font-src 'self';
+  font-src 
+    'self'
+    https://fonts.gstatic.com/;
   form-action 'self';
   frame-ancestors 'none';
   frame-src 'self' https://vercel.live/;
@@ -22,7 +24,10 @@ export function middleware(request: NextRequest): Response {
     https://va.vercel-scripts.com/v1/script.debug.js 
     https://vercel.live/_next-live/feedback/;
   script-src-attr 'none';
-  style-src 'self' 'unsafe-inline';
+  style-src 
+    'self' 
+    'unsafe-inline'
+    https://fonts.googleapis.com;
   upgrade-insecure-requests; 
   worker-src 'self';
 `;
