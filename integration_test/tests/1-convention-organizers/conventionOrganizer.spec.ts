@@ -111,11 +111,13 @@ test.describe('Polls', () => {
   }) => {
     await page.goto('/');
     const homePage = new HomePage(page);
+
     await homePage.deleteOpenPollCards();
     await homePage.createPoll();
     await page.getByTestId('begin-vote-button').click();
     await expect(page.getByTestId('end-vote-button')).toBeVisible();
     await page.getByTestId('end-vote-button').click();
+
     await expect(page.getByTestId('delete-poll-button')).toBeVisible();
     expect(await page.locator('button').allInnerTexts()).not.toContain(
       'Begin Voting'
@@ -129,11 +131,63 @@ test.describe('Polls', () => {
    *
    * Acceptance Criteria: Given that I am a CO on the page of a given poll, when I press the delete button I will be asked in a modal if I am sure, then if I confirm that I want to delete, then the poll will be deleted.
    */
-  test('11F. Given connected as CO, can delete a poll', async ({
-    page,
-    browser,
-  }) => {
-    throw new Error('Not Implemented');
+
+  test.describe('Delete Poll', async () => {
+    test('11F1. Given connected as CO, can delete a pending poll', async ({
+      page,
+      browser,
+    }) => {
+      await page.goto('/');
+      const homePage = new HomePage(page);
+
+      await homePage.deleteOpenPollCards();
+      await homePage.createPoll();
+      await expect(
+        page.getByTestId('poll-page-status-chip').first()
+      ).toContainText('Pending');
+      await page.getByTestId('delete-poll-button').click();
+
+      await expect(page).toHaveURL('/');
+    });
+    test('11F2. Given connected as CO, can delete a ongoing poll', async ({
+      page,
+      browser,
+    }) => {
+      await page.goto('/');
+      const homePage = new HomePage(page);
+
+      await homePage.deleteOpenPollCards();
+      await homePage.createPoll();
+      await page.getByTestId('begin-vote-button').click();
+      await expect(
+        page.getByTestId('poll-page-status-chip').first()
+      ).toContainText('Voting');
+      await page.getByTestId('delete-poll-button').click();
+
+      await expect(page).toHaveURL('/');
+    });
+    test('11F3. Given connected as CO, can delete a closed poll', async ({
+      page,
+      browser,
+    }) => {
+      test.slow();
+      await page.goto('/');
+      const homePage = new HomePage(page);
+
+      await homePage.deleteOpenPollCards();
+      await homePage.createPoll();
+      await page.getByTestId('begin-vote-button').click();
+      await expect(
+        page.getByTestId('poll-page-status-chip').first()
+      ).toContainText('Voting');
+      await page.getByTestId('end-vote-button').click();
+      await expect(
+        page.getByTestId('poll-page-status-chip').first()
+      ).toContainText('Concluded');
+      await page.getByTestId('delete-poll-button').click();
+
+      await expect(page).toHaveURL('/');
+    });
   });
 });
 
