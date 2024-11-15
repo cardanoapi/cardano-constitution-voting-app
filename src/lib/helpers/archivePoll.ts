@@ -19,7 +19,6 @@ export async function archivePoll(
         headers: {
           'X-Custom-Header': 'intersect',
         },
-        responseType: 'blob',
       },
     );
     const data = await response.data;

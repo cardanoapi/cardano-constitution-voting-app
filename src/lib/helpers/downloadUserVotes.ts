@@ -19,6 +19,7 @@ export async function downloadUserVotes(
         headers: {
           'X-Custom-Header': 'intersect',
         },
+        responseType: 'blob',
       },
     );
     if (response.status === 200) {
