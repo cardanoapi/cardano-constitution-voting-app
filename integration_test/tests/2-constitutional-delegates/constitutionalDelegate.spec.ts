@@ -1,6 +1,9 @@
 import { setAllureEpic } from '@helpers/allure';
 import { test } from '@fixtures/organizer';
 import { delegateWallet } from '@constants/staticWallets';
+import HomePage from '@pages/homePage';
+import PollPage from '@pages/pollPage';
+import { expect } from '@playwright/test';
 
 test.beforeEach(async () => {
   await setAllureEpic('2. Constitutional Delegates');
@@ -10,7 +13,7 @@ test.describe('Vote', () => {
   test.use({
     storageState: '.auth/delegate.json',
     wallet: delegateWallet,
-    pollEnabled: true,
+    pollType: 'CreateAndBeginPoll',
   });
   /**
    * Description: voters are the only people who can vote, and they can only vote in a poll that is open
@@ -23,7 +26,17 @@ test.describe('Vote', () => {
    */
   test('21A. Given active delegate, and poll is open, can cast vote', async ({
     page,
-  }) => {});
+  }) => {
+    const homePage = new HomePage(page);
+    await homePage.goto();
+    const openPollCard = await homePage.getOpenPollCard();
+    await openPollCard.click();
+    const pollPage = new PollPage(page);
+
+    await expect(pollPage.voteYesBtn).toBeVisible();
+    await expect(pollPage.voteNoBtn).toBeVisible();
+    await expect(pollPage.voteAbstainBtn).toBeVisible();
+  });
 
   /**
    * Description: If a voter has already voted on a poll that is currently open then they will be able to change their vote
@@ -47,4 +60,26 @@ test.describe('Vote', () => {
   test('21B. Given active delegate, can choose not to vote', async ({
     page,
   }) => {});
+});
+
+test.describe('Pending poll visibility', () => {
+  test.use({
+    storageState: '.auth/delegate.json',
+    wallet: delegateWallet,
+    pollType: 'CreatePoll',
+  });
+
+  test('21B. Given active delegate and the poll is pending, voting should be disallowed', async ({
+    page,
+  }) => {
+    const homePage = new HomePage(page);
+    await homePage.goto();
+    const openPollCard = await homePage.getOpenPollCard();
+    await openPollCard.click();
+    const pollPage = new PollPage(page);
+
+    await expect(pollPage.voteYesBtn).not.toBeVisible();
+    await expect(pollPage.voteNoBtn).not.toBeVisible();
+    await expect(pollPage.voteAbstainBtn).not.toBeVisible();
+  });
 });
