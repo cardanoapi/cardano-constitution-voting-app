@@ -21,7 +21,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!environments.ci,
   /* Retry on CI only */
-  retries: environments.ci ? 2 : 0,
+  retries: environments.ci ? 1 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? parseInt(process.env.TEST_WORKERS || '1') : 1,
   /*use Allure Playwright's testPlanFilter() to determine the grep parameter*/
@@ -47,19 +47,19 @@ export default defineConfig({
     {
       name: 'loggedin (desktop)',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: '**/*.loggedin.spec.ts',
+      testIgnore: ['**/*.independent.spec.ts'],
       dependencies: environments.ci ? ['auth setup'] : [],
     },
     {
       name: 'independent (desktop)',
+      testMatch: '**/*independent.spec.ts',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore:['**/*.loggedin.spec.ts'],
     },
 
     {
       name: 'mobile',
+      testMatch: '**/*independent.spec.ts',
       use: { ...devices['Pixel 5'] },
-      testIgnore:['**/*.loggedin.spec.ts'],
     },
 
     /* Test against mobile viewports. */
