@@ -3,14 +3,17 @@ import { test as base } from '@fixtures/walletExtension';
 import { createNewPageWithWallet } from '@helpers/page';
 import HomePage from '@pages/homePage';
 import PollPage from '@pages/pollPage';
+
+type pollEnableType = 'CreatePoll' | 'CreateAndBeginPoll' | 'NoAction';
+
 type TestOptions = {
-  pollEnabled: boolean;
+  pollType: pollEnableType;
 };
 
 export const test = base.extend<TestOptions>({
-  pollEnabled: [false, { option: true }],
+  pollType: ['NoAction', { option: true }],
 
-  page: async ({ page, browser, pollEnabled }, use) => {
+  page: async ({ page, browser, pollType }, use) => {
     // setup
     const organizerPage = await createNewPageWithWallet(browser, {
       storageState: '.auth/organizer.json',
@@ -19,16 +22,22 @@ export const test = base.extend<TestOptions>({
 
     const homePage = new HomePage(organizerPage);
     await homePage.goto();
-    let pollId: number;
-    if (pollEnabled) {
+
+    let pollId: number | undefined;
+
+    if (pollType !== 'NoAction') {
       await homePage.deleteOpenPollCards();
       pollId = await homePage.createPoll();
+
+      if (pollType === 'CreateAndBeginPoll') {
+        await homePage.beginVoteBtn.click();
+      }
     }
 
     await use(page);
 
     // cleanup
-    if (pollEnabled) {
+    if (pollType !== 'NoAction') {
       const pollPage = new PollPage(organizerPage);
       await pollPage.goto(pollId);
       await pollPage.deletePoll();
