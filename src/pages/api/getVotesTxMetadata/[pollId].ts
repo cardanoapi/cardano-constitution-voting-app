@@ -18,7 +18,7 @@ type Data = { metadata: Metadata | null; message: string };
  * Constructs the metadata for the CO's transactions to upload poll votes on-chain
  * @param pollId - The ID of the poll
  * @returns status - 200 if successful, 500 if failed from an internal error
- * @returns message - An error message if getting the poll vote count failed from an internal error
+ * @returns message - A message indicating the status of the request
  * @returns metadata - The metadata for the TXs
  */
 export default async function getVotesTxMetadata(
