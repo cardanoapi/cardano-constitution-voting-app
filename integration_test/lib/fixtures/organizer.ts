@@ -10,10 +10,10 @@ type TestOptions = {
   pollType: pollEnableType;
 };
 
-export const test = base.extend<TestOptions>({
+export const test = base.extend<TestOptions & {pollId: number}>({
   pollType: ['NoAction', { option: true }],
 
-  page: async ({ page, browser, pollType }, use) => {
+  pollId: async ({ page, browser, pollType }, use) => {
     // setup
     const organizerPage = await createNewPageWithWallet(browser, {
       storageState: '.auth/organizer.json',
@@ -34,7 +34,7 @@ export const test = base.extend<TestOptions>({
       }
     }
 
-    await use(page);
+    await use(pollId );
 
     // cleanup
     if (pollType !== 'NoAction') {

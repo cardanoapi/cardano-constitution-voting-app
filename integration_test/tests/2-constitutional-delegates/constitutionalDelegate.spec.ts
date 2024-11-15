@@ -25,13 +25,10 @@ test.describe('Vote', () => {
    * *conversely votes that are 'closed' or 'pending' do not give voters the option to vote.
    */
   test('21A. Given active delegate, and poll is open, can cast vote', async ({
-    page,
+    page, pollId
   }) => {
-    const homePage = new HomePage(page);
-    await homePage.goto();
-    const openPollCard = await homePage.getOpenPollCard();
-    await openPollCard.click();
     const pollPage = new PollPage(page);
+    await pollPage.goto(pollId)
 
     await expect(pollPage.voteYesBtn).toBeVisible();
     await expect(pollPage.voteNoBtn).toBeVisible();
@@ -70,13 +67,10 @@ test.describe('Pending poll visibility', () => {
   });
 
   test('21B. Given active delegate and the poll is pending, voting should be disallowed', async ({
-    page,
+    page, pollId
   }) => {
-    const homePage = new HomePage(page);
-    await homePage.goto();
-    const openPollCard = await homePage.getOpenPollCard();
-    await openPollCard.click();
     const pollPage = new PollPage(page);
+    await pollPage.goto(pollId)
 
     await expect(pollPage.voteYesBtn).not.toBeVisible();
     await expect(pollPage.voteNoBtn).not.toBeVisible();

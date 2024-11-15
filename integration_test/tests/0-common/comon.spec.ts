@@ -1,6 +1,6 @@
 import { setAllureEpic } from '@helpers/allure';
 import { expect } from '@playwright/test';
-import { test } from '@fixtures/walletExtension';
+import { test } from '@fixtures/organizer';
 
 
 
@@ -8,8 +8,9 @@ test.beforeEach(async () => {
     await setAllureEpic('0. All Users');
 });
 
-// test.use({ storageState: '.auth/organizer.json', wallet: organizerWallet });
-//
+test.use({
+    pollType: 'CreateAndBeginPoll',
+});//
 
 test.describe('Polls', () => {
 
