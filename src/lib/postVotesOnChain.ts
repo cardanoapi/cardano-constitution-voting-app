@@ -15,9 +15,11 @@ import { buildClarityBackendReq } from '@/lib/buildClarityBackendReq';
  * @returns A promise that resolves to the transaction hash if the transaction is successful, or false if the transaction fails
  */
 export async function postVotesOnChain(
-  metadata: {
-    [key: string]: string[];
-  }[],
+  metadata:
+    | {
+        [key: string]: string[];
+      }[]
+    | string[],
 ): Promise<TransactionSubmitResult | false> {
   try {
     const clarityBackendReq = await buildClarityBackendReq();

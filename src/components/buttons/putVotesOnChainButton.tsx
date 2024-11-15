@@ -1,10 +1,11 @@
-import type { TransactionSubmitResult } from '@claritydao/clarity-backend';
 import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { addTxToPoll } from '@/lib/helpers/addTxToPoll';
+import { addTxToPollTransactions } from '@/lib/helpers/addTxToPollTransactions';
 import { addTxToPollVotes } from '@/lib/helpers/addTxToPollVotes';
+import { getSummaryTxMetadata } from '@/lib/helpers/getSummaryTxMetadata';
 import { getVotesTxMetadata } from '@/lib/helpers/getVotesTxMetadata';
 import { postVotesOnChain } from '@/lib/postVotesOnChain';
 
@@ -35,18 +36,21 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
     // Put votes on-chain
     const response = await getVotesTxMetadata(pollId);
     if (response.metadata) {
-      let txHash: false | TransactionSubmitResult = false;
       // For loop required as they metadata may be broken up into multiple transactions
       for (const metadata of Object.values(response.metadata)) {
         let success = false;
         // Keep trying until the transaction is successful
         while (!success) {
           // Post votes on chain
-          txHash = await postVotesOnChain(metadata.metadata);
+          const txHash = await postVotesOnChain(metadata.metadata);
           if (txHash) {
+            // TODO: Figure out how to handle errors in addTxToPollTransactions and addTxToPollVotes since the data is already on-chain
             success = true;
             // Add txHash to poll
-            const addTxResponse = await addTxToPoll(pollId, txHash.submitTxId);
+            const addTxResponse = await addTxToPollTransactions(
+              pollId,
+              txHash.submitTxId,
+            );
             if (addTxResponse.pollTransactionId === '-1') {
               toast.error(addTxResponse.message);
               break;
@@ -64,15 +68,33 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
           }
         }
       }
-      if (txHash) {
-        toast.success('Votes posted on-chain!');
-      } else {
-        toast.error('Error posting votes on-chain. Please try again.');
-      }
     } else if (
       response.message !== 'All votes have already been uploaded on-chain'
     ) {
       toast.error(response.message);
+    }
+    // Put summary TX on-chain
+    let summaryTxSuccess = false;
+    while (!summaryTxSuccess) {
+      const response = await getSummaryTxMetadata(pollId);
+      if (response.metadata) {
+        const txHash = await postVotesOnChain(response.metadata);
+        if (txHash) {
+          // TODO: Figure out how to handle errors in addTxToPoll since the data is already on-chain
+          summaryTxSuccess = true;
+          // Add txHash to poll
+          const addTxResponse = await addTxToPoll(pollId, txHash.submitTxId);
+          if (!addTxResponse.success) {
+            toast.error(addTxResponse.message);
+            break;
+          } else {
+            toast.success('Votes successfully uploaded on-chain');
+          }
+        }
+      } else {
+        toast.error(response.message);
+        break;
+      }
     }
     setIsSubmitting(false);
   }
