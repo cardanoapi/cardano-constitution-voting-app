@@ -43,7 +43,7 @@ export default class HomePage {
   }
 
   async deleteOpenPollCards() {
-    await this.page.waitForTimeout(2_000);
+    await this.page.waitForTimeout(1_000);
     const pollCards = await this.pollCard.all();
     if (pollCards.length > 0) {
       for (const pollCard of pollCards) {
