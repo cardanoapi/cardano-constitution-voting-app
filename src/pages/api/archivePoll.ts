@@ -14,15 +14,14 @@ type Data = {
 /**
  * Archives a poll in the database
  * @returns Success - True if poll was successfully archived, false otherwise
- * @returns Message - An error message if the user updating failed
- * @returns Status - 200 if successful, 400 if the user updating failed from user input, 500 if the user updating failed from an internal error
+ * @returns Message - An error message if archiving poll failed
+ * @returns Status - 200 if successful, 400 if the failed from user input, 500 if failed from an internal error
  */
 export default async function archivePoll(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
   try {
-    console.log('IM FINNA DELETE');
     if (req.method !== 'POST') {
       res.setHeader('Allow', 'POST');
       return res
@@ -47,7 +46,6 @@ export default async function archivePoll(
       });
     }
 
-    console.log('IM FINNA DELETE');
 
     const { pollId } = req.body;
 
@@ -75,7 +73,7 @@ export default async function archivePoll(
     Sentry.captureException(error);
     return res.status(500).json({
       success: false,
-      message: 'Error updating user.',
+      message: 'Error archiving poll.',
     });
   }
 }
