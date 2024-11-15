@@ -62,4 +62,25 @@ export default class RepresentativesPage {
       .click({ force: true });
     await this.saveUpdatedVotingPowerBtn.click();
   }
+
+  async assertSwitchedVotingPower(): Promise<void> {
+    await expect(this.page.getByRole('row').first()).toBeVisible();
+    const activeVoterRole = await this.page
+      .locator('[data-id="1"]')
+      .locator('[data-field="active_voter_id"]')
+      .innerText();
+    const changedRow = await this.page
+      .locator('[data-id="1"]')
+      .filter({ has: this.page.getByTestId('edit-active-voter-1') })
+      .allInnerTexts();
+    const changedRowData = changedRow[0].split('\n\n');
+    const activeVoter =
+      activeVoterRole === 'Delegate' ? changedRowData[1] : changedRowData[2];
+    await this.page.goto('/');
+    const activeVoterNamme = await this.page
+      .locator('[data-id="1"]')
+      .locator('[data-field="active_voter"]')
+      .innerText();
+    expect(activeVoterNamme).toBe(activeVoter);
+  }
 }
