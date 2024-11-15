@@ -1,10 +1,11 @@
 import { organizerWallet } from '@constants/staticWallets';
 import { setAllureEpic } from '@helpers/allure';
 import { expect } from '@playwright/test';
-import { test } from '@fixtures/walletExtension';
+import { test } from '@fixtures/organizer';
 import RepresentativesPage from '@pages/representativesPage';
 import HomePage from '@pages/homePage';
 import { faker } from '@faker-js/faker';
+import PollPage from '@pages/pollPage';
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -12,7 +13,151 @@ test.beforeEach(async () => {
 
 test.use({ storageState: '.auth/organizer.json', wallet: organizerWallet });
 
-test.describe('Polls', () => {
+/**
+ * Description: Convention Organisers can delete a poll, so that it no longer appears on the list of historical polls
+ *
+ * User Story: As a CO I want to be able to delete a poll so that no user of the CVT will be able to see the results of old tests or mistakenly created polls.
+ *
+ * Acceptance Criteria: Given that I am a CO on the page of a given poll, when I press the delete button I will be asked in a modal if I am sure, then if I confirm that I want to delete, then the poll will be deleted.
+ */
+
+test.describe('Delete Poll', async () => {
+  let pollId: number | undefined;
+
+  test.beforeEach(async ({ page }) => {
+    const homePage = new HomePage(page);
+    await homePage.goto();
+
+    await homePage.deleteOpenPollCards();
+    pollId = await homePage.createPoll();
+  });
+  test('11F1. Given connected as CO, can delete a pending poll', async ({
+    page,
+  }) => {
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+
+    await expect(pollPage.pollPageStatusChip).toHaveText('Pending', {
+      timeout: 10_000,
+    });
+    await pollPage.deletePoll();
+
+    await expect(page).toHaveURL('/');
+  });
+  test('11F2. Given connected as CO, can delete a ongoing poll', async ({
+    page,
+  }) => {
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+
+    await expect(pollPage.pollPageStatusChip).toHaveText('Pending', {
+      timeout: 10_000,
+    });
+    await pollPage.beginVoteBtn.click();
+    await expect(pollPage.pollPageStatusChip).toHaveText('Voting', {
+      timeout: 10_000,
+    });
+    await pollPage.deletePoll();
+
+    await expect(page).toHaveURL('/');
+  });
+  test('11F3. Given connected as CO, can delete a closed poll', async ({
+    page,
+  }) => {
+    test.slow();
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+
+    await expect(pollPage.pollPageStatusChip).toHaveText('Pending', {
+      timeout: 10_000,
+    });
+    await pollPage.beginVoteBtn.click();
+    await expect(pollPage.pollPageStatusChip).toHaveText('Voting', {
+      timeout: 10_000,
+    });
+    await pollPage.closeVoteBtn.click();
+    await expect(pollPage.pollPageStatusChip).toHaveText('Concluded', {
+      timeout: 10_000,
+    });
+    await pollPage.deletePoll();
+
+    await expect(page).toHaveURL('/');
+  });
+});
+
+test.describe('Open Close Poll', () => {
+  test.use({
+    pollType: 'CreatePoll',
+  });
+  /**
+   * Description: A convention organiser will be able to open a poll to make it available to vote on my delegates and alternates
+   *
+   * User Stories: As a CO, I want to open a poll, so that those who are eligible to vote can do so.
+   *
+   * Acceptance Criteria: Given that I am a CO on the poll's page, and the poll is in 'pending' status, then when I click the "open poll" button then the poll is opened.
+   */
+  test('11C. Given connected as CO can open  poll', async ({
+    page,
+    pollId,
+  }) => {
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+
+    await pollPage.beginVoteBtn.click();
+
+    await expect(page.getByText('Poll voting is open!')).toBeVisible();
+    await expect(pollPage.closeVoteBtn).toBeVisible();
+  });
+  /**
+   * Description: If a poll is open then a CO can close it
+   *
+   * User Story: As a CO, I want to be able to close a poll so that the results can be calculated
+   *
+   * Acceptance Criteria: Given that I am a CO on the page of a poll that is in "Open" status, when I click "Close Poll" then the poll is closed.
+   */
+  test('11D. Given connected as CO can close an open poll', async ({
+    page,
+    pollId,
+  }) => {
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+
+    await pollPage.beginVoteBtn.click();
+    await expect(pollPage.pollPageStatusChip).toHaveText('Voting', {
+      timeout: 10_000,
+    });
+    await pollPage.closeVoteBtn.click();
+
+    await expect(pollPage.voteYesIcon).toBeVisible();
+  });
+  /**
+   * Description: Once a poll has been closed to voting it cannot be re-opened, and no further votes will be accepted.
+   *
+   * User Story: As a CO, I do not want to be able to reopen a poll, so that there is no suggestion of vote manipulation.
+   *
+   * Acceptance Criteria: Given that I am on the page of a closed poll, then there is no button or any other way for me to re-open it.
+   */
+  test('11E. Given connected as CO cannot re-open closed poll', async ({
+    page,
+    pollId,
+  }) => {
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+
+    await pollPage.beginVoteBtn.click();
+    await expect(pollPage.pollPageStatusChip).toHaveText('Voting', {
+      timeout: 10_000,
+    });
+    await pollPage.closeVoteBtn.click();
+    await expect(pollPage.voteYesIcon).toBeVisible();
+
+    expect(await page.locator('button').allInnerTexts()).not.toContain(
+      'Begin Voting'
+    );
+  });
+});
+
+test.describe('Create Poll', () => {
   /**
    * Description
    * The Convention Voting Tool (CVT) recognises a Convention Organiser (CO)
@@ -55,139 +200,6 @@ test.describe('Polls', () => {
     await expect(
       page.getByTestId('poll-status-chip').getByText('Pending')
     ).toBeVisible();
-  });
-
-  /**
-   * Description: A convention organiser will be able to open a poll to make it available to vote on my delegates and alternates
-   *
-   * User Stories: As a CO, I want to open a poll, so that those who are eligible to vote can do so.
-   *
-   * Acceptance Criteria: Given that I am a CO on the poll's page, and the poll is in 'pending' status, then when I click the "open poll" button then the poll is opened.
-   */
-  test('11C. Given connected as CO can open  poll', async ({
-    page,
-    browser,
-  }) => {
-    test.slow();
-    await page.goto('/');
-    const homePage = new HomePage(page);
-    await homePage.deleteOpenPollCards();
-
-    await homePage.createPoll();
-    await page.getByTestId('begin-vote-button').click();
-
-    await expect(page.getByText('Poll voting is open!')).toBeVisible();
-    await expect(page.getByTestId('end-vote-button')).toBeVisible();
-  });
-  /**
-   * Description: If a poll is open then a CO can close it
-   *
-   * User Story: As a CO, I want to be able to close a poll so that the results can be calculated
-   *
-   * Acceptance Criteria: Given that I am a CO on the page of a poll that is in "Open" status, when I click "Close Poll" then the poll is closed.
-   */
-  test('11D. Given connected as CO can close an open poll', async ({
-    page,
-    browser,
-  }) => {
-    await page.goto('/');
-    const votingPollCard = page
-      .getByTestId('poll-status-chip')
-      .getByText('Voting', { exact: true });
-    await votingPollCard.click();
-    await page.getByTestId('end-vote-button').click();
-    await expect(page.getByTestId('results-yes')).toBeVisible();
-  });
-  /**
-   * Description: Once a poll has been closed to voting it cannot be re-opened, and no further votes will be accepted.
-   *
-   * User Story: As a CO, I do not want to be able to reopen a poll, so that there is no suggestion of vote manipulation.
-   *
-   * Acceptance Criteria: Given that I am on the page of a closed poll, then there is no button or any other way for me to re-open it.
-   */
-  test('11E. Given connected as CO cannot re-open closed poll', async ({
-    page,
-    browser,
-  }) => {
-    await page.goto('/');
-    const homePage = new HomePage(page);
-
-    await homePage.deleteOpenPollCards();
-    await homePage.createPoll();
-    await page.getByTestId('begin-vote-button').click();
-    await expect(page.getByTestId('end-vote-button')).toBeVisible();
-    await page.getByTestId('end-vote-button').click();
-
-    await expect(page.getByTestId('delete-poll-button')).toBeVisible();
-    expect(await page.locator('button').allInnerTexts()).not.toContain(
-      'Begin Voting'
-    );
-  });
-
-  /**
-   * Description: Convention Organisers can delete a poll, so that it no longer appears on the list of historical polls
-   *
-   * User Story: As a CO I want to be able to delete a poll so that no user of the CVT will be able to see the results of old tests or mistakenly created polls.
-   *
-   * Acceptance Criteria: Given that I am a CO on the page of a given poll, when I press the delete button I will be asked in a modal if I am sure, then if I confirm that I want to delete, then the poll will be deleted.
-   */
-
-  test.describe('Delete Poll', async () => {
-    test('11F1. Given connected as CO, can delete a pending poll', async ({
-      page,
-      browser,
-    }) => {
-      await page.goto('/');
-      const homePage = new HomePage(page);
-
-      await homePage.deleteOpenPollCards();
-      await homePage.createPoll();
-      await expect(
-        page.getByTestId('poll-page-status-chip').first()
-      ).toContainText('Pending');
-      await page.getByTestId('delete-poll-button').click();
-
-      await expect(page).toHaveURL('/');
-    });
-    test('11F2. Given connected as CO, can delete a ongoing poll', async ({
-      page,
-      browser,
-    }) => {
-      await page.goto('/');
-      const homePage = new HomePage(page);
-
-      await homePage.deleteOpenPollCards();
-      await homePage.createPoll();
-      await page.getByTestId('begin-vote-button').click();
-      await expect(
-        page.getByTestId('poll-page-status-chip').first()
-      ).toContainText('Voting');
-      await page.getByTestId('delete-poll-button').click();
-
-      await expect(page).toHaveURL('/');
-    });
-    test('11F3. Given connected as CO, can delete a closed poll', async ({
-      page,
-      browser,
-    }) => {
-      test.slow();
-      await page.goto('/');
-      const homePage = new HomePage(page);
-
-      await homePage.deleteOpenPollCards();
-      await homePage.createPoll();
-      await page.getByTestId('begin-vote-button').click();
-      await expect(
-        page.getByTestId('poll-page-status-chip').first()
-      ).toContainText('Voting');
-      await page.getByTestId('end-vote-button').click();
-      await expect(
-        page.getByTestId('poll-page-status-chip').first()
-      ).toContainText('Concluded');
-      await page.getByTestId('delete-poll-button').click();
-
-      await expect(page).toHaveURL('/');
-    });
   });
 });
 
@@ -278,13 +290,6 @@ test.describe('Voting Power', () => {
     const representativePage = new RepresentativesPage(page);
     await representativePage.switchVotingPower();
     await expect(page.getByText('Active voter updated!')).toBeVisible();
-  });
-
-  test('1E. Should transfer voting power from alternate to delegate.', async ({
-    page,
-  }) => {
-    const representativePage = new RepresentativesPage(page);
-    await representativePage.switchVotingPower();
-    await expect(page.getByText('Active voter updated!')).toBeVisible();
+    await representativePage.assertSwitchedVotingPower();
   });
 });
