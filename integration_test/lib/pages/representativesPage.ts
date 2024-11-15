@@ -1,7 +1,8 @@
 import { Page, expect } from '@playwright/test';
+import { faker } from '@faker-js/faker';
 
-const updateDelegateEmail = 'jamejones123@email.com';
-const updatedAlternateEmail = 'sallysue123@email.com';
+const updateDelegateEmail = faker.person.fullName + '@email.com';
+const updatedAlternateEmail = faker.person.fullName + '@email.com';
 const representativeUpdatedToast = 'User info updated!';
 export default class RepresentativesPage {
   readonly updateDelegateBtn = this.page.getByTestId(

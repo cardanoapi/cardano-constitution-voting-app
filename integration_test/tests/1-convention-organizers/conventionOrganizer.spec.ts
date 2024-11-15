@@ -291,5 +291,6 @@ test.describe('Voting Power', () => {
     await representativePage.switchVotingPower();
     await expect(page.getByText('Active voter updated!')).toBeVisible();
     await representativePage.assertSwitchedVotingPower();
+    await representativePage.switchVotingPower();
   });
 });
