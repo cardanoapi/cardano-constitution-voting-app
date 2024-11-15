@@ -9,7 +9,7 @@ test.beforeEach(async () => {
 });
 test.use({ wallet: organizerWallet });
 
-test('5A. Should connect wallet if stake key is registered', async ({
+test('5-1A. Should connect wallet if stake key is registered', async ({
   page,
 }) => {
   const loginPage = new LoginPage(page);
@@ -17,7 +17,7 @@ test('5A. Should connect wallet if stake key is registered', async ({
   await loginPage.isLoggedIn();
 });
 
-test('5B. Should disconnect Wallet When connected', async ({ page }) => {
+test('5-1B. Should disconnect Wallet When connected', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.login();
 

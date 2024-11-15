@@ -1,7 +1,7 @@
 import { organizerWallet } from '@constants/staticWallets';
 import { setAllureEpic } from '@helpers/allure';
 import { expect } from '@playwright/test';
-import { test } from '@fixtures/organizer';
+import { test } from '@fixtures/poll';
 import RepresentativesPage from '@pages/representativesPage';
 import HomePage from '@pages/homePage';
 import { faker } from '@faker-js/faker';
@@ -31,7 +31,7 @@ test.describe('Delete Poll', async () => {
     await homePage.deleteOpenPollCards();
     pollId = await homePage.createPoll();
   });
-  test('11F1. Given connected as CO, can delete a pending poll', async ({
+  test('1-1F-1. Given connected as CO, can delete a pending poll', async ({
     page,
   }) => {
     const pollPage = new PollPage(page);
@@ -44,7 +44,7 @@ test.describe('Delete Poll', async () => {
 
     await expect(page).toHaveURL('/');
   });
-  test('11F2. Given connected as CO, can delete a ongoing poll', async ({
+  test('1-1F-2. Given connected as CO, can delete a ongoing poll', async ({
     page,
   }) => {
     const pollPage = new PollPage(page);
@@ -61,7 +61,7 @@ test.describe('Delete Poll', async () => {
 
     await expect(page).toHaveURL('/');
   });
-  test('11F3. Given connected as CO, can delete a closed poll', async ({
+  test('1-1F-3. Given connected as CO, can delete a closed poll', async ({
     page,
   }) => {
     test.slow();
@@ -96,7 +96,7 @@ test.describe('Open Close Poll', () => {
    *
    * Acceptance Criteria: Given that I am a CO on the poll's page, and the poll is in 'pending' status, then when I click the "open poll" button then the poll is opened.
    */
-  test('11C. Given connected as CO can open  poll', async ({
+  test('1-1C. Given connected as CO can open  poll', async ({
     page,
     pollId,
   }) => {
@@ -115,7 +115,7 @@ test.describe('Open Close Poll', () => {
    *
    * Acceptance Criteria: Given that I am a CO on the page of a poll that is in "Open" status, when I click "Close Poll" then the poll is closed.
    */
-  test('11D. Given connected as CO can close an open poll', async ({
+  test('1-1D. Given connected as CO can close an open poll', async ({
     page,
     pollId,
   }) => {
@@ -137,7 +137,7 @@ test.describe('Open Close Poll', () => {
    *
    * Acceptance Criteria: Given that I am on the page of a closed poll, then there is no button or any other way for me to re-open it.
    */
-  test('11E. Given connected as CO cannot re-open closed poll', async ({
+  test('1-1E. Given connected as CO cannot re-open closed poll', async ({
     page,
     pollId,
   }) => {
@@ -168,7 +168,7 @@ test.describe('Create Poll', () => {
    * Acceptance Criteria
    * Given that I am a CO with my wallet connected, When I go to the homepage, Then I see the "create poll" button
    */
-  test('11A. Given connected as CO can see create poll button', async ({
+  test('1-1A. Given connected as CO can see create poll button', async ({
     page,
   }) => {
     await page.goto('/');
@@ -186,7 +186,7 @@ test.describe('Create Poll', () => {
    * Acceptance Criteria
    * Given that I am a CO on the homepage with my wallet connected, when I click the "create poll" button, Then I will go to the create poll page
    */
-  test('11B. Given connected as CO can create a new poll', async ({
+  test('1-1B. Given connected as CO can create a new poll', async ({
     page,
     browser,
   }) => {
@@ -212,7 +212,7 @@ test.describe('User Control', () => {
    * Acceptance Criteria: Given that I am a CO on the page containing the list of user records, I can select the
    * record that I want to edit and modify the fields in that record as I see fit.
    */
-  test('12A. Given connected as CO can update all fields of user', async ({
+  test('1-2A. Given connected as CO can update all fields of user', async ({
     page,
     browser,
   }) => {
@@ -226,7 +226,7 @@ test.describe('User Control', () => {
    *
    * Acceptance Criteria: Given that I am a CO on the page listing all the delegates and alternates, when I toggle one of them to be the voter from a given workshop that one can vote, the other one from the workshop is not able to vote.
    */
-  test('12B. Given connected as CO can switch delegate user to alternate or vice-versa', async ({
+  test('1-2B-1. Given connected as CO can switch delegate user to alternate or vice-versa', async ({
     page,
   }) => {
     const representativePage = new RepresentativesPage(page);
@@ -236,7 +236,7 @@ test.describe('User Control', () => {
     // again switch and test.
   });
 
-  test('12B. Should have corresponding workspace delegate and alternate in a same row', async ({
+  test('1-2B-2. Should have corresponding workspace delegate and alternate in a same row', async ({
     page,
   }) => {
     await page.goto('/');
@@ -253,7 +253,7 @@ test.describe('User Control', () => {
     expect(alternateList).toContain(alternate);
   });
 
-  test('1O. Should have workspace_name ordered alphabetically', async ({
+  test('1-2C. Should have workspace_name ordered alphabetically', async ({
     page,
   }) => {
     const workspaceNames = [];
@@ -272,7 +272,7 @@ test.describe('User Control', () => {
     );
   });
   // As a convention organiser, I want to be able to update the profile information of a delegate (or alternate) to correct any error or omission.
-  test('1-Org-Invite: 9. Convention organisers can update delegate profile information ', async ({
+  test('1-2D. Convention organisers can update delegate profile information ', async ({
     page,
   }) => {
     const represntativePage = new RepresentativesPage(page);
@@ -284,7 +284,7 @@ test.describe('User Control', () => {
 });
 
 test.describe('Voting Power', () => {
-  test('1D. Should be able to switch active voting power between delegate and alternate.', async ({
+  test('1-3A. Should be able to switch active voting power between delegate and alternate.', async ({
     page,
   }) => {
     const representativePage = new RepresentativesPage(page);

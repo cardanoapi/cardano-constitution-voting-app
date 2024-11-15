@@ -38,6 +38,7 @@ export async function getUser(userId: string | string[] | undefined): Promise<{
         };
       }
     } else {
+      console.log('UserI',userId);
       return {
         user: null,
         message: 'Invalid userId',

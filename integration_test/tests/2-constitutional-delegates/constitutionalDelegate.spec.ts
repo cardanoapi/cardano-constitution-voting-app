@@ -1,5 +1,5 @@
 import { setAllureEpic } from '@helpers/allure';
-import { test } from '@fixtures/organizer';
+import { test } from '@fixtures/poll';
 import { delegateWallet } from '@constants/staticWallets';
 import PollPage from '@pages/pollPage';
 import { expect } from '@playwright/test';
@@ -27,7 +27,7 @@ test.describe('Vote', () => {
      *
      * *conversely votes that are 'closed' or 'pending' do not give voters the option to vote.
      */
-    test('21A. Given active delegate, and poll is open, then vote option should be visible', async ({
+    test('2-1A. Given active delegate, and poll is open, then vote option should be visible', async ({
       page,
       pollId,
     }) => {
@@ -46,7 +46,7 @@ test.describe('Vote', () => {
      *
      * Acceptance Criteria: Given that I am a voter on the page of an open poll and I have already voted, when I vote again, then my vote is counted.
      */
-    test('21C. Given active delegate, and poll is open, can update casted vote', async ({
+    test('2-1C. Given active delegate, and poll is open, can update casted vote', async ({
       page,
       pollId,
     }) => {
@@ -71,7 +71,7 @@ test.describe('Vote', () => {
      * Acceptance Criteria: Given that I am a voter, when I choose not to vote, then there is no effect.
      */
 
-    test('21D. Given active delegate, can choose not to vote', async ({
+    test('2-1D. Given active delegate, can choose not to vote', async ({
       page,
       pollId,
     }) => {
@@ -91,7 +91,7 @@ test.describe('Vote', () => {
      * Acceptance Criteria: Given that I am a voter on the page of an open poll, when I press to vote either "yes", "no", or "abstain", then my the CVT sends a vote message to my wallet to be signed.
      */
 
-    test('21E: Active Delegate Should Be Able to Vote Yes, No, or Abstain on a Poll', async ({
+    test('2-1E: Active Delegate Should Be Able to Vote Yes, No, or Abstain on a Poll', async ({
       page,
       pollId,
     }) => {
@@ -130,7 +130,7 @@ test.describe('Vote', () => {
      * *conversely votes that are 'closed' or 'pending' do not give voters the option to vote.
      */
 
-    test('21B. Given active delegate and the poll is pending, voting should be disallowed', async ({
+    test('2-1B. Given active delegate and the poll is pending, voting should be disallowed', async ({
       page,
       pollId,
     }) => {

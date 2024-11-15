@@ -40,5 +40,53 @@
     },
     "dRepId": "drep1zz0swwxzmwfezqz4r4fa3cqcss7hgftdy6tsfavwhf2pu7d95jj",
     "address": "addr_test1qzpxc66v0hk74h6fthnavvxjjgmujp6nkskyepzdh7x76wqsnurn3skmjwgsq4ga20vwqxyy846z2mfxjuz0tr462s0qw8jepc"
+  },
+  {
+    "payment": {
+      "private": "7094d6db1dcb756c5ca16dd78bb2b40e2a7ab44b9e0f9ba045c30c936cd91d4b",
+      "public": "2dcab974058989926304d0f811a207db91e8a5494fab0630c546e30672424481",
+      "pkh": "46db8ae386f2d8811f3be359d00a10b94a9af41e5d6266b6b35e19de"
+    },
+    "stake": {
+      "private": "f0b456be73948b0336ff1873e3abd6151540e632b76532535dddf63f67d91d4b",
+      "public": "e82dea6fbe5c866e8ae805a7d4c0824aac54daf5bff4c4224c76491ce63d42d7",
+      "pkh": "0cd61dcc68470aeb3f50de1a230460ab4982d81468dbd7ee94b0c814"
+    }
+  },
+  {
+    "payment": {
+      "private": "90b8338b3bd7e0069b2a3d8650706117287cc78fbc1329ad2f337fb161d91d4b",
+      "public": "f54d08863799fa95eab57623160aecec6e47604321ca8160f6c84b2b713555de",
+      "pkh": "2df75661915f3cf560f98fb0c54e2530146433f18a0b388e428947d1"
+    },
+    "stake": {
+      "private": "30eed77f86480ce26172e062fae8e7702db50f246ddc23089c77008160d91d4b",
+      "public": "a6ed4aa51b93523234776387010faca74669e08a0168b44d2dbdc525088f1b98",
+      "pkh": "3eb020543f2b97ee6baf14b5ce6754211803cd2f67a35ea5bf6427e5"
+    }
+  },
+  {
+    "payment": {
+      "private": "80cdcfa96c29cc5313c63b2f0c8ce647d6b8376f911239330cc23dbe65d91d4b",
+      "public": "6de9805440e25a1f77a32bf5b56e4b2fe38ff5a64eae0a686342aecb779265f6",
+      "pkh": "183ade5a8d284a9d2ee3859394e58b1c61837280cc71fcad565ceea5"
+    },
+    "stake": {
+      "private": "489f6ee7b556a171b8c8b6ddeee6927646c68f435ece2a7a265c616164d91d4b",
+      "public": "235208acfebcc3cf731908512f9e727cfc02462e05ab61c4d32f3b2564fec611",
+      "pkh": "a749bc9d6300c0aa57dd11851fbeb12ea9d8101f49ca4765f10de1a4"
+    }
+  },
+  {
+    "payment": {
+      "private": "b8a45789046b4671b22d52f385286c9327be57f8146d4056a985ccce63d91d4b",
+      "public": "e3f8be942173004d6eccef7e572b741bbbb7d08228125cb54e3ee7701b86adab",
+      "pkh": "89f2b776a14d1b7bb9f3a470840e3c6ebe4f231b4333e46e2333d419"
+    },
+    "stake": {
+      "private": "d809a1e7675450a2d20af2a0942562f059b7da3d36157ee28f34892f66d91d4b",
+      "public": "6bca2b86c77a170a96cbafa51c0f305cc5f72916762aa1d3b7968ced71979b0a",
+      "pkh": "8f3e346ff209f583a1409862f584361c18e0d39ff684b63409a924a3"
+    }
   }
 ]

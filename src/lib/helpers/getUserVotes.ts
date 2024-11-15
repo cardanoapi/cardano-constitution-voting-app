@@ -28,6 +28,7 @@ export async function getUserVotes(
         return { votes: [], message: data.message };
       }
     } else {
+      console.log('UserId',userId);
       return { votes: [], message: 'Invalid userId' };
     }
   } catch (error) {
