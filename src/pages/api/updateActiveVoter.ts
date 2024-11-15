@@ -48,7 +48,7 @@ export default async function updateActiveVoter(
 
     const isVoting = await checkIfVoting();
     if (isVoting) {
-      return res.status(401).json({
+      return res.status(400).json({
         userId: BigInt(-1).toString(),
         message:
           'You cannot change the active voter while a Poll is actively voting.',
