@@ -2,18 +2,18 @@ import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
- * Sends TX ID to the backend to add to the poll
+ * Sends TX ID to the backend to add to the poll_transaction table
  * @param pollId - The ID of the poll to cast a vote on
  * @param txId - The ID of the transaction to add to the poll
  * @returns { pollTransactionId: string, message: string } - Valid ID if successful, -1 otherwise with a message
  */
-export async function addTxToPoll(
+export async function addTxToPollTransactions(
   pollId: string,
   txId: string,
 ): Promise<{ pollTransactionId: string; message: string }> {
   try {
     const response = await axios.post(
-      '/api/addTxToPoll',
+      '/api/addTxToPollTransactions',
       {
         pollId: pollId,
         txId: txId,

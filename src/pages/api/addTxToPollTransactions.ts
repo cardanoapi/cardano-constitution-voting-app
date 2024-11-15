@@ -13,12 +13,12 @@ type Data = {
   message: string;
 };
 /**
- * Adds a TX ID to a poll
+ * Adds a TX ID to the poll_transaction table
  * @returns success - True if the TX was successfully added, false otherwise
  * @returns Message - An error message if the TX was not successfully added
  * @returns Status - 200 if successful, 400 if failed from user input, 500 if failed from an internal error
  */
-export default async function addTxToPoll(
+export default async function addTxToPollTransactions(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
