@@ -66,7 +66,7 @@ test.describe('Vote', () => {
      * Description: voters can choose not to vote
      *
      * User Story: As a voter I want to be able to choose not to vote, so that the app does not break if I don't
-     * .
+     *
      * Acceptance Criteria: Given that I am a voter, when I choose not to vote, then there is no effect.
      */
 
@@ -78,6 +78,34 @@ test.describe('Vote', () => {
       await pollPage.goto(pollId);
       await pollPage.voteAbstainBtn.click();
 
+      await expect(page.getByText('Abstain', { exact: true })).toBeVisible();
+    });
+
+    /**
+     * Description: One delegate or alternate from each workshop is chosen to be eligible to vote (a 'voter'), this voter can vote "yes", "no", or "abstain" in any open poll
+     *
+     * User Story: As a voter, I want to vote either "yes", "no", or "abstain" in an open poll, so that I can represent my workshop
+     *
+     * Acceptance Criteria: Given that I am a voter on the page of an open poll, when I press to vote either "yes", "no", or "abstain", then my the CVT sends a vote message to my wallet to be signed.
+     */
+
+    test('21E: Active Delegate Should Be Able to Vote Yes, No, or Abstain on a Poll', async ({
+      page,
+      pollId,
+    }) => {
+      const pollPage = new PollPage(page);
+      await pollPage.goto(pollId);
+
+      // yes vote
+      await pollPage.voteYesBtn.click();
+      await expect(page.getByText('Yes', { exact: true })).toBeVisible();
+
+      // no vote
+      await pollPage.voteNoBtn.click();
+      await expect(page.getByText('No', { exact: true })).toBeVisible();
+
+      // abstain vote
+      await pollPage.voteAbstainBtn.click();
       await expect(page.getByText('Abstain', { exact: true })).toBeVisible();
     });
   });
