@@ -24,7 +24,8 @@ export async function castVote(
         message: 'You must be signed in as a Representative to vote.',
       };
     }
-    const message = `Wallet: ${stakeAddress}, Poll Id: ${pollId}, Vote: ${vote}`;
+    const timestamp = new Date().toLocaleString();
+    const message = `Wallet: ${stakeAddress}, Poll Id: ${pollId}, Vote: ${vote}, Timestamp: ${timestamp}`;
     const signature = await signMessage(walletName, message);
     const response = await axios.post(
       '/api/newPollVote',
