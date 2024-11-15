@@ -38,28 +38,30 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
       let txHash: false | TransactionSubmitResult = false;
       // For loop required as they metadata may be broken up into multiple transactions
       for (const metadata of Object.values(response.metadata)) {
-        // Post votes on chain
-        txHash = await postVotesOnChain(metadata.metadata);
-        if (txHash) {
-          // Add txHash to poll
-          const addTxResponse = await addTxToPoll(pollId, txHash.submitTxId);
-          if (addTxResponse.pollTransactionId === '-1') {
-            toast.error(addTxResponse.message);
-            break;
+        let success = false;
+        // Keep trying until the transaction is successful
+        while (!success) {
+          // Post votes on chain
+          txHash = await postVotesOnChain(metadata.metadata);
+          if (txHash) {
+            success = true;
+            // Add txHash to poll
+            const addTxResponse = await addTxToPoll(pollId, txHash.submitTxId);
+            if (addTxResponse.pollTransactionId === '-1') {
+              toast.error(addTxResponse.message);
+              break;
+            }
+            // Add txHash to poll votes
+            const addTxToVotesResponse = await addTxToPollVotes(
+              metadata.userIds,
+              pollId,
+              addTxResponse.pollTransactionId,
+            );
+            if (!addTxToVotesResponse.succeeded) {
+              toast.error(addTxToVotesResponse.message);
+              break;
+            }
           }
-          // Add txHash to poll votes
-          const addTxToVotesResponse = await addTxToPollVotes(
-            metadata.userIds,
-            pollId,
-            addTxResponse.pollTransactionId,
-          );
-          if (!addTxToVotesResponse.succeeded) {
-            toast.error(addTxToVotesResponse.message);
-            break;
-          }
-        } else {
-          toast.error('Error posting votes on-chain. Please try again.');
-          break;
         }
       }
       if (txHash) {
