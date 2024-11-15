@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 import { addTxToPoll } from '@/lib/helpers/addTxToPoll';
 import { addTxToPollVotes } from '@/lib/helpers/addTxToPollVotes';
-import { getTxMetadata } from '@/lib/helpers/getTxMetadata';
+import { getVotesTxMetadata } from '@/lib/helpers/getVotesTxMetadata';
 import { postVotesOnChain } from '@/lib/postVotesOnChain';
 
 interface Props {
@@ -33,7 +33,7 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
     }
     setIsSubmitting(true);
     // Put votes on-chain
-    const response = await getTxMetadata(pollId);
+    const response = await getVotesTxMetadata(pollId);
     if (response.metadata) {
       let txHash: false | TransactionSubmitResult = false;
       // For loop required as they metadata may be broken up into multiple transactions
@@ -69,8 +69,10 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
       } else {
         toast.error('Error posting votes on-chain. Please try again.');
       }
-    } else {
-      toast.error('Error getting transaction metadata. Please try again.');
+    } else if (
+      response.message !== 'All votes have already been uploaded on-chain'
+    ) {
+      toast.error(response.message);
     }
     setIsSubmitting(false);
   }

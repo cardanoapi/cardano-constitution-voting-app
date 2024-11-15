@@ -69,12 +69,25 @@ export default async function getVotesTxMetadata(
 
     const pollVotes = await pollVotesDto(pollId);
 
+    // Filter out votes that already have a transaction ID. This is to prevent votes from being uploaded on-chain twice.
+    // This could happen if the CO has to sign multiple TXs, the first TX succeeds, but the second TX fails.
+    const filteredPollVotes = pollVotes.filter(
+      (vote) => vote.poll_transaction_id === null,
+    );
+
+    if (filteredPollVotes.length === 0) {
+      return res.status(400).json({
+        metadata: null,
+        message: 'All votes have already been uploaded on-chain',
+      });
+    }
+
     const metadata: Metadata = {};
 
     let i = 0;
     let temporaryMetadataArray: { [key: string]: string[] }[] = []; // Temporary array to store metadata for a single transaction
     let temporaryUserArray: string[] = []; // Temporary array to store user IDs that are included in a single transaction
-    for (const vote of pollVotes) {
+    for (const vote of filteredPollVotes) {
       // First, check how large the bytes of the temporary array is
       const bytes = getBytesOfArray(temporaryMetadataArray);
       // Limit is set to 10 KB right now. Cardano TX limit is 16KB. This is to be safe. If the limit is reached, create a new entry in the metadata object.
