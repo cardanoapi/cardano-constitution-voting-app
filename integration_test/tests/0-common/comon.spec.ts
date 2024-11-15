@@ -1,35 +1,60 @@
-import { organizerWallet } from '@constants/staticWallets';
 import { setAllureEpic } from '@helpers/allure';
 import { expect } from '@playwright/test';
 import { test } from '@fixtures/walletExtension';
-import RepresentativesPage from '@pages/representativesPage';
-import HomePage from '@pages/homePage';
-import { faker } from '@faker-js/faker';
+
 
 
 test.beforeEach(async () => {
     await setAllureEpic('0. All Users');
 });
 
-test.use({ storageState: '.auth/organizer.json', wallet: organizerWallet });
-
+// test.use({ storageState: '.auth/organizer.json', wallet: organizerWallet });
+//
 
 test.describe('Polls', () => {
 
-
     /**
-     * Description
-     * The Convention Voting Tool (CVT) recognises a Convention Organiser (CO)
+     * Description: Anyone can see what stage in its lifecycle a poll is
      *
-     * User Story
-     * As a CO I want the CVT to know my status so that I can act on it
+     * User Story: As an observer, I want to know whether a poll is pending, open or closed, so that I know what to expect
      *
-     * Acceptance Criteria
-     * Given that I am a CO with my wallet connected, When I go to the homepage, Then I see the "create poll" button
+     * Acceptance Criteria: Given that I am looking at a given poll, when I look at it, then I can see its status
      */
-    test('01A. Given any user, can view all polls', async ({page}) => {
-        throw new Error("Not Implemented")
+    test('01A. Given any user, can view poll status', async ({ page }) => {
+        await page.goto('/');
+        await page.waitForSelector('[data-testid^="poll-card-"]');
+
+        let pollCards = page.locator('[data-testid^="poll-card-"]');
+
+        let pollCardCount = await pollCards.count();
+        expect(pollCardCount).toBeGreaterThan(0);
+
+        // Check that each poll card has a 'poll-status-chip' with "Concluded" or "Pending"
+        for (let i = 0; i < pollCardCount; i++) {
+            const statusChip = pollCards.nth(i).locator('[data-testid="poll-status-chip"]');
+
+            await expect(statusChip).toBeVisible();
+
+            const statusText = await statusChip.textContent();
+            expect(['Concluded', 'Pending','Voting']).toContain(statusText);
+        }
+
+        const randomIndex = Math.floor(Math.random() * pollCardCount);
+        const pollCard =  pollCards.nth(randomIndex)
+        const pollCardTestId = await pollCard.getAttribute('data-testid');
+        const pollId = pollCardTestId.split('-').pop();
+
+        await page.goto(`/polls/${pollId}`);
+
+
+        const pollPageStatusChip = page.getByTestId('poll-page-status-chip');
+        await expect(pollPageStatusChip).toBeVisible();
+
+        const statusText = await pollPageStatusChip.textContent();
+        expect(['Concluded', 'Pending','Voting']).toContain(statusText);
+
     });
+
     test('01B. Given any user, can view poll status', async ({page}) => {
         throw new Error("Not Implemented")
     });

@@ -84,7 +84,7 @@ export default function ViewPoll(): JSX.Element {
                 'View Poll'
               )}
             </Typography>
-            {poll && <PollStatusChip status={poll.status} />}
+            {poll && <PollStatusChip status={poll.status} testId='poll-page-status-chip' />}
           </Box>
           <PollVoteCount pollId={poll?.id?.toString() || ''} />
           <Grid container data-testid="poll-description">
