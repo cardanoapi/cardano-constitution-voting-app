@@ -27,7 +27,7 @@ test.describe('Vote', () => {
      *
      * *conversely votes that are 'closed' or 'pending' do not give voters the option to vote.
      */
-    test('21A. Given active delegate, and poll is open, can cast vote', async ({
+    test('21A. Given active delegate, and poll is open, then vote option should be visible', async ({
       page,
       pollId,
     }) => {
@@ -60,6 +60,7 @@ test.describe('Vote', () => {
       await pollPage.voteNoBtn.click();
 
       await expect(page.getByText('No', { exact: true })).toBeVisible();
+      await expect(page.getByText('1 vote', { exact: true })).toBeVisible(); // missing test id
     });
 
     /**
@@ -79,6 +80,7 @@ test.describe('Vote', () => {
       await pollPage.voteAbstainBtn.click();
 
       await expect(page.getByText('Abstain', { exact: true })).toBeVisible();
+      await expect(page.getByText('1 vote', { exact: true })).toBeVisible(); // missing test id
     });
 
     /**
@@ -99,14 +101,17 @@ test.describe('Vote', () => {
       // yes vote
       await pollPage.voteYesBtn.click();
       await expect(page.getByText('Yes', { exact: true })).toBeVisible();
+      await expect(page.getByText('1 vote', { exact: true })).toBeVisible(); // missing test id
 
       // no vote
       await pollPage.voteNoBtn.click();
       await expect(page.getByText('No', { exact: true })).toBeVisible();
+      await expect(page.getByText('1 vote', { exact: true })).toBeVisible(); // missing test id
 
       // abstain vote
       await pollPage.voteAbstainBtn.click();
       await expect(page.getByText('Abstain', { exact: true })).toBeVisible();
+      await expect(page.getByText('1 vote', { exact: true })).toBeVisible(); // missing test id
     });
   });
 
