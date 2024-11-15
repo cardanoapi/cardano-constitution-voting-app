@@ -46,8 +46,13 @@ export default async function archivePoll(
       });
     }
 
-
     const { pollId } = req.body;
+    if (typeof pollId !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid pollId',
+      });
+    }
 
     // TODO: Also additional security step of verifying coordinator's signature before archiving poll?
 

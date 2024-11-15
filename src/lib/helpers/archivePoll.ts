@@ -6,7 +6,7 @@ import axios from 'axios';
  * @param pollId - The ID of the poll to archive
  * @returns { succeeded: boolean, message: string } - True if the poll voting was successfully archived, false otherwise with a message
  */
-export async function deletePoll(
+export async function archivePoll(
   pollId: string,
 ): Promise<{ succeeded: boolean; message: string }> {
   try {

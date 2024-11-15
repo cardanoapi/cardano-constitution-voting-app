@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 import { paths } from '@/paths';
-import { deletePoll } from '@/lib/helpers/deletePoll';
+import { archivePoll } from '@/lib/helpers/archivePoll';
 
 interface Props {
   pollId: string | string[] | undefined;
@@ -30,7 +30,7 @@ export function DeletePollButton(props: Props): JSX.Element {
     }
     // Delete Poll
     setIsSubmitting(true);
-    const result = await deletePoll(pollId);
+    const result = await archivePoll(pollId);
     if (result.succeeded === false) {
       toast.error(result.message);
     } else {
