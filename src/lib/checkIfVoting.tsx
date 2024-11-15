@@ -8,6 +8,7 @@ export async function checkIfVoting(): Promise<boolean> {
   const polls = await prisma.poll.findMany({
     where: {
       status: 'voting',
+      is_archived: false,
     },
   });
   if (polls.length > 0) {
