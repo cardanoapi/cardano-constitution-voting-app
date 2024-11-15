@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model challenge {
+  id          String @unique @db.VarChar(255)
+  expire_time BigInt
+}
+
 model poll {
   id               BigInt             @id @default(autoincrement())
   name             String             @db.VarChar(255)
@@ -20,10 +25,10 @@ model poll {
 
 model poll_transaction {
   poll_id        BigInt
-  transaction_id String     @unique @db.VarChar(255)
-  id             BigInt     @id @default(autoincrement())
-  poll           poll       @relation(fields: [poll_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  poll_vote      poll_vote?
+  transaction_id String      @unique @db.VarChar(255)
+  id             BigInt      @id @default(autoincrement())
+  poll           poll        @relation(fields: [poll_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  poll_vote      poll_vote[]
 }
 
 model poll_vote {
@@ -32,7 +37,7 @@ model poll_vote {
   vote                String            @db.VarChar(100)
   signature           String            @unique @db.VarChar(1000)
   hashed_message      String            @db.VarChar(1000)
-  poll_transaction_id BigInt?           @unique
+  poll_transaction_id BigInt?
   poll                poll              @relation(fields: [poll_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   poll_transaction    poll_transaction? @relation(fields: [poll_transaction_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user                user              @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -66,9 +71,4 @@ model workshop {
   user_workshop_active_voter_idTouser user?   @relation("workshop_active_voter_idTouser", fields: [active_voter_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user_workshop_alternate_idTouser    user?   @relation("workshop_alternate_idTouser", fields: [alternate_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user_workshop_delegate_idTouser     user?   @relation("workshop_delegate_idTouser", fields: [delegate_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model challenge {
-  id          String @unique @db.VarChar(255)
-  expire_time BigInt
 }
