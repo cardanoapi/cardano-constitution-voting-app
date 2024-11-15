@@ -1,7 +1,6 @@
 import { setAllureEpic } from '@helpers/allure';
 import { test } from '@fixtures/organizer';
 import { delegateWallet } from '@constants/staticWallets';
-import HomePage from '@pages/homePage';
 import PollPage from '@pages/pollPage';
 import { expect } from '@playwright/test';
 
@@ -9,10 +8,13 @@ test.beforeEach(async () => {
   await setAllureEpic('2. Constitutional Delegates');
 });
 
+test.use({
+  storageState: '.auth/delegate.json',
+  wallet: delegateWallet,
+});
+
 test.describe('Vote', () => {
   test.use({
-    storageState: '.auth/delegate.json',
-    wallet: delegateWallet,
     pollType: 'CreateAndBeginPoll',
   });
   /**
@@ -25,10 +27,11 @@ test.describe('Vote', () => {
    * *conversely votes that are 'closed' or 'pending' do not give voters the option to vote.
    */
   test('21A. Given active delegate, and poll is open, can cast vote', async ({
-    page, pollId
+    page,
+    pollId,
   }) => {
     const pollPage = new PollPage(page);
-    await pollPage.goto(pollId)
+    await pollPage.goto(pollId);
 
     await expect(pollPage.voteYesBtn).toBeVisible();
     await expect(pollPage.voteNoBtn).toBeVisible();
@@ -42,9 +45,21 @@ test.describe('Vote', () => {
    *
    * Acceptance Criteria: Given that I am a voter on the page of an open poll and I have already voted, when I vote again, then my vote is counted.
    */
-  test('21A. Given active delegate, and poll is open, can update casted vote', async ({
+  test('22A. Given active delegate, and poll is open, can update casted vote', async ({
     page,
-  }) => {});
+    pollId,
+  }) => {
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+    //  yes vote
+    await pollPage.voteYesBtn.click();
+    await expect(page.getByText('Yes', { exact: true })).toBeVisible();
+
+    // change vote
+    await pollPage.voteNoBtn.click();
+
+    await expect(page.getByText('No', { exact: true })).toBeVisible();
+  });
 
   /**
    * Description: voters can choose not to vote
@@ -61,16 +76,25 @@ test.describe('Vote', () => {
 
 test.describe('Pending poll visibility', () => {
   test.use({
-    storageState: '.auth/delegate.json',
-    wallet: delegateWallet,
     pollType: 'CreatePoll',
   });
 
+  /**
+   * Description: voters are the only people who can vote, and they can only vote in a poll that is open
+   *
+   * User Story: As an eligible delegate or alternate, I want to be able to vote in open polls, so that I can represent the interests of my workshop
+   *
+   * Acceptance Criteria: Given that I am on the page of an open poll when I look at it, then I see that I have the option to vote*
+   *
+   * *conversely votes that are 'closed' or 'pending' do not give voters the option to vote.
+   */
+
   test('21B. Given active delegate and the poll is pending, voting should be disallowed', async ({
-    page, pollId
+    page,
+    pollId,
   }) => {
     const pollPage = new PollPage(page);
-    await pollPage.goto(pollId)
+    await pollPage.goto(pollId);
 
     await expect(pollPage.voteYesBtn).not.toBeVisible();
     await expect(pollPage.voteNoBtn).not.toBeVisible();
