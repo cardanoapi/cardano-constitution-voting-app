@@ -1,13 +1,17 @@
 import { setAllureEpic } from '@helpers/allure';
-import { CCVT } from '@mock/index';
-import { expect, test } from '@playwright/test';
+import { test } from '@fixtures/organizer';
+import { delegateWallet } from '@constants/staticWallets';
 
 test.beforeEach(async () => {
   await setAllureEpic('2. Constitutional Delegates');
 });
 
 test.describe('Vote', () => {
-
+  test.use({
+    storageState: '.auth/delegate.json',
+    wallet: delegateWallet,
+    pollEnabled: true,
+  });
   /**
    * Description: voters are the only people who can vote, and they can only vote in a poll that is open
    *
@@ -19,9 +23,7 @@ test.describe('Vote', () => {
    */
   test('21A. Given active delegate, and poll is open, can cast vote', async ({
     page,
-  }) => {
-
-  });
+  }) => {});
 
   /**
    * Description: If a voter has already voted on a poll that is currently open then they will be able to change their vote
@@ -31,10 +33,8 @@ test.describe('Vote', () => {
    * Acceptance Criteria: Given that I am a voter on the page of an open poll and I have already voted, when I vote again, then my vote is counted.
    */
   test('21A. Given active delegate, and poll is open, can update casted vote', async ({
-                                                                  page,
-                                                                }) => {
-
-  });
+    page,
+  }) => {});
 
   /**
    * Description: voters can choose not to vote
@@ -44,8 +44,7 @@ test.describe('Vote', () => {
    * Acceptance Criteria: Given that I am a voter, when I choose not to vote, then there is no effect.
    */
 
-  test('21B. Given active delegate, can choose not to vote',async ({page})=>{
-
-  })
-
+  test('21B. Given active delegate, can choose not to vote', async ({
+    page,
+  }) => {});
 });
