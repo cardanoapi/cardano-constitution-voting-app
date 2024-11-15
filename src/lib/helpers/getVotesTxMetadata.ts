@@ -7,12 +7,12 @@ import type { Metadata } from '@/types';
  * Returns metadata for a transaction that uploads poll votes on-chain
  * @returns TX metadata
  */
-export async function getTxMetadata(pollId: string): Promise<{
+export async function getVotesTxMetadata(pollId: string): Promise<{
   metadata: Metadata | null;
   message: string;
 }> {
   try {
-    const response = await axios.get(`/api/getTxMetadata/${pollId}`, {
+    const response = await axios.get(`/api/getVotesTxMetadata/${pollId}`, {
       headers: { 'X-Custom-Header': 'intersect' },
     });
 

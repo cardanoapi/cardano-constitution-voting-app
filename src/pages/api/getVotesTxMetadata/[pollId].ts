@@ -21,7 +21,7 @@ type Data = { metadata: Metadata | null; message: string };
  * @returns message - An error message if getting the poll vote count failed from an internal error
  * @returns metadata - The metadata for the TXs
  */
-export default async function getTxMetadata(
+export default async function getVotesTxMetadata(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ): Promise<void> {
