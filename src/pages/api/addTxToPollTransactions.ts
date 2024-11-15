@@ -6,6 +6,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import * as Sentry from '@sentry/nextjs';
 import { getServerSession } from 'next-auth';
 
+import { pollDto } from '@/data/pollDto';
 import { checkIfCO } from '@/lib/checkIfCO';
 
 type Data = {
@@ -60,11 +61,7 @@ export default async function addTxToPollTransactions(
       });
     }
 
-    const poll = await prisma.poll.findUnique({
-      where: {
-        id: BigInt(pollId),
-      },
-    });
+    const poll = await pollDto(pollId);
     if (!poll || poll.status !== pollPhases.concluded) {
       return res.status(400).json({
         pollTransactionId: '-1',
