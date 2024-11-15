@@ -5,6 +5,7 @@ import { signMessage } from '@/lib/signMessage';
 
 /**
  * Casts a vote on a poll
+ * @param pollName - The name of the poll to cast a vote on
  * @param pollId - The ID of the poll to cast a vote on
  * @param vote - The vote to cast
  * @param stakeAddress - The stake address of the user casting the vote
@@ -12,6 +13,7 @@ import { signMessage } from '@/lib/signMessage';
  * @returns { succeeded: boolean, message: string } - True if the poll voting was successfully started, false otherwise with a message
  */
 export async function castVote(
+  pollName: string,
   pollId: string,
   vote: string,
   stakeAddress: string | null | undefined,
@@ -25,7 +27,7 @@ export async function castVote(
       };
     }
     const timestamp = new Date().toLocaleString();
-    const message = `Wallet: ${stakeAddress}, Poll Id: ${pollId}, Vote: ${vote}, Timestamp: ${timestamp}`;
+    const message = `Wallet: ${stakeAddress}, Poll: ${pollName}, Vote: ${vote}, Timestamp: ${timestamp}`;
     const signature = await signMessage(walletName, message);
     const response = await axios.post(
       '/api/newPollVote',

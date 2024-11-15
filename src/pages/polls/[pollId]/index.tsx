@@ -231,6 +231,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                       alignItems="center"
                     >
                       <VoteOnPollButtons
+                        pollName={poll.name}
                         pollId={poll.id}
                         disabled={isSubmitting}
                         setDisabled={updateIsSubmitting}

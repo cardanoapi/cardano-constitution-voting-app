@@ -12,6 +12,7 @@ import { castVote } from '@/lib/helpers/castVote';
 import { getPollVote } from '@/lib/helpers/getPollVote';
 
 interface Props {
+  pollName: string;
   pollId: string;
   disabled: boolean;
   setDisabled: (value: boolean) => void;
@@ -20,6 +21,7 @@ interface Props {
 
 /**
  * Yes, No, Abstain buttons to vote on a poll
+ * @param pollName - The name of the poll
  * @param pollId - The ID of the poll
  * @param disabled - Whether the buttons are disabled
  * @param setDisabled - Function to set the disabled state
@@ -27,7 +29,7 @@ interface Props {
  * @returns Vote on Poll Buttons
  */
 export function VoteOnPollButtons(props: Props): JSX.Element {
-  const { pollId, disabled, setDisabled, isActiveVoter } = props;
+  const { pollName, pollId, disabled, setDisabled, isActiveVoter } = props;
   const [vote, setVote] = useState('');
 
   const session = useSession();
@@ -36,6 +38,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
   async function handleVote(vote: string): Promise<void> {
     setDisabled(true);
     const result = await castVote(
+      pollName,
       pollId,
       vote,
       session.data?.user.stakeAddress,
