@@ -109,7 +109,17 @@ test.describe('Polls', () => {
     page,
     browser,
   }) => {
-    throw new Error('Not Implemented');
+    await page.goto('/');
+    const homePage = new HomePage(page);
+    await homePage.deleteOpenPollCards();
+    await homePage.createPoll();
+    await page.getByTestId('begin-vote-button').click();
+    await expect(page.getByTestId('end-vote-button')).toBeVisible();
+    await page.getByTestId('end-vote-button').click();
+    await expect(page.getByTestId('delete-poll-button')).toBeVisible();
+    expect(await page.locator('button').allInnerTexts()).not.toContain(
+      'Begin Voting'
+    );
   });
 
   /**
