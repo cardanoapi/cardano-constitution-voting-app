@@ -12,7 +12,7 @@ import {
 import * as Sentry from '@sentry/nextjs';
 import blake from 'blakejs';
 
-import { deriveStakeAddress } from '@/lib/deriveStakeAddress';
+import { deriveStakeAddressFromPublicKey } from '@/lib/deriveStakeAddressFromPublicKey';
 import { verifyChallenge } from '@/lib/verifyChallenge';
 
 /**
@@ -47,7 +47,7 @@ export const verifyWallet = async (
     if (!publicKey) return false;
 
     // Ensure that the derived stake address from the signature matches the stake address from the session
-    const derivedStakeAddress = deriveStakeAddress(publicKey);
+    const derivedStakeAddress = deriveStakeAddressFromPublicKey(publicKey);
     if (derivedStakeAddress !== stakeAddress) return false;
 
     const payload = decoded.payload();

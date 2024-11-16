@@ -9,7 +9,7 @@ import {
  * @param publicKey - The public key to derive the stake address from
  * @returns Wallet's stake address in bech32 format
  */
-export function deriveStakeAddress(publicKey: PublicKey): string {
+export function deriveStakeAddressFromPublicKey(publicKey: PublicKey): string {
   // Get the stake key hash from the public key
   const stakeKeyHash = publicKey.hash();
 
