@@ -13,6 +13,8 @@ import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 import { PollList } from '@/components/polls/pollList';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
 
+// Just a test
+
 interface Props {
   polls: Poll[];
   representatives: User[];
