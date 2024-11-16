@@ -15,6 +15,7 @@ export async function userVotesDto(userId: string): Promise<PollVote[]> {
       user_id: BigInt(userId),
       poll: {
         status: pollPhases.concluded,
+        is_archived: false,
       },
     },
   });
