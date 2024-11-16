@@ -1,8 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import * as Sentry from '@sentry/nextjs';
+import { getServerSession } from 'next-auth';
 
+import { pollActiveResultsDto } from '@/data/pollActiveResultsDto';
 import { pollResultsDto } from '@/data/pollResultsDto';
+
+import { authOptions } from '../auth/[...nextauth]';
 
 type Data = {
   votes: {
@@ -42,7 +46,14 @@ export default async function getPollResults(
       });
     }
 
-    const votes = await pollResultsDto(pollId, req, res);
+    // check session, if it's a coordinator get active results, otherwise get concluded results
+    const session = await getServerSession(req, res, authOptions);
+    let votes;
+    if (session?.user.isCoordinator) {
+      votes = await pollActiveResultsDto(pollId);
+    } else {
+      votes = await pollResultsDto(pollId);
+    }
 
     return res.status(200).json({
       votes: votes,

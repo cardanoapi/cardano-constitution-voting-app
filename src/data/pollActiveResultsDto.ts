@@ -16,11 +16,11 @@ type Data = {
 };
 
 /**
- * Gets and formats the results of a concluded poll
+ * Gets and formats the results of all polls - Used for coordinators
  * @param pollId - The ID of the poll to get results for
  * @returns Results of the poll
  */
-export async function pollResultsDto(pollId: string): Promise<{
+export async function pollActiveResultsDto(pollId: string): Promise<{
   yes: {
     name: string;
     id: string;
@@ -37,9 +37,6 @@ export async function pollResultsDto(pollId: string): Promise<{
   const votes = await prisma.poll_vote.findMany({
     where: {
       poll_id: BigInt(pollId),
-      poll: {
-        status: 'concluded',
-      },
     },
     select: {
       user_id: true,
