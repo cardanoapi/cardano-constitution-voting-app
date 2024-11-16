@@ -13,7 +13,12 @@ export async function pollsDto(): Promise<Poll[]> {
   const convertedPolls = convertBigIntsToStrings(polls);
 
   // Filter items to include only those with a valid poll status
-  const filteredPolls = convertedPolls.filter(isValidPollStatus);
+  const verifiedPolls = [];
+  for (const poll of convertedPolls) {
+    if (isValidPollStatus(poll)) {
+      verifiedPolls.push(poll);
+    }
+  }
 
-  return filteredPolls;
+  return verifiedPolls;
 }
