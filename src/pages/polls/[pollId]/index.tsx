@@ -29,6 +29,7 @@ import { EndVoteButton } from '@/components/buttons/endVoteButton';
 import { PutVotesOnChainButton } from '@/components/buttons/putVotesOnChainButton';
 import { ViewTxButton } from '@/components/buttons/viewTxButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
+import { CoordinatorViewVotes } from '@/components/polls/coordinatorViewVotes';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollResults } from '@/components/polls/pollResults';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
@@ -232,6 +233,16 @@ export default function ViewPoll(props: Props): JSX.Element {
                         </Box>
                       </>
                     )}
+                    {session.data?.user.isCoordinator &&
+                      poll.status === pollPhases.voting && (
+                        <Box display="flex">
+                          <CoordinatorViewVotes
+                            votes={pollResults}
+                            workshops={workshops}
+                            representatives={representatives}
+                          />
+                        </Box>
+                      )}
                   </Box>
                   {/* Delegate Voting Buttons */}
                   {poll.status === pollPhases.voting && (
