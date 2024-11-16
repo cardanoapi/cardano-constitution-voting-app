@@ -50,6 +50,7 @@ export default async function newPollVote(
         key: signature.signature.signedMessage.key,
       },
       signature.challenge.challenge,
+      session.user.stakeAddress,
     );
 
     if (!valid) {
