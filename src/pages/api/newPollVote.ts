@@ -141,6 +141,13 @@ export default async function newPollVote(
       });
     }
 
+    if (findPoll.is_archived) {
+      return res.status(400).json({
+        success: false,
+        message: 'Poll is archived',
+      });
+    }
+
     // create poll vote
     await prisma.poll_vote.upsert({
       where: {

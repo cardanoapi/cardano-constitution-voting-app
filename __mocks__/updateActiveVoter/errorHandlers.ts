@@ -1,5 +1,18 @@
 import { http, HttpResponse } from 'msw';
 
+export const updateActiveVoterActiveVoteHandler = [
+  http.post('/api/updateActiveVoter', async () => {
+    return HttpResponse.json(
+      {
+        userId: '-1',
+        message:
+          'You cannot change the active voter while a Poll is actively voting.',
+      },
+      { status: 400 },
+    );
+  }),
+];
+
 export const updateActiveVoterNoWorkshopIdHandler = [
   http.post('/api/updateActiveVoter', async () => {
     return HttpResponse.json(

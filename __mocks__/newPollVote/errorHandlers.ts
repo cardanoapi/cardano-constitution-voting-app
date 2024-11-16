@@ -60,6 +60,18 @@ export const newPollVoteNotVotingHandler = [
   }),
 ];
 
+export const pollIsArchivedHandler = [
+  http.post('/api/newPollVote', async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        message: 'Poll is archived',
+      },
+      { status: 400 },
+    );
+  }),
+];
+
 export const newPollVoteInternalErrorHandler = [
   http.post('/api/newPollVote', async () => {
     return HttpResponse.json(

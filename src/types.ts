@@ -4,6 +4,7 @@ export interface Poll {
   description: string;
   status: 'pending' | 'voting' | 'concluded';
   summary_tx_id: string | null;
+  is_archived: boolean;
 }
 
 export interface User {

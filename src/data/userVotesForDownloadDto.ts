@@ -29,6 +29,7 @@ export async function userVotesForDownloadDto(userId: string): Promise<
       user_id: BigInt(userId),
       poll: {
         status: pollPhases.concluded,
+        is_archived: false,
       },
     },
     include: {
