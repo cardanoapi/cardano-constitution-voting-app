@@ -12,6 +12,7 @@ import {
 import * as Sentry from '@sentry/nextjs';
 import blake from 'blakejs';
 
+import { deriveStakeAddressFromPublicKey } from '@/lib/deriveStakeAddressFromPublicKey';
 import { verifyChallenge } from '@/lib/verifyChallenge';
 
 /**
@@ -19,6 +20,7 @@ import { verifyChallenge } from '@/lib/verifyChallenge';
  * @param originalPayload - Text content of message that was signed
  * @param signedMessage - Signed message object from wallet
  * @param challenge - Challenge from the BE
+ * @param stakeAddress - Stake address of the user
  * @returns true if wallet ownership is verified, false if not
  */
 export const verifyWallet = async (
@@ -28,6 +30,7 @@ export const verifyWallet = async (
     key: string;
   },
   challenge: string,
+  stakeAddress: string,
 ): Promise<boolean> => {
   try {
     const challengeValid = await verifyChallenge(challenge);
@@ -40,6 +43,12 @@ export const verifyWallet = async (
       .header(Label.new_int(Int.new_negative(BigNum.from_str('2'))))
       ?.as_bytes();
     const publicKey = pubKeyBytes ? PublicKey.from_bytes(pubKeyBytes) : null;
+
+    if (!publicKey) return false;
+
+    // Ensure that the derived stake address from the signature matches the stake address from the session
+    const derivedStakeAddress = deriveStakeAddressFromPublicKey(publicKey);
+    if (derivedStakeAddress !== stakeAddress) return false;
 
     const payload = decoded.payload();
     const signature = Ed25519Signature.from_bytes(decoded.signature());

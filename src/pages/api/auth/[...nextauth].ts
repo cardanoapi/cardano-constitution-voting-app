@@ -30,6 +30,7 @@ export const authOptions: NextAuthOptions = {
           credentials.payload,
           { signature: credentials.signature, key: credentials.key },
           credentials.challenge,
+          credentials.stakeAddress,
         );
 
         if (!valid) {
