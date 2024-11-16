@@ -54,7 +54,7 @@ export default async function newPollVote(
     );
 
     if (!valid) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: 'Invalid signature.',
       });
