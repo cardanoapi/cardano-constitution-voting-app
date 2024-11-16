@@ -1,19 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next/types';
 import { prisma } from '@/db';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { getServerSession } from 'next-auth';
 
 import { convertBigIntsToStrings } from '@/lib/convertBigIntsToStrings';
-
-type Data = {
-  votes: {
-    [key: string]: {
-      name: string;
-      id: string;
-    }[];
-  } | null;
-  message: string;
-};
 
 /**
  * Gets and formats the results of a concluded poll
