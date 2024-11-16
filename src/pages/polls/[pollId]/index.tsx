@@ -26,6 +26,8 @@ import { getPollResults } from '@/lib/helpers/getPollResults';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
+import { PutVotesOnChainButton } from '@/components/buttons/putVotesOnChainButton';
+import { ViewTxButton } from '@/components/buttons/viewTxButton';
 import { VoteOnPollButtons } from '@/components/buttons/voteOnPollButtons';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { PollResults } from '@/components/polls/pollResults';
@@ -166,6 +168,11 @@ export default function ViewPoll(props: Props): JSX.Element {
                 <Box display="flex" flexDirection="column" gap={3}>
                   <Typography variant="h6">{poll.description}</Typography>
                 </Box>
+                {poll.summary_tx_id && (
+                  <Box marginTop={3} marginBottom={3}>
+                    <ViewTxButton txId={poll.summary_tx_id} />
+                  </Box>
+                )}
               </Grid>
             ) : (
               !isPending && <Typography variant="h4">Poll not found</Typography>
@@ -209,6 +216,14 @@ export default function ViewPoll(props: Props): JSX.Element {
                               updatePollResults={updatePollResults}
                             />
                           )}
+                          {poll.status === pollPhases.concluded &&
+                            !poll.summary_tx_id && (
+                              <PutVotesOnChainButton
+                                pollId={pollId}
+                                isSubmitting={isSubmitting}
+                                setIsSubmitting={updateIsSubmitting}
+                              />
+                            )}
                           <DeletePollButton
                             pollId={pollId}
                             isSubmitting={isSubmitting}
@@ -227,6 +242,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                       alignItems="center"
                     >
                       <VoteOnPollButtons
+                        pollName={poll.name}
                         pollId={poll.id}
                         disabled={isSubmitting}
                         setDisabled={updateIsSubmitting}

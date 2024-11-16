@@ -14,6 +14,7 @@ export async function pollVotesDto(pollId: string): Promise<
       workshop_id: string;
       name: string;
       wallet_address: string;
+      id: string;
     };
     poll_transaction: {
       transaction_id: string;
@@ -45,6 +46,7 @@ export async function pollVotesDto(pollId: string): Promise<
           workshop_id: true,
           wallet_address: true,
           is_delegate: true,
+          id: true,
         },
       },
     },
