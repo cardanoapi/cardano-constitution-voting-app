@@ -60,8 +60,9 @@ export default class RepresentativesPage {
     );
   }
 
-  async switchVotingPower(): Promise<void> {
-    await this.transferVotingPowerBtn.click();
+  async switchVotingPower(workshopId = 1): Promise<void> {
+    await this.goto();
+    await this.page.getByTestId(`edit-active-voter-${workshopId}`).click();
     const currentActiveVoter = await this.page
       .getByRole('combobox')
       .nth(1)
@@ -72,23 +73,27 @@ export default class RepresentativesPage {
         name: currentActiveVoter === 'Delegate' ? 'Alternate' : 'Delegate',
       })
       .click({ force: true });
-    await this.saveUpdatedVotingPowerBtn.click();
+    await this.page.getByTestId(`save-active-voter-${workshopId}`).click();
   }
 
-  async assertSwitchedVotingPower(): Promise<void> {
+  async assertSwitchedVotingPower(workshopId = 1): Promise<void> {
     await expect(this.page.getByRole('row').first()).toBeVisible();
-    const activeVoterRole = await this.page
-      .locator('[data-id="1"]')
-      .locator('[data-field="active_voter_id"]')
-      .innerText();
+    const activeVoterRole = await this.getActiveVoterStatus();
     await this.page
-      .locator('[data-id="1"]')
-      .filter({ has: this.page.getByTestId('edit-active-voter-1') })
+      .locator('[data-id="${workshopId}"]')
+      .filter({ has: this.page.getByTestId(`edit-active-voter-${workshopId}`) })
       .locator(`[data-testid^="${activeVoterRole.toLowerCase()}-name-"]`)
       .click({ force: true });
     await expect(this.page.locator('.MuiChip-root').first()).toHaveText(
       'Active Voter'
     );
+  }
+
+  async getActiveVoterStatus(workshopId = 1): Promise<string> {
+    return await this.page
+      .locator(`[data-id="${workshopId}"]`)
+      .locator('[data-field="active_voter_id"]')
+      .innerText();
   }
 
   async getRepresentativeId(isDelegate: boolean = false): Promise<string> {
