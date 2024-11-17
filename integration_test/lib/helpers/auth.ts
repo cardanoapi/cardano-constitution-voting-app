@@ -20,10 +20,10 @@ export async function createAuth({
   await importWallet(page, wallet);
 
   await page.route('/api/getUser/*', (route, request) => {
-    const userId = request.url().split('/').pop(); 
+    const userId = request.url().split('/').pop();
     if (userId) {
       page.evaluate((id) => {
-        localStorage.setItem('userId', id); 
+        localStorage.setItem('userId', id);
       }, userId);
     }
     route.continue();

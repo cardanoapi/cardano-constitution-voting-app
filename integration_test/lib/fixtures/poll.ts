@@ -8,6 +8,7 @@ import {
 } from '@helpers/page';
 import HomePage from '@pages/homePage';
 import PollPage from '@pages/pollPage';
+import {Page} from "@playwright/test";
 
 type pollEnableType =
   | 'CreatePoll'
@@ -29,6 +30,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
       wallet: organizerWallet,
     });
 
+    let pages: Page[] = [];
     const homePage = new HomePage(organizerPage);
     await homePage.goto();
     const organizerPollPage = new PollPage(organizerPage);
@@ -54,18 +56,17 @@ export const test = base.extend<TestOptions & { pollId: number }>({
           'vote-no-button',
           'vote-abstain-button',
         ];
+        pages = [delegatePage, delegate2Page, delegate3Page];
 
         await Promise.all(
-          [delegatePage, delegate2Page, delegate3Page].map(
-            async (userPage, index) => {
-              const userPollPage = new PollPage(userPage);
-              await userPollPage.goto(pollId);
-              // cast vote
-              await userPage.getByTestId(votes[index]).click();
-              await userPage.getByText('Vote recorded').isVisible();
-              await userPage.close();
-            }
-          )
+          pages.map(async (userPage, index) => {
+            const userPollPage = new PollPage(userPage);
+            await userPollPage.goto(pollId);
+            // cast vote
+            await userPage.getByTestId(votes[index]).click();
+            await userPage.getByText('Vote recorded').isVisible();
+            // await userPage.close();
+          })
         );
         await organizerPollPage.goto(pollId);
         await organizerPollPage.endVoting();
@@ -74,6 +75,11 @@ export const test = base.extend<TestOptions & { pollId: number }>({
 
     await use(pollId);
 
+    await Promise.all(
+      pages.map(async (userPage) => {
+        userPage.close();
+      })
+    );
     // cleanup
     if (pollType !== 'NoAction') {
       await organizerPollPage.deletePoll();

@@ -8,6 +8,7 @@ import {
   delegate2Wallet,
   delegate3Wallet,
   delegateWallet,
+  organizerWallet,
 } from '@constants/staticWallets';
 
 interface NewPageConfig {
@@ -36,6 +37,12 @@ export async function createNewPageWithWallet(
   await importWallet(newPage, wallet);
 
   return newPage;
+}
+export async function newOrganizerPage(browser) {
+  return await createNewPageWithWallet(browser, {
+    storageState: '.auth/organizer.json',
+    wallet: organizerWallet,
+  });
 }
 
 export async function newDelegatePage(browser) {
