@@ -1,4 +1,4 @@
-import { organizerWallet } from '@constants/staticWallets';
+import { organizer1Wallet } from '@constants/staticWallets';
 import { setAllureEpic } from '@helpers/allure';
 import { expect } from '@playwright/test';
 import { test } from '@fixtures/poll';
@@ -11,7 +11,7 @@ test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
 });
 
-test.use({ storageState: '.auth/organizer1.json', wallet: organizerWallet });
+test.use({ storageState: '.auth/organizer1.json', wallet: organizer1Wallet });
 
 /**
  * Description: Convention Organisers can delete a poll, so that it no longer appears on the list of historical polls

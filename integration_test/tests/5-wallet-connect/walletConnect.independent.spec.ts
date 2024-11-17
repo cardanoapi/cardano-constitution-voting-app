@@ -1,13 +1,13 @@
 import { setAllureEpic } from '@helpers/allure';
 import LoginPage from '@pages/loginPage';
 import { test } from '@fixtures/walletExtension';
-import { organizerWallet } from '@constants/staticWallets';
+import { organizer1Wallet } from '@constants/staticWallets';
 import { expect } from '@playwright/test';
 
 test.beforeEach(async () => {
   await setAllureEpic('5. Wallet connect');
 });
-test.use({ wallet: organizerWallet });
+test.use({ wallet: organizer1Wallet });
 
 test('5-1A. Should connect wallet if stake key is registered', async ({
   page,

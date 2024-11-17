@@ -1,7 +1,7 @@
 import {
-  alternateWallet,
-  delegateWallet,
-  organizerWallet,
+  alternate1Wallet,
+  delegate1Wallet,
+  organizer1Wallet,
 } from '@constants/staticWallets';
 import * as wallets from '@constants/staticWallets';
 import { test as setup } from '@fixtures/walletExtension';
@@ -10,13 +10,17 @@ import { createAuth } from '@helpers/auth';
 
 const authConfigurations = [
   {
-    wallet: organizerWallet,
+    wallet: organizer1Wallet,
     authFile: '.auth/organizer1.json',
     role: 'Organizer1',
   },
-  { wallet: delegateWallet, authFile: '.auth/delegate1.json', role: 'Delegate1' },
   {
-    wallet: alternateWallet,
+    wallet: delegate1Wallet,
+    authFile: '.auth/delegate1.json',
+    role: 'Delegate1',
+  },
+  {
+    wallet: alternate1Wallet,
     authFile: '.auth/alternate1.json',
     role: 'Alternate1',
   },

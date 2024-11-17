@@ -7,8 +7,9 @@ import {
   alternate3Wallet,
   delegate2Wallet,
   delegate3Wallet,
-  delegateWallet,
-  organizerWallet,
+  delegate1Wallet,
+  organizer1Wallet,
+  alternate1Wallet,
 } from '@constants/staticWallets';
 
 interface NewPageConfig {
@@ -38,17 +39,24 @@ export async function createNewPageWithWallet(
 
   return newPage;
 }
-export async function newOrganizerPage(browser) {
+export async function newOrganizer1Page(browser) {
   return await createNewPageWithWallet(browser, {
-    storageState: '.auth/organizer.json',
-    wallet: organizerWallet,
+    storageState: '.auth/organizer1.json',
+    wallet: organizer1Wallet,
   });
 }
 
-export async function newDelegatePage(browser) {
+export async function newDelegate1Page(browser) {
   return await createNewPageWithWallet(browser, {
-    storageState: '.auth/delegate.json',
-    wallet: delegateWallet,
+    storageState: '.auth/delegate1.json',
+    wallet: delegate1Wallet,
+  });
+}
+
+export async function newAlternate1Page(browser) {
+  return await createNewPageWithWallet(browser, {
+    storageState: '.auth/alternate1.json',
+    wallet: alternate1Wallet,
   });
 }
 

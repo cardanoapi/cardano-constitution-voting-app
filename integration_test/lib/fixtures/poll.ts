@@ -1,20 +1,21 @@
-import { delegateWallet, organizerWallet } from '@constants/staticWallets';
+import { organizer1Wallet } from '@constants/staticWallets';
 import { test as base } from '@fixtures/walletExtension';
 import {
   createNewPageWithWallet,
   newDelegate2Page,
   newDelegate3Page,
-  newDelegatePage,
+  newDelegate1Page,
 } from '@helpers/page';
 import HomePage from '@pages/homePage';
 import PollPage from '@pages/pollPage';
-import {Page} from "@playwright/test";
+import { Page } from '@playwright/test';
 
 type pollEnableType =
   | 'CreatePoll'
   | 'CreateAndBeginPoll'
   | 'NoAction'
-  | 'VotedPoll';
+  | 'VotedPoll'
+  | 'CreatePollWithoutTeardown';
 
 type TestOptions = {
   pollType: pollEnableType;
@@ -27,7 +28,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
     // setup
     const organizerPage = await createNewPageWithWallet(browser, {
       storageState: '.auth/organizer1.json',
-      wallet: organizerWallet,
+      wallet: organizer1Wallet,
     });
 
     let pages: Page[] = [];
@@ -47,7 +48,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
       if (pollType === 'VotedPoll') {
         await homePage.beginVoteBtn.click();
 
-        const delegatePage = await newDelegatePage(browser);
+        const delegatePage = await newDelegate1Page(browser);
         const delegate2Page = await newDelegate2Page(browser);
         const delegate3Page = await newDelegate3Page(browser);
 
@@ -81,7 +82,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
       })
     );
     // cleanup
-    if (pollType !== 'NoAction') {
+    if (pollType !== 'NoAction' && pollType !== 'CreatePollWithoutTeardown') {
       await organizerPollPage.deletePoll();
     }
   },
