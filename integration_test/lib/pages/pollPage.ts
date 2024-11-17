@@ -10,6 +10,7 @@ export default class PollPage {
   readonly voteNoBtn = this.page.getByTestId('vote-no-button');
   readonly voteAbstainBtn = this.page.getByTestId('vote-abstain-button');
   readonly endVotingBtn = this.page.getByTestId('end-vote-button');
+  readonly downloadVotesBtn = this.page.getByTestId('download-poll-votes-btn');
 
   //chip or icon
   readonly pollPageStatusChip = this.page.getByTestId('poll-page-status-chip');

@@ -120,6 +120,7 @@ test.describe('Open Close Poll', () => {
     page,
     pollId,
   }) => {
+    test.slow();
     const pollPage = new PollPage(page);
     await pollPage.goto(pollId);
 
@@ -128,8 +129,10 @@ test.describe('Open Close Poll', () => {
       timeout: 10_000,
     });
     await pollPage.closeVoteBtn.click();
-
-    await expect(pollPage.voteYesIcon).toBeVisible();
+    await expect(pollPage.pollPageStatusChip).toHaveText('Concluded', {
+      timeout: 10_000,
+    });
+    await expect(pollPage.downloadVotesBtn).toBeVisible();
   });
   /**
    * Description: Once a poll has been closed to voting it cannot be re-opened, and no further votes will be accepted.
@@ -142,6 +145,7 @@ test.describe('Open Close Poll', () => {
     page,
     pollId,
   }) => {
+    test.slow();
     const pollPage = new PollPage(page);
     await pollPage.goto(pollId);
 
@@ -150,7 +154,8 @@ test.describe('Open Close Poll', () => {
       timeout: 10_000,
     });
     await pollPage.closeVoteBtn.click();
-    await expect(pollPage.voteYesIcon).toBeVisible();
+
+    await expect(pollPage.downloadVotesBtn).toBeVisible({ timeout: 10_000 });
 
     expect(await page.locator('button').allInnerTexts()).not.toContain(
       'Begin Voting'
@@ -189,17 +194,17 @@ test.describe('Create Poll', () => {
    */
   test('1-1B. Given connected as CO can create a new poll', async ({
     page,
-    browser,
   }) => {
     await page.goto('/');
     const homePage = new HomePage(page);
     const pollName = faker.commerce.productName();
     const pollDescription = faker.commerce.productDescription();
+    await homePage.deleteOpenPollCards();
     await homePage.createPoll(pollName, pollDescription);
 
     await expect(page.getByText(pollName)).toBeVisible();
     await expect(
-      page.getByTestId('poll-status-chip').getByText('Pending')
+      page.getByTestId('poll-page-status-chip').getByText('Pending')
     ).toBeVisible();
   });
 });
@@ -267,7 +272,7 @@ test.describe('User Control', () => {
     );
   });
 
-  test('1-2D. Should not be able to switch active voting power between delegate and alternate during voting', async ({
+  test('1-2D. Should not be able to switch active voting power between delegate and alternate when polling is open', async ({
     page,
     pollId,
   }) => {
@@ -298,6 +303,32 @@ test.describe('User Control', () => {
       .getAttribute('data-testid');
 
     expect(previousActiveVoterId).toBe(currentActiveVoterId);
+  });
+
+  test('1-2D. Should not be able to edit user profile when polling is open', async ({
+    page,
+    pollId,
+  }) => {
+    test.slow();
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+    await pollPage.beginVoteBtn.click();
+
+    // before switching power while poll is opened for voting
+    const representativePage = new RepresentativesPage(page);
+    await representativePage.goto();
+    await expect(page.getByRole('row').first()).toBeVisible();
+    const name = faker.person.fullName();
+    const email = name.split(' ')[0] + '@email.com';
+    const stake_address = faker.person.jobArea();
+    await representativePage.updateUserProfile(name, email, stake_address);
+
+    // // after trying to switch power while poll is opened for voting
+    await expect(page.getByRole('status')).toHaveText(
+      'You cannot update user information while a Poll is actively voting.'
+    );
+    await expect(page.getByTestId('edit-representative-info-2')).toBeVisible();
+    await expect(page.getByText(name)).not.toBeVisible();
   });
 });
 
@@ -336,8 +367,9 @@ test.describe('Voting Power', () => {
       .locator('[data-field="active_voter_cell"]')
       .getAttribute('data-testid');
 
-    expect(representativesIds).toContain(previousActiveVoterId);
-    expect(representativesIds).toContain(currentActiveVoterId);
+    expect(representativesIds).toEqual(
+      expect.arrayContaining([currentActiveVoterId, previousActiveVoterId])
+    );
     expect(currentActiveVoterId).not.toBe(previousActiveVoterId);
   });
 });
