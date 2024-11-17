@@ -19,6 +19,16 @@ export async function createAuth({
 }: CreateUserProps): Promise<void> {
   await importWallet(page, wallet);
 
+  await page.route('/api/getUser/*', (route, request) => {
+    const userId = request.url().split('/').pop(); 
+    if (userId) {
+      page.evaluate((id) => {
+        localStorage.setItem('userId', id); 
+      }, userId);
+    }
+    route.continue();
+  });
+
   const loginPage = new LoginPage(page);
   await loginPage.login();
   await loginPage.isLoggedIn();

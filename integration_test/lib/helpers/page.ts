@@ -2,7 +2,13 @@ import { importWallet } from '@fixtures/importWallet';
 import loadDemosExtension from '@fixtures/loadExtension';
 import { Browser, Page } from '@playwright/test';
 import { StaticWallet } from '@types';
-import { delegate2Wallet, delegateWallet } from '@constants/staticWallets';
+import {
+  alternate2Wallet,
+  alternate3Wallet,
+  delegate2Wallet,
+  delegate3Wallet,
+  delegateWallet,
+} from '@constants/staticWallets';
 
 interface NewPageConfig {
   storageState?: string;
@@ -34,10 +40,11 @@ export async function createNewPageWithWallet(
 
 export async function newDelegatePage(browser) {
   return await createNewPageWithWallet(browser, {
-    storageState: '.auth/delegate2.json',
-    wallet: delegate2Wallet,
+    storageState: '.auth/delegate.json',
+    wallet: delegateWallet,
   });
 }
+
 export async function newDelegate2Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/delegate2.json',
@@ -47,20 +54,20 @@ export async function newDelegate2Page(browser) {
 export async function newAlternate2Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/alternate2.json',
-    wallet: delegate2Wallet,
+    wallet: alternate2Wallet,
   });
 }
 
 export async function newDelegate3Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/delegate3.json',
-    wallet: delegate2Wallet,
+    wallet: delegate3Wallet,
   });
 }
 
 export async function newAlternate3Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/alternate3.json',
-    wallet: delegate2Wallet,
+    wallet: alternate3Wallet,
   });
 }

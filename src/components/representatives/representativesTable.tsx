@@ -199,6 +199,7 @@ export function RepresentativesTable(props: Props): JSX.Element {
             rows={workshops.filter(
               (workshop) => workshop.name !== 'Convention Organizer',
             )}
+            data-test-id="representatives-table"
             columns={columns}
             initialState={{
               pagination: {

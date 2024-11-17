@@ -79,7 +79,7 @@ export function VotingHistoryTable(props: Props): JSX.Element {
 
   if (polls.length > 0) {
     return (
-      <Box display="flex" flexDirection="column" gap={1}>
+      <Box display="flex" flexDirection="column" gap={1} data-test-id="voting-history-table">
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h5" fontWeight="600">
             Voting History

@@ -4,10 +4,10 @@ import {
   createNewPageWithWallet,
   newDelegate2Page,
   newDelegate3Page,
+  newDelegatePage,
 } from '@helpers/page';
 import HomePage from '@pages/homePage';
 import PollPage from '@pages/pollPage';
-import { expect } from '@playwright/test';
 
 type pollEnableType =
   | 'CreatePoll'
@@ -31,6 +31,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
 
     const homePage = new HomePage(organizerPage);
     await homePage.goto();
+    const organizerPollPage = new PollPage(organizerPage);
 
     let pollId: number | undefined;
 
@@ -44,10 +45,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
       if (pollType === 'VotedPoll') {
         await homePage.beginVoteBtn.click();
 
-        const delegatePage = await createNewPageWithWallet(browser, {
-          storageState: '.auth/delegate.json',
-          wallet: delegateWallet,
-        });
+        const delegatePage = await newDelegatePage(browser);
         const delegate2Page = await newDelegate2Page(browser);
         const delegate3Page = await newDelegate3Page(browser);
 
@@ -64,12 +62,13 @@ export const test = base.extend<TestOptions & { pollId: number }>({
               await userPollPage.goto(pollId);
               // cast vote
               await userPage.getByTestId(votes[index]).click();
+              await userPage.getByText('Vote recorded').isVisible()
+              await userPage.close();
             }
           )
         );
-        const pollPage = new PollPage(organizerPage);
-        await pollPage.goto(pollId);
-        await pollPage.endVoting();
+        await organizerPollPage.goto(pollId);
+        await organizerPollPage.endVoting();
       }
     }
 
@@ -77,9 +76,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
 
     // cleanup
     if (pollType !== 'NoAction') {
-      const pollPage = new PollPage(organizerPage);
-      await pollPage.goto(pollId);
-      // await pollPage.deletePoll();
+      await organizerPollPage.deletePoll();
     }
   },
 });
