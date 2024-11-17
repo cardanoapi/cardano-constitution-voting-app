@@ -1,5 +1,18 @@
 import { http, HttpResponse } from 'msw';
 
+export const updateUserActiveVoteHandler = [
+  http.post('/api/updateUser', async () => {
+    return HttpResponse.json(
+      {
+        pollId: BigInt(-1).toString(),
+        message:
+          'You cannot update user information while a Poll is actively voting.',
+      },
+      { status: 400 },
+    );
+  }),
+];
+
 export const updateUserNoNameHandler = [
   http.post('/api/updateUser', async () => {
     return HttpResponse.json(

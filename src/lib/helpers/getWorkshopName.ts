@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
@@ -30,6 +31,7 @@ export async function getWorkshopName(workshopId: string): Promise<{
       return { name: '', message: 'Invalid workshopId' };
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return { name: '', message: error.response.data.message };
     } else {

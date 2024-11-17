@@ -1,75 +1,48 @@
-import { useEffect, useState } from 'react';
+import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { HowToVoteRounded } from '@mui/icons-material';
-import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Chip,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import toast from 'react-hot-toast';
 
-import { PollVote, User } from '@/types';
-import { getUser } from '@/lib/helpers/getUser';
-import { getUserVotes } from '@/lib/helpers/getUserVotes';
-import { getWorkshopName } from '@/lib/helpers/getWorkshopName';
+import type { Poll, PollVote, User, Workshop } from '@/types';
+import { pollsDto } from '@/data/pollsDto';
+import { representativesDto } from '@/data/representativesDto';
+import { userDto } from '@/data/userDto';
+import { userVotesDto } from '@/data/userVotesDto';
+import { workshopNameDto } from '@/data/workshopNameDto';
+import { workshopsDto } from '@/data/workshopsDto';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
 import { VotingHistoryTable } from '@/components/representatives/votingHistoryTable';
 
-export default function Representative(): JSX.Element {
-  const [user, setUser] = useState<User | null>(null);
-  const [workshopName, setWorkshopName] = useState('');
-  const [votes, setVotes] = useState<PollVote[]>([]);
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [loadingWorkshop, setLoadingWorkshop] = useState(false);
-  const [loadingVotes, setLoadingVotes] = useState(true);
+interface Props {
+  user: User;
+  userVotes: PollVote[];
+  representatives: User[];
+  workshops: Workshop[];
+  workshopName: string | null;
+  polls: Poll[];
+  isActiveVoter: boolean;
+}
 
-  const router = useRouter();
-  const { userId } = router.query;
+export default function Representative(props: Props): JSX.Element {
+  const {
+    user,
+    userVotes,
+    representatives,
+    workshops,
+    workshopName,
+    polls,
+    isActiveVoter,
+  } = props;
+
   const theme = useTheme();
-
-  useEffect(() => {
-    // looks up a user & their vote history in the DB from their userId
-    async function fetchUserData(): Promise<void> {
-      // get user data
-      setLoadingUser(true);
-      const data = await getUser(userId);
-      if (data.user) {
-        setUser(data.user);
-      } else {
-        toast.error(data.message);
-      }
-      setLoadingUser(false);
-
-      // get vote data
-      setLoadingVotes(true);
-      const votes = await getUserVotes(userId);
-      if (votes) {
-        setVotes(votes.votes);
-      }
-      setLoadingVotes(false);
-    }
-
-    if (userId) {
-      fetchUserData();
-    }
-  }, [userId]);
-
-  // get the name of the workshop they attended
-  useEffect(() => {
-    async function fetchWorkshop(): Promise<void> {
-      if (user) {
-        // get user data
-        setLoadingWorkshop(true);
-        const workshopName = await getWorkshopName(user.workshop_id.toString());
-        if (workshopName.name) {
-          setWorkshopName(workshopName.name);
-        } else {
-          toast.error(workshopName.message);
-        }
-        setLoadingWorkshop(false);
-      }
-    }
-    fetchWorkshop();
-  }, [user]);
 
   return (
     <>
@@ -103,77 +76,72 @@ export default function Representative(): JSX.Element {
                   >
                     {user.name}
                   </Typography>
-                  {user.is_delegate && (
-                    <Typography
-                      variant="h4"
-                      fontWeight="600"
-                      data-testid="user-delegate"
-                    >
-                      DELEGATE
-                    </Typography>
-                  )}
-                  {user.is_alternate && (
-                    <Typography
-                      variant="h4"
-                      fontWeight="600"
-                      data-testid="user-alternate"
-                    >
-                      ALTERNATE
-                    </Typography>
-                  )}
-                  {votes ? (
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      gap={1}
-                      alignItems="center"
-                      color={theme.palette.text.primary}
-                    >
-                      <HowToVoteRounded />
-                      <Typography
-                        variant="h5"
-                        fontWeight="500"
-                        data-testid="user-vote-count"
-                      >
-                        {votes.length} vote{votes.length === 1 ? '' : 's'}
-                      </Typography>
+                  <Box display="flex" flexDirection="row" gap={1}>
+                    <Box sx={{ color: theme.palette.text.disabled }}>
+                      {isActiveVoter === true ? (
+                        <Chip
+                          variant="outlined"
+                          color="success"
+                          label="Active Voter"
+                        ></Chip>
+                      ) : (
+                        <Chip
+                          variant="outlined"
+                          label="Not an active voter"
+                        ></Chip>
+                      )}
                     </Box>
-                  ) : (
-                    loadingVotes && (
-                      <Box sx={{ display: 'flex' }}>
-                        <CircularProgress />
+                    {user.is_delegate && (
+                      <Box>
+                        <Chip
+                          variant="outlined"
+                          color="primary"
+                          label="Delegate"
+                        ></Chip>
                       </Box>
-                    )
-                  )}
-                  {workshopName ? (
+                    )}
+                    {user.is_alternate && (
+                      <Box sx={{ color: theme.palette.text.disabled }}>
+                        <Chip variant="outlined" label="Alternate"></Chip>
+                      </Box>
+                    )}
+                  </Box>
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    gap={1}
+                    alignItems="center"
+                    color={theme.palette.text.primary}
+                  >
+                    <HowToVoteRounded />
                     <Typography
                       variant="h5"
                       fontWeight="500"
-                      data-testid="workshop-name"
+                      data-testid="user-vote-count"
                     >
-                      {workshopName}
+                      {userVotes.length} vote
+                      {userVotes.length === 1 ? '' : 's'}
                     </Typography>
-                  ) : (
-                    loadingWorkshop && (
-                      <Box sx={{ display: 'flex' }}>
-                        <CircularProgress />
-                      </Box>
-                    )
-                  )}
+                  </Box>
+                  <Typography
+                    variant="h5"
+                    fontWeight="500"
+                    data-testid="workshop-name"
+                  >
+                    {workshopName || 'Failed to retrieve workshop'}
+                  </Typography>
                 </Box>
               ) : (
-                loadingUser && (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      width: '100%',
-                    }}
-                  >
-                    <CircularProgress />
-                  </Box>
-                )
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
               )}
             </Grid>
             <Grid
@@ -182,14 +150,95 @@ export default function Representative(): JSX.Element {
                 md: 6,
               }}
             >
-              <VotingHistoryTable userId={userId} />
+              <VotingHistoryTable
+                userId={user.id}
+                votes={userVotes}
+                polls={polls}
+              />
             </Grid>
           </Grid>
 
-          <PollCarrousel currentPollId={undefined} />
-          <RepresentativesTable />
+          <PollCarrousel currentPollId={undefined} polls={polls} />
+          <RepresentativesTable
+            representatives={representatives}
+            workshops={workshops}
+          />
         </Box>
       </main>
     </>
   );
 }
+
+type Params = {
+  userId: string;
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<Params>,
+): Promise<{
+  props: {
+    user: User | null;
+    userVotes: PollVote[];
+    representatives: User[];
+    workshops: Workshop[];
+    workshopName: string | null;
+    polls: Poll[];
+    isActiveVoter: boolean;
+  };
+}> => {
+  if (!context.params) {
+    return {
+      props: {
+        user: null,
+        userVotes: [],
+        representatives: [],
+        workshops: [],
+        workshopName: '',
+        polls: [],
+        isActiveVoter: false,
+      },
+    };
+  }
+
+  const user = await userDto(context.params.userId);
+
+  if (!user) {
+    return {
+      props: {
+        user: null,
+        userVotes: [],
+        representatives: [],
+        workshops: [],
+        workshopName: '',
+        polls: [],
+        isActiveVoter: false,
+      },
+    };
+  }
+
+  const userVotes = await userVotesDto(context.params.userId);
+  const representatives = await representativesDto();
+  const workshops = await workshopsDto();
+  const workshopName = await workshopNameDto(user.workshop_id);
+  const polls = await pollsDto();
+
+  const userWorkshop = workshops.find(
+    (workshop) => workshop.id === user.workshop_id,
+  );
+
+  const workshopActiveVoterId = userWorkshop?.active_voter_id;
+
+  const isUserActiveVoter = user.id === workshopActiveVoterId;
+
+  return {
+    props: {
+      user: user,
+      userVotes: userVotes,
+      representatives: representatives,
+      workshops: workshops,
+      workshopName: workshopName,
+      polls: polls,
+      isActiveVoter: isUserActiveVoter,
+    },
+  };
+};

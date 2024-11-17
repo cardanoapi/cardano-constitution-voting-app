@@ -50,10 +50,11 @@ export default async function newPollVote(
         key: signature.signature.signedMessage.key,
       },
       signature.challenge.challenge,
+      session.user.stakeAddress,
     );
 
     if (!valid) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: 'Invalid signature.',
       });
@@ -138,6 +139,13 @@ export default async function newPollVote(
       return res.status(400).json({
         success: false,
         message: 'Poll is not voting',
+      });
+    }
+
+    if (findPoll.is_archived) {
+      return res.status(400).json({
+        success: false,
+        message: 'Poll is archived',
       });
     }
 

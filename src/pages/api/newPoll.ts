@@ -63,6 +63,7 @@ export default async function newPoll(
         status: {
           in: ['pending', 'voting'],
         },
+        is_archived: false,
       },
     });
     if (polls.length > 0) {

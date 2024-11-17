@@ -1,9 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/db';
 import * as Sentry from '@sentry/nextjs';
+import { getServerSession } from 'next-auth';
 
-import { parseJsonData } from '@/lib/parseJsonData';
+import { pollActiveResultsDto } from '@/data/pollActiveResultsDto';
+import { pollResultsDto } from '@/data/pollResultsDto';
+
+import { authOptions } from '../auth/[...nextauth]';
 
 type Data = {
   votes: {
@@ -33,71 +36,34 @@ export default async function getPollResults(
         .status(405)
         .json({ votes: null, message: 'Method not allowed' });
     }
+
     const pollId = req.query.pollId;
+
     if (typeof pollId !== 'string') {
       return res.status(400).json({
         votes: null,
         message: 'Invalid pollId',
       });
     }
-    const votes = await prisma.poll_vote.findMany({
-      where: {
-        poll_id: BigInt(pollId),
-        poll: {
-          status: 'concluded',
-        },
-      },
-      select: {
-        user_id: true,
-        vote: true,
-        user: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-    const votesJson = parseJsonData(votes);
 
-    const transformedVotes = votesJson.reduce(
-      (
-        acc: {
-          [key: string]: {
-            name: string;
-            id: string;
-          }[];
-        },
-        {
-          user,
-          user_id,
-          vote,
-        }: { user: { name: string }; user_id: string; vote: string },
-      ) => {
-        // Initialize the array for each vote choice if it doesn't exist
-        if (!acc[vote]) {
-          acc[vote] = [];
-        }
-
-        // Add the user object to the appropriate vote choice array
-        acc[vote].push({
-          name: user.name,
-          id: user_id,
-        });
-
-        return acc;
-      },
-      { yes: [], no: [], abstain: [] },
-    );
+    // check session, if it's a coordinator get active results, otherwise get concluded results
+    const session = await getServerSession(req, res, authOptions);
+    let votes;
+    if (session?.user.isCoordinator) {
+      votes = await pollActiveResultsDto(pollId);
+    } else {
+      votes = await pollResultsDto(pollId);
+    }
 
     return res.status(200).json({
-      votes: transformedVotes,
-      message: 'Poll vote count retrieved',
+      votes: votes,
+      message: 'Poll votes retrieved',
     });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({
       votes: null,
-      message: 'Error getting Poll Vote Count.',
+      message: 'Error getting Poll Results.',
     });
   }
 }

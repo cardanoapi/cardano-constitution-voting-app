@@ -1,37 +1,27 @@
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import LaunchRounded from '@mui/icons-material/LaunchRounded';
-import { Box, CircularProgress, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import type { User, Workshop } from '@/types';
 import { paths } from '@/paths';
-import { getRepresentatives } from '@/lib/helpers/getRepresentatives';
-import { getWorkshops } from '@/lib/helpers/getWorkshops';
+
+interface Props {
+  representatives: User[];
+  workshops: Workshop[];
+}
 
 /**
  * A Table with all Representatives grouped by their Workshop
+ * @param representatives - List of Representatives
+ * @param workshops - List of Workshops
  * @returns Representatives Table
  */
-export function RepresentativesTable(): JSX.Element {
-  const [loadingReps, setLoadingReps] = useState(true);
-  const [representatives, setRepresentatives] = useState<User[]>([]);
-  const [workshops, setWorkshops] = useState<Workshop[]>([]);
+export function RepresentativesTable(props: Props): JSX.Element {
+  const { representatives, workshops } = props;
 
   const theme = useTheme();
-
-  useEffect(() => {
-    async function fetchData(): Promise<void> {
-      setLoadingReps(true);
-      const workshops = await getWorkshops();
-      setWorkshops(workshops);
-      const reps = await getRepresentatives();
-      setRepresentatives(reps);
-      setLoadingReps(false);
-    }
-    fetchData();
-  }, []);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID' },
@@ -40,6 +30,9 @@ export function RepresentativesTable(): JSX.Element {
       headerName: 'Name',
       minWidth: 125,
       flex: 1,
+      renderCell: (params): JSX.Element => {
+        return <Typography fontWeight="500">{params.row.name}</Typography>;
+      },
     },
     {
       field: 'Delegate',
@@ -68,6 +61,17 @@ export function RepresentativesTable(): JSX.Element {
               gap={{
                 xs: 0,
                 sm: 1,
+              }}
+              sx={{
+                height: '100%',
+                justifyContent: {
+                  xs: 'center',
+                  sm: 'flex-start',
+                },
+                alignItems: {
+                  xs: 'flex-start',
+                  sm: 'center',
+                },
               }}
             >
               <Typography color={delegateId === activeVoterId ? 'success' : ''}>
@@ -106,6 +110,17 @@ export function RepresentativesTable(): JSX.Element {
               gap={{
                 xs: 0,
                 sm: 1,
+              }}
+              sx={{
+                height: '100%',
+                justifyContent: {
+                  xs: 'center',
+                  sm: 'flex-start',
+                },
+                alignItems: {
+                  xs: 'flex-start',
+                  sm: 'center',
+                },
               }}
             >
               <Typography
@@ -148,6 +163,17 @@ export function RepresentativesTable(): JSX.Element {
                 xs: 0,
                 sm: 1,
               }}
+              sx={{
+                height: '100%',
+                justifyContent: {
+                  xs: 'center',
+                  sm: 'flex-start',
+                },
+                alignItems: {
+                  xs: 'flex-start',
+                  sm: 'center',
+                },
+              }}
             >
               <Typography noWrap>{activeVoter?.name}</Typography>
               <LaunchRounded fontSize="small" />
@@ -158,50 +184,62 @@ export function RepresentativesTable(): JSX.Element {
     },
   ];
 
-  if (loadingReps) {
-    return (
-      <Box
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-        width="100%"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  } else if (representatives.length > 0) {
+  if (representatives.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={1} width="100%">
-        <Typography variant="h6" fontWeight="600" textAlign="center">
+        <Typography variant="h5" fontWeight="600" textAlign="center">
           Representatives
         </Typography>
-        <DataGrid
-          rows={workshops}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 100,
+        <Box
+          sx={{
+            fontFamily: 'Inter',
+          }}
+        >
+          <DataGrid
+            rows={workshops.filter(
+              (workshop) => workshop.name !== 'Convention Organizer',
+            )}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 100,
+                },
               },
-            },
-          }}
-          pageSizeOptions={[25, 50, 100]}
-          columnVisibilityModel={{
-            id: false,
-          }}
-          sortModel={[
-            {
-              field: 'name',
-              sort: 'asc',
-            },
-          ]}
-        />
+            }}
+            pageSizeOptions={[25, 50, 100]}
+            columnVisibilityModel={{
+              id: false,
+            }}
+            sortModel={[
+              {
+                field: 'name',
+                sort: 'asc',
+              },
+            ]}
+            sx={{
+              '.MuiDataGrid-columnSeparator': {
+                display: 'none',
+              },
+              '.MuiDataGrid-columnHeader': {
+                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                fontFamily: 'Montserrat',
+                fontSize: '1.2rem',
+              },
+              '.MuiDataGrid-cell': {
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              },
+            }}
+          />
+        </Box>
       </Box>
     );
   } else {
     return (
       <Typography variant="h4" textAlign="center">
-        No Representatives found.
+        No representatives found.
       </Typography>
     );
   }

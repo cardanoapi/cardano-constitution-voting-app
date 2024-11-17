@@ -1,45 +1,36 @@
-import { useEffect, useMemo, useState } from 'react';
-import { CircularProgress } from '@mui/material';
+import { useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import Carousel from 'react-material-ui-carousel';
 
 import type { Poll } from '@/types';
-import { getPolls } from '@/lib/helpers/getPolls';
 import { PollCard } from '@/components/polls/pollCard';
 
 interface Props {
   currentPollId: string | string[] | undefined;
+  polls: Poll[];
 }
 
 /**
  * A Carrousel of poll cards
  * @param currentPollId - The ID of the current poll
+ * @param polls - The list of polls
  * @returns Poll List
  */
 export function PollCarrousel(props: Props): JSX.Element {
-  const { currentPollId } = props;
-  const [loadingPolls, setLoadingPolls] = useState(true);
-  const [polls, setPolls] = useState<Poll[]>([]);
+  const { currentPollId, polls } = props;
 
-  useEffect(() => {
-    async function fetchPolls(): Promise<void> {
-      setLoadingPolls(true);
-      let polls = await getPolls();
-      // don't show the current poll
-      if (typeof currentPollId === 'string') {
-        polls = polls.filter((poll) => poll.id !== currentPollId);
-      }
+  let pollsToDisplay = useMemo(() => [...polls], [polls]);
 
-      // only show the last 4 polls in this view
-      polls.reverse();
-      polls.splice(4);
-      setPolls(polls);
-      setLoadingPolls(false);
-    }
-    fetchPolls();
-  }, [currentPollId]);
+  // Do not show current poll
+  if (typeof currentPollId === 'string') {
+    pollsToDisplay = polls.filter((poll) => poll.id !== currentPollId);
+  }
+
+  // only show the last 4 polls in this view
+  pollsToDisplay.reverse();
+  pollsToDisplay.splice(4);
 
   const pollCards = useMemo(() => {
     return (
@@ -55,7 +46,7 @@ export function PollCarrousel(props: Props): JSX.Element {
           data-testid="poll-carousel"
         >
           <Carousel autoPlay={false}>
-            {polls.map((poll) => {
+            {pollsToDisplay.map((poll) => {
               return (
                 <Box key={poll.id}>
                   <PollCard poll={poll} />
@@ -74,7 +65,7 @@ export function PollCarrousel(props: Props): JSX.Element {
           width="100%"
         >
           <Grid container spacing={3}>
-            {polls.map((poll) => {
+            {pollsToDisplay.map((poll) => {
               return (
                 <Grid
                   size={{
@@ -91,20 +82,9 @@ export function PollCarrousel(props: Props): JSX.Element {
         </Box>
       </>
     );
-  }, [polls]);
+  }, [pollsToDisplay]);
 
-  if (loadingPolls) {
-    return (
-      <Box
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-        width="100%"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  } else if (polls.length > 0) {
+  if (pollsToDisplay.length > 0) {
     return (
       <Box
         display="flex"

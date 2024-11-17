@@ -1,21 +1,28 @@
 import { useMemo } from 'react';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
+import type { Poll } from '@/types';
 import { getPolls } from '@/lib/helpers/getPolls';
 import { PollCard } from '@/components/polls/pollCard';
 
+interface Props {
+  polls: Poll[];
+}
+
 /**
  * A grid of all polls with their status and a link to view the poll, to be shown on the homepage
+ * @param polls - List of Polls from SSR
  * @returns Poll List
  */
-export function PollList(): JSX.Element {
+export function PollList(props: Props): JSX.Element {
+  let { polls } = props;
+
   // Using react-query to fetch and refresh the vote count
-  const { isPending, data } = useQuery({
+  const { data } = useQuery({
     queryKey: ['fetchPollList'],
     queryFn: async () => {
       const data = await getPolls();
@@ -25,7 +32,9 @@ export function PollList(): JSX.Element {
     refetchInterval: 5000, // refresh every 5 seconds
   });
 
-  const polls = data;
+  if (data) {
+    polls = data;
+  }
 
   const session = useSession();
 
@@ -47,18 +56,7 @@ export function PollList(): JSX.Element {
     });
   }, [polls]);
 
-  if (isPending) {
-    return (
-      <Box
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-        width="100%"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  } else if (polls && polls.length > 0) {
+  if (polls && polls.length > 0) {
     return (
       <Box display="flex" flexDirection="column" gap={2} width="100%">
         {session.status !== 'authenticated' && (
@@ -74,7 +72,7 @@ export function PollList(): JSX.Element {
     );
   } else {
     return (
-      <Typography variant="h4" textAlign="center">
+      <Typography variant="h4" textAlign="center" fontWeight="bold">
         No polls yet.
       </Typography>
     );

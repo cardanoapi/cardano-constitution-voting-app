@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 /**
@@ -30,6 +31,7 @@ export async function newPoll(
       return { pollId: '-1', message: data.message };
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return { pollId: '-1', message: error.response.data.message };
     } else {

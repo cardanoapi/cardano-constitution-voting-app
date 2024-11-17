@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import axios from 'axios';
 
 import { User } from '@/types';
@@ -45,6 +46,7 @@ export async function getUser(userId: string | string[] | undefined): Promise<{
       };
     }
   } catch (error) {
+    Sentry.captureException(error);
     if (axios.isAxiosError(error) && error.response) {
       return { user: null, message: error.response.data.message };
     } else {

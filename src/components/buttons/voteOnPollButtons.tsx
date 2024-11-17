@@ -12,17 +12,24 @@ import { castVote } from '@/lib/helpers/castVote';
 import { getPollVote } from '@/lib/helpers/getPollVote';
 
 interface Props {
+  pollName: string;
   pollId: string;
   disabled: boolean;
   setDisabled: (value: boolean) => void;
+  isActiveVoter: boolean;
 }
 
 /**
  * Yes, No, Abstain buttons to vote on a poll
+ * @param pollName - The name of the poll
+ * @param pollId - The ID of the poll
+ * @param disabled - Whether the buttons are disabled
+ * @param setDisabled - Function to set the disabled state
+ * @param isActiveVoter - Whether the user is the active voter
  * @returns Vote on Poll Buttons
  */
 export function VoteOnPollButtons(props: Props): JSX.Element {
-  const { pollId, disabled, setDisabled } = props;
+  const { pollName, pollId, disabled, setDisabled, isActiveVoter } = props;
   const [vote, setVote] = useState('');
 
   const session = useSession();
@@ -31,6 +38,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
   async function handleVote(vote: string): Promise<void> {
     setDisabled(true);
     const result = await castVote(
+      pollName,
       pollId,
       vote,
       session.data?.user.stakeAddress,
@@ -48,7 +56,7 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
   useEffect(() => {
     async function getVote(): Promise<void> {
       if (session.data?.user.id) {
-        const recordedVote = await getPollVote(session.data?.user.id, pollId);
+        const recordedVote = await getPollVote(session.data.user.id, pollId);
         setVote(recordedVote.vote);
       }
     }
@@ -60,9 +68,9 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
 
   return (
     <>
-      {(session.data?.user.isDelegate || session.data?.user.isAlternate) && (
+      {session.status == 'authenticated' && (
         <Box display="flex" flexDirection="column" gap={2} alignItems="center">
-          {vote && (
+          {vote && isActiveVoter && (
             <Box display="flex" flexDirection="row" gap={1}>
               <Typography variant="h5" fontWeight="bold">
                 Your Vote:
@@ -82,54 +90,71 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
               </Typography>
             </Box>
           )}
-          <Typography>{vote ? 'Re-cast' : 'Cast'} your vote:</Typography>
-          <Box
-            display="flex"
-            flexDirection={{ xs: 'column', md: 'row' }}
-            gap={2}
-          >
-            <Button
-              variant="outlined"
-              color="success"
-              sx={{
-                width: '150px',
-              }}
-              endIcon={<ThumbUpRounded />}
-              size="large"
-              onClick={() => handleVote('yes')}
-              disabled={disabled}
-              data-testid="vote-yes-button"
+          {!isActiveVoter && !session.data?.user.isCoordinator && (
+            <Typography variant="h6" fontWeight="bold">
+              You are not the active voter for your workshop. Only the active
+              voter can vote.
+            </Typography>
+          )}
+          {isActiveVoter && (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={2}
+              alignItems="center"
             >
-              Yes
-            </Button>
-            <Button
-              variant="outlined"
-              color="warning"
-              sx={{
-                width: '150px',
-              }}
-              endIcon={<ThumbDownRounded />}
-              size="large"
-              onClick={() => handleVote('no')}
-              disabled={disabled}
-              data-testid="vote-no-button"
-            >
-              No
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                width: '150px',
-              }}
-              endIcon={<DoDisturbRounded />}
-              size="large"
-              onClick={() => handleVote('abstain')}
-              disabled={disabled}
-              data-testid="vote-abstain-button"
-            >
-              Abstain
-            </Button>
-          </Box>
+              <Typography color={!isActiveVoter ? 'textDisabled' : ''}>
+                {vote ? 'Re-cast' : 'Cast'} your vote:
+              </Typography>
+              <Box
+                display="flex"
+                flexDirection={{ xs: 'column', md: 'row' }}
+                gap={2}
+              >
+                <Button
+                  variant="outlined"
+                  color="success"
+                  sx={{
+                    width: '150px',
+                  }}
+                  endIcon={<ThumbUpRounded />}
+                  size="large"
+                  onClick={() => handleVote('yes')}
+                  disabled={disabled || !isActiveVoter}
+                  data-testid="vote-yes-button"
+                >
+                  Yes
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  sx={{
+                    width: '150px',
+                  }}
+                  endIcon={<ThumbDownRounded />}
+                  size="large"
+                  onClick={() => handleVote('no')}
+                  disabled={disabled || !isActiveVoter}
+                  data-testid="vote-no-button"
+                >
+                  No
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    width: '150px',
+                  }}
+                  endIcon={<DoDisturbRounded />}
+                  size="large"
+                  onClick={() => handleVote('abstain')}
+                  disabled={disabled || !isActiveVoter}
+                  data-testid="vote-abstain-button"
+                >
+                  Abstain
+                </Button>
+              </Box>
+            </Box>
+          )}
         </Box>
       )}
     </>
