@@ -1,14 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../src/db';
 
 const workshopLocations = [
   { name: 'Dubai' },
   { name: 'Singapore' },
   { name: 'Convention Organizer' },
   { name: 'Buenos Aires' },
-  {name: 'Integration Test 1' },
-  {name: 'Integration Test 2'}
+  { name: 'Integration Test 1' },
+  { name: 'Integration Test 2' },
 ];
 
 const users = [
@@ -17,8 +15,8 @@ const users = [
     is_delegate: false,
     is_alternate: false,
     workshop_id: BigInt(3),
-    name: 'Billy Bob Organizer',
-    email: 'billybob@email.com',
+    name: 'Integration Organizer 1',
+    email: 'organizer1@integration.test',
     wallet_address:
       'stake_test1uzmx7hxevy7r63an2v968x4kw5cxdkjw0zwgxe0ph74ad3s7zmcxx',
   },
@@ -27,8 +25,8 @@ const users = [
     is_delegate: true,
     is_alternate: false,
     workshop_id: BigInt(1),
-    name: 'James Jones delegate',
-    email: 'jamesjones@email.com',
+    name: 'Integration Delegate 1',
+    email: 'delegate1@integration.test',
     wallet_address:
       'stake_test1ur582xvym2mv8qj7xfny5vsm5gn8yxam7er43xu779vh0cq4tpyxh',
   },
@@ -40,7 +38,7 @@ const users = [
     name: 'Sally Sue alternate',
     email: 'sallysue@email.com',
     wallet_address:
-      'stake_test1uqgf7pecctde8ygq25w48k8qrzzr6ap9d5nfwp8436a9g8sdmnp2k',
+      'stake_test1uq2c7pdk3nr0mtsl9z47redcc38pvchz5czryeh643ecvpgu5v0gr',
   },
   {
     is_convention_organizer: false,
@@ -57,10 +55,10 @@ const users = [
     is_delegate: false,
     is_alternate: true,
     workshop_id: BigInt(1),
-    name: 'Roy James',
-    email: 'Royjames@email.com',
+    name: 'Integration Alternate 1',
+    email: 'alternate1@integration.test',
     wallet_address:
-      'stake_test1uq2c7pdk3nr0mtsl9z47redcc38pvchz5czryeh643ecvpgu5v0gr',
+      'stake_test1uqgf7pecctde8ygq25w48k8qrzzr6ap9d5nfwp8436a9g8sdmnp2k',
   },
   {
     is_convention_organizer: true,
@@ -97,7 +95,7 @@ const users = [
     is_delegate: true,
     is_alternate: false,
     workshop_id: BigInt(5),
-    name: 'Integration Delegate 1',
+    name: 'Integration Delegate 2',
     email: 'delegate1@integration.test',
     wallet_address:
       'stake_test1uqxdv8wvdprs46el2r0p5gcyvz45nqkcz35dh4lwjjcvs9qltuf86',
@@ -107,7 +105,7 @@ const users = [
     is_delegate: false,
     is_alternate: true,
     workshop_id: BigInt(5),
-    name: 'Integration Alternate 1',
+    name: 'Integration Alternate 2',
     email: 'alternate1@integration.test',
     wallet_address:
       'stake_test1uqltqgz58u4e0mnt4u2ttnn82ss3sq7d9an6xh49hajz0egghy55y',
@@ -117,7 +115,7 @@ const users = [
     is_delegate: true,
     is_alternate: false,
     workshop_id: BigInt(6),
-    name: 'Integration Delegate 2',
+    name: 'Integration Delegate 3',
     email: 'delegate2@integration.test',
     wallet_address:
       'stake_test1uzn5n0yavvqvp2jhm5gc28a7kyh2nkqsrayu53m97yx7rfqk3qe0g',
@@ -127,7 +125,7 @@ const users = [
     is_delegate: false,
     is_alternate: true,
     workshop_id: BigInt(6),
-    name: 'Integration Alternate 2',
+    name: 'Integration Alternate 3',
     email: 'alternate2@integration.test',
     wallet_address:
       'stake_test1uz8nudr07gyltqapgzvx9avyxcwp3cxnnlmgfd35px5jfgcq2hezv',
