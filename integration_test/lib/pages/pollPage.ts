@@ -9,7 +9,7 @@ export default class PollPage {
   readonly voteYesBtn = this.page.getByTestId('vote-yes-button');
   readonly voteNoBtn = this.page.getByTestId('vote-no-button');
   readonly voteAbstainBtn = this.page.getByTestId('vote-abstain-button');
-  readonly endVotingBtn = this.page.getByTestId('end-vote-button')
+  readonly endVotingBtn = this.page.getByTestId('end-vote-button');
 
   //chip or icon
   readonly pollPageStatusChip = this.page.getByTestId('poll-page-status-chip');
@@ -24,7 +24,7 @@ export default class PollPage {
   async deletePoll(): Promise<void> {
     await this.deletePollBtn.click();
   }
-  async  endVoting(){
-    await this.endVotingBtn.click()
+  async endVoting() {
+    await this.endVotingBtn.click();
   }
 }
