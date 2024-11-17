@@ -68,6 +68,7 @@ jobs:
               echo 'REGISTRY_BASE=registry.sireto.io/cardanoapi'
               echo 'NEXT_AUTH_SECRET=${{ secrets.NEXT_AUTH_SECRET }}'
               echo 'STACK_NAME=ccva'
+              echo 'NEXT_PUBLIC_NETWORK=${{vars.NEXT_PUBLIC_NETWORK}}'
               echo 'DEPLOY_BASE_DOMAIN=ccv.cardanoapi.io'
               echo 'NPM_AUTH_TOKEN=${{ secrets.NPM_AUTH_TOKEN }}'
               echo 'DATABASE_PASSWORD=${{ secrets.TEST_DATABASE_PASSWORD }}'
