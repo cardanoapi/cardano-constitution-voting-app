@@ -26,7 +26,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
   pollId: async ({ browser, pollType }, use) => {
     // setup
     const organizerPage = await createNewPageWithWallet(browser, {
-      storageState: '.auth/organizer.json',
+      storageState: '.auth/organizer1.json',
       wallet: organizerWallet,
     });
 

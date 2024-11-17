@@ -11,7 +11,7 @@ test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
 });
 
-test.use({ storageState: '.auth/organizer.json', wallet: organizerWallet });
+test.use({ storageState: '.auth/organizer1.json', wallet: organizerWallet });
 
 /**
  * Description: Convention Organisers can delete a poll, so that it no longer appears on the list of historical polls

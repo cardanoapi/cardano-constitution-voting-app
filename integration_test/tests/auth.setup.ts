@@ -11,14 +11,14 @@ import { createAuth } from '@helpers/auth';
 const authConfigurations = [
   {
     wallet: organizerWallet,
-    authFile: '.auth/organizer.json',
-    role: 'Organizer',
+    authFile: '.auth/organizer1.json',
+    role: 'Organizer1',
   },
-  { wallet: delegateWallet, authFile: '.auth/delegate.json', role: 'Delegate' },
+  { wallet: delegateWallet, authFile: '.auth/delegate1.json', role: 'Delegate1' },
   {
     wallet: alternateWallet,
-    authFile: '.auth/alternate.json',
-    role: 'Alternate',
+    authFile: '.auth/alternate1.json',
+    role: 'Alternate1',
   },
   {
     wallet: wallets.delegate2Wallet,
