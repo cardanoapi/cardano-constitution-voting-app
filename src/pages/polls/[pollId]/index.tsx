@@ -162,7 +162,7 @@ export default function ViewPoll(props: Props): JSX.Element {
             </Typography>
             {poll && <PollStatusChip status={poll.status} testId='poll-page-status-chip' />}
           </Box>
-          <PollVoteCount pollId={poll?.id || ''} />
+          <PollVoteCount pollId={poll?.id || ''} testId='poll-page-vote-count' />
           <Grid container data-testid="poll-description">
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>
