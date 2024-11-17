@@ -212,6 +212,8 @@ export function ManageActivePowerTable(): JSX.Element {
               flexDirection="row"
               alignItems="center"
               height="100%"
+              data-testid={`${activeVoterId}`}
+              data-field="active_voter_cell"
             >
               <Typography>
                 {activeVoterId == delegateId

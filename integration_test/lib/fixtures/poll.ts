@@ -62,7 +62,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
               await userPollPage.goto(pollId);
               // cast vote
               await userPage.getByTestId(votes[index]).click();
-              await userPage.getByText('Vote recorded').isVisible()
+              await userPage.getByText('Vote recorded').isVisible();
               await userPage.close();
             }
           )

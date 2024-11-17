@@ -1,8 +1,5 @@
 import { Page, expect } from '@playwright/test';
-import { faker } from '@faker-js/faker';
 
-const updateDelegateEmail = faker.person.fullName + '@email.com';
-const updatedAlternateEmail = faker.person.fullName + '@email.com';
 const representativeUpdatedToast = 'User info updated!';
 export default class RepresentativesPage {
   readonly updateDelegateBtn = this.page.getByTestId(
@@ -30,26 +27,40 @@ export default class RepresentativesPage {
     await this.page.goto('/representatives/manage');
   }
 
-  async updateDelegateProfile(): Promise<void> {
+  async updateUserProfile(
+    name: string,
+    email: string,
+    stake_address: string
+  ): Promise<void> {
+    // await this.goto();
+    // await this.page
+    //   .locator('[data-testid^="edit-representative-info-"]')
+    //   .first()
+    //   .click();
+    // await this.page.getByRole('textbox').nth(0).fill(name);
+    // await this.page.getByRole('textbox').nth(1).fill(email);
+    // await this.page
+    //   .locator('[data-testid^="save-representative-info-"]')
+    //   .first()
+    //   .click();
     await this.goto();
     await this.updateDelegateBtn.click();
-    await this.page.getByRole('textbox').nth(1).fill(updateDelegateEmail);
+    await this.page.getByRole('textbox').nth(0).fill(name);
+    await this.page.getByRole('textbox').nth(1).fill(email);
+    await this.page.getByRole('textbox').nth(2).fill(stake_address);
     await this.saveDelegateInfoBtn.click({ force: true });
   }
 
-  async isRepresentativeUpdated(): Promise<void> {
+  async isRepresentativeUpdated(infos: Array<string>): Promise<void> {
     await expect(this.page.getByText(representativeUpdatedToast)).toBeVisible();
-  }
-
-  async updateAlternateProfile(): Promise<void> {
-    await this.goto();
-    await this.updateAlternateBtn.click();
-    await this.page.getByRole('textbox').nth(1).fill(updatedAlternateEmail);
-    await this.saveAlternateBtn.click({ force: true });
+    await Promise.all(
+      infos.map(
+        async (info) => await expect(this.page.getByText(info)).toBeVisible()
+      )
+    );
   }
 
   async switchVotingPower(): Promise<void> {
-    await this.goto();
     await this.transferVotingPowerBtn.click();
     const currentActiveVoter = await this.page
       .getByRole('combobox')
@@ -70,18 +81,25 @@ export default class RepresentativesPage {
       .locator('[data-id="1"]')
       .locator('[data-field="active_voter_id"]')
       .innerText();
-    const changedRow = await this.page
+    await this.page
       .locator('[data-id="1"]')
       .filter({ has: this.page.getByTestId('edit-active-voter-1') })
-      .allInnerTexts();
-    const changedRowData = changedRow[0].split('\n\n');
-    const activeVoter =
-      activeVoterRole === 'Delegate' ? changedRowData[1] : changedRowData[2];
-    await this.page.goto('/');
-    const activeVoterNamme = await this.page
+      .locator(`[data-testid^="${activeVoterRole.toLowerCase()}-name-"]`)
+      .click({ force: true });
+    await expect(this.page.locator('.MuiChip-root').first()).toHaveText(
+      'Active Voter'
+    );
+  }
+
+  async getRepresentativeId(isDelegate: boolean = false): Promise<string> {
+    await expect(this.page.getByRole('row').first()).toBeVisible();
+    const representativeTestId = await this.page
       .locator('[data-id="1"]')
-      .locator('[data-field="active_voter"]')
-      .innerText();
-    expect(activeVoterNamme).toBe(activeVoter);
+      .filter({ has: this.page.getByTestId('edit-active-voter-1') })
+      .locator(
+        `[data-testid^="${isDelegate ? 'delegate' : 'alternate'}-name-"]`
+      )
+      .getAttribute('data-testid');
+    return representativeTestId.split('-').pop();
   }
 }

@@ -31,6 +31,7 @@ test.describe('Delete Poll', async () => {
     await homePage.deleteOpenPollCards();
     pollId = await homePage.createPoll();
   });
+
   test('1-1F-1. Given connected as CO, can delete a pending poll', async ({
     page,
   }) => {
@@ -204,6 +205,8 @@ test.describe('Create Poll', () => {
 });
 
 test.describe('User Control', () => {
+  test.use({ pollType: 'CreatePoll' });
+
   /**
    * Description: A CO can update individual fields in the information held on a given user of the CVT
    *
@@ -214,29 +217,21 @@ test.describe('User Control', () => {
    */
   test('1-2A. Given connected as CO can update all fields of user', async ({
     page,
-    browser,
+    pollId,
   }) => {
-    throw new Error('Not Implemented');
+    const name = faker.person.fullName();
+    const email = name.split(' ')[0] + '@email.com';
+    const stake_address = faker.person.jobArea();
+    const represntativePage = new RepresentativesPage(page);
+    await represntativePage.updateUserProfile(name, email, stake_address);
+    await represntativePage.isRepresentativeUpdated([
+      name,
+      email,
+      stake_address,
+    ]);
   });
 
-  /**
-   * Description: If a delegate is unable to vote then their alternate needs to be given voting rights, and if they become able to vote again, then the voting rights need to be able to be returned.
-   *
-   * User Story: As a CO, I want to be able to choose either the delegate or the alternate from any given workshop to have the right to vote on behalf of the workshop participants so that every workshop has the opportunity to cast exactly one vote in each poll
-   *
-   * Acceptance Criteria: Given that I am a CO on the page listing all the delegates and alternates, when I toggle one of them to be the voter from a given workshop that one can vote, the other one from the workshop is not able to vote.
-   */
-  test('1-2B-1. Given connected as CO can switch delegate user to alternate or vice-versa', async ({
-    page,
-  }) => {
-    const representativePage = new RepresentativesPage(page);
-    await representativePage.switchVotingPower();
-    await expect(page.getByText('Active voter updated!')).toBeVisible();
-    // TODO: go to listing page and confirm that the role is change.
-    // again switch and test.
-  });
-
-  test('1-2B-2. Should have corresponding workspace delegate and alternate in a same row', async ({
+  test('1-2B. Should have corresponding workspace delegate and alternate in a same row', async ({
     page,
   }) => {
     await page.goto('/');
@@ -271,26 +266,78 @@ test.describe('User Control', () => {
       )
     );
   });
-  // As a convention organiser, I want to be able to update the profile information of a delegate (or alternate) to correct any error or omission.
-  test('1-2D. Convention organisers can update delegate profile information ', async ({
+
+  test('1-2D. Should not be able to switch active voting power between delegate and alternate during voting', async ({
     page,
+    pollId,
   }) => {
-    const represntativePage = new RepresentativesPage(page);
-    await represntativePage.updateDelegateProfile();
-    await represntativePage.isRepresentativeUpdated();
-    await represntativePage.updateAlternateProfile();
-    await represntativePage.isRepresentativeUpdated();
+    test.slow();
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+    await pollPage.beginVoteBtn.click();
+
+    // before switching power while poll is opened for voting
+    const representativePage = new RepresentativesPage(page);
+    await representativePage.goto();
+    await expect(page.getByRole('row').first()).toBeVisible();
+    const previousActiveVoterId = await page
+      .locator('[data-id="1"]')
+      .locator('[data-field="active_voter_cell"]')
+      .getAttribute('data-testid');
+
+    await representativePage.switchVotingPower();
+    await page.waitForTimeout(500);
+
+    // // after trying to switch power while poll is opened for voting
+    await expect(page.getByRole('status')).toHaveText(
+      'You cannot change the active voter while a Poll is actively voting.'
+    );
+    const currentActiveVoterId = await page
+      .locator('[data-id="1"]')
+      .locator('[data-field="active_voter_cell"]')
+      .getAttribute('data-testid');
+
+    expect(previousActiveVoterId).toBe(currentActiveVoterId);
   });
 });
 
+/**
+ * Description: If a delegate is unable to vote then their alternate needs to be given voting rights, and if they become able to vote again, then the voting rights need to be able to be returned.
+ *
+ * User Story: As a CO, I want to be able to choose either the delegate or the alternate from any given workshop to have the right to vote on behalf of the workshop participants so that every workshop has the opportunity to cast exactly one vote in each poll
+ *
+ * Acceptance Criteria: Given that I am a CO on the page listing all the delegates and alternates, when I toggle one of them to be the voter from a given workshop that one can vote, the other one from the workshop is not able to vote.
+ */
+
 test.describe('Voting Power', () => {
+  test.beforeEach(async ({ page }) => {
+    const homePage = new HomePage(page);
+    await homePage.goto();
+    await homePage.deleteOpenPollCards();
+  });
   test('1-3A. Should be able to switch active voting power between delegate and alternate.', async ({
     page,
   }) => {
     const representativePage = new RepresentativesPage(page);
+    await representativePage.goto();
+    const previousActiveVoterId = await page
+      .locator('[data-id="1"]')
+      .locator('[data-field="active_voter_cell"]')
+      .getAttribute('data-testid');
     await representativePage.switchVotingPower();
+
     await expect(page.getByText('Active voter updated!')).toBeVisible();
-    await representativePage.assertSwitchedVotingPower();
-    await representativePage.switchVotingPower();
+    const representativesIds = await Promise.all([
+      representativePage.getRepresentativeId(true),
+      representativePage.getRepresentativeId(),
+    ]);
+    const currentActiveVoterId = await page
+      .locator('[data-id="1"]')
+      .locator('[data-field="active_voter_cell"]')
+      .getAttribute('data-testid');
+
+    expect(representativesIds).toContain(previousActiveVoterId);
+    expect(representativesIds).toContain(currentActiveVoterId);
+    expect(currentActiveVoterId).not.toBe(previousActiveVoterId);
   });
 });
