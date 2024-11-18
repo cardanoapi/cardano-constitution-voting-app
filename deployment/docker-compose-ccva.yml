@@ -7,6 +7,7 @@ services:
       context: ../
       args:
         - NPM_AUTH_TOKEN=${NPM_AUTH_TOKEN}
+        - NEXT_PUBLIC_NETWORK=${NEXT_PUBLIC_NETWORK}
     networks:
       - postgres
       - frontend
