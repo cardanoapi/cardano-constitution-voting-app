@@ -56,7 +56,12 @@ export default defineConfig({
       testMatch: '**/*independent.spec.ts',
       use: { ...devices['Desktop Chrome'] },
     },
-
+    {
+      name: 'loggedin (mobile)',
+      use: { ...devices['Pixel 5'] },
+      testIgnore: ['**/*.independent.spec.ts'],
+      dependencies: environments.ci ? ['auth setup'] : [],
+    },
     {
       name: 'mobile',
       testMatch: '**/*independent.spec.ts',
