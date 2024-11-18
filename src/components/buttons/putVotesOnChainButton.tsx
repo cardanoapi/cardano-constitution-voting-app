@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
+import { awaitTxConfirm } from '@/lib/awaitTxConfirm';
 import { addTxToPoll } from '@/lib/helpers/addTxToPoll';
 import { addTxToPollTransactions } from '@/lib/helpers/addTxToPollTransactions';
 import { addTxToPollVotes } from '@/lib/helpers/addTxToPollVotes';
@@ -24,6 +26,7 @@ interface Props {
  */
 export function PutVotesOnChainButton(props: Props): JSX.Element {
   const { pollId, isSubmitting, setIsSubmitting } = props;
+  const [txSubmitting, setTxSubmitting] = useState(false);
 
   const session = useSession();
 
@@ -42,18 +45,19 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
         // Keep trying until the transaction is successful
         while (!success) {
           // Post votes on chain
-          const txHash = await postVotesOnChain(metadata.metadata);
-          if (txHash) {
+          const txResult = await postVotesOnChain(metadata.metadata);
+          setTxSubmitting(true);
+          if (txResult) {
             // TODO: Figure out how to handle errors in addTxToPollTransactions and addTxToPollVotes since the data is already on-chain
             success = true;
             // Add txHash to poll
             const addTxResponse = await addTxToPollTransactions(
               pollId,
-              txHash.submitTxId,
+              txResult.submitTxId,
             );
             if (addTxResponse.pollTransactionId === '-1') {
               toast.error(addTxResponse.message);
-              break;
+              break; // TODO: Do we really want to break here?
             }
             // Add txHash to poll votes
             const addTxToVotesResponse = await addTxToPollVotes(
@@ -63,8 +67,16 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
             );
             if (!addTxToVotesResponse.succeeded) {
               toast.error(addTxToVotesResponse.message);
-              break;
+              break; // TODO: Do we really want to break here?
             }
+            await awaitTxConfirm(txResult.submitTxId).then(() =>
+              setTxSubmitting(false),
+            );
+          } else {
+            toast.error(
+              'Error posting this TX on-chain. Please try signing this TX again. If the issue persists, refresh the app and re-click the upload votes on-chain button.',
+            );
+            break;
           }
         }
       }
@@ -78,18 +90,22 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
     while (!summaryTxSuccess) {
       const response = await getSummaryTxMetadata(pollId);
       if (response.metadata) {
-        const txHash = await postVotesOnChain(response.metadata);
-        if (txHash) {
+        const txResult = await postVotesOnChain(response.metadata);
+        setTxSubmitting(true);
+        if (txResult) {
           // TODO: Figure out how to handle errors in addTxToPoll since the data is already on-chain
           summaryTxSuccess = true;
           // Add txHash to poll
-          const addTxResponse = await addTxToPoll(pollId, txHash.submitTxId);
+          const addTxResponse = await addTxToPoll(pollId, txResult.submitTxId);
           if (!addTxResponse.success) {
             toast.error(addTxResponse.message);
             break;
           } else {
             toast.success('Votes successfully uploaded on-chain');
           }
+          await awaitTxConfirm(txResult.submitTxId).then(() =>
+            setTxSubmitting(false),
+          );
         }
       } else {
         toast.error(response.message);
@@ -99,16 +115,25 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
     setIsSubmitting(false);
   }
 
+  let buttonText = 'Upload votes on-chain';
+  if (txSubmitting) {
+    buttonText = 'Submitting transaction...';
+  } else if (isSubmitting) {
+    buttonText = 'Preparing next transaction...';
+  }
+
   if (session.data?.user.isCoordinator) {
     return (
-      <Button
-        onClick={handleClick}
-        variant="contained"
-        disabled={isSubmitting}
-        data-testid="put-votes-onchain-button"
-      >
-        Upload votes on-chain
-      </Button>
+      <>
+        <Button
+          onClick={handleClick}
+          variant="contained"
+          disabled={isSubmitting}
+          data-testid="put-votes-onchain-button"
+        >
+          {buttonText}
+        </Button>
+      </>
     );
   } else {
     return <></>;
