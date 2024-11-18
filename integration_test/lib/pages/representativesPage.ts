@@ -29,7 +29,10 @@ export default class RepresentativesPage {
     await this.goto();
     await this.editUserProfileBtn.isVisible();
     await this.editUserProfileBtn.click();
-    await this.page.getByRole('textbox').nth(0).fill(name);
+    await this.page
+      .getByRole('textbox')
+      .nth(0)
+      .fill('A' + name);
     await this.page.getByRole('textbox').nth(1).fill(email);
     await this.page.getByRole('textbox').nth(2).fill(stake_address);
     await this.saveUserProfileBtn.click({ force: true });

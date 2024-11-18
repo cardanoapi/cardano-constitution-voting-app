@@ -53,6 +53,16 @@ const authConfigurations = [
     authFile: '.auth/alternate4.json',
     name: 'Alternate4',
   },
+  {
+    wallet: delegateWallets[4],
+    authFile: '.auth/delegate5.json',
+    name: 'Delegate5',
+  },
+  {
+    wallet: alternateWallets[4],
+    authFile: '.auth/alternate5.json',
+    name: 'Alternate5',
+  },
 ];
 
 setup.beforeEach(async () => {

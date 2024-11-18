@@ -6,7 +6,12 @@ import RepresentativesPage from '@pages/representativesPage';
 import HomePage from '@pages/homePage';
 import { faker } from '@faker-js/faker';
 import PollPage from '@pages/pollPage';
-import { newAlternate1Page, newDelegate1Page } from '@helpers/page';
+import {
+  newAlternate1Page,
+  newAlternatePage,
+  newDelegate1Page,
+  newDelegatePage,
+} from '@helpers/page';
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -284,17 +289,21 @@ test.describe('User Control', () => {
    */
   test('1-2A. Given connected as CO can update all fields of user', async ({
     page,
-    pollId,
   }) => {
+    // delete exisiting opened polls
+    const homePage = new HomePage(page);
+    await homePage.goto();
+    await homePage.deleteOpenPollCards();
+
     const name = faker.person.lastName();
-    const email = name.split(' ')[0] + '@email.com';
+    const email = name + '@email.com';
     const stake_address = faker.person.jobArea();
     const represntativePage = new RepresentativesPage(page);
 
     await represntativePage.updateUserProfile(name, email, stake_address);
 
     await represntativePage.isRepresentativeUpdated([
-      name,
+      'A' + name,
       email,
       stake_address,
     ]);
@@ -370,7 +379,7 @@ test.describe('User Control', () => {
     await expect(page.getByRole('status')).toHaveText(
       'You cannot change the active voter while a Poll is actively voting.'
     );
-    await page.waitForTimeout(500);
+    await expect(page.getByRole('row').first()).toBeVisible();
     const currentActiveVoterId = await page
       .locator('[data-id="1"]')
       .locator('[data-field="active_voter_cell"]')
@@ -402,7 +411,9 @@ test.describe('User Control', () => {
     await expect(page.getByRole('status')).toHaveText(
       'You cannot update user information while a Poll is actively voting.'
     );
-    await expect(page.getByTestId('edit-representative-info-2')).toBeVisible();
+    await expect(
+      page.getByTestId('edit-representative-info-138')
+    ).toBeVisible();
     await expect(page.getByText(name)).not.toBeVisible();
   });
 });
@@ -468,11 +479,11 @@ test.describe('Voting Power', () => {
     // Get Active Voter Status
     const representativePage = new RepresentativesPage(page);
     await representativePage.goto();
-    const activeVoterRole = await representativePage.getActiveVoterStatus();
+    const activeVoterRole = await representativePage.getActiveVoterStatus(6);
 
     // Delegate and Alternate page
-    const delegatePage = await newDelegate1Page(browser);
-    const alternatePage = await newAlternate1Page(browser);
+    const delegatePage = await newDelegatePage(browser, 4);
+    const alternatePage = await newAlternatePage(browser, 4);
 
     // Get Active voter
     const activeVoter =
@@ -487,12 +498,19 @@ test.describe('Voting Power', () => {
     await activeVoter.getByText('Vote recorded').isVisible();
 
     // Assert vote
-    await expect(activeVoter.getByText('Vote recorded')).toBeVisible();
+    await expect(activeVoter.getByText('Vote recorded')).toBeVisible({
+      timeout: 5_000,
+    });
 
     const inactiveVoterPage = new PollPage(inactiveVoter);
     await inactiveVoterPage.goto(pollId);
 
     // Assert not able to vote
+    await inactiveVoter
+      .getByRole('heading', {
+        name: 'You are not the active voter for your workshop. Only the active voter can vote.',
+      })
+      .isVisible();
     await expect(
       inactiveVoter.getByRole('heading', {
         name: 'You are not the active voter for your workshop. Only the active voter can vote.',
