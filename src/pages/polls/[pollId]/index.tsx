@@ -225,17 +225,11 @@ export default function ViewPoll(props: Props): JSX.Element {
                           alignItems="center"
                         >
                           {poll.status === pollPhases.pending && (
-                            <BeginVoteButton
-                              pollId={pollId}
-                              isSubmitting={isSubmitting}
-                              setIsSubmitting={updateIsSubmitting}
-                            />
+                            <BeginVoteButton pollId={pollId} />
                           )}
                           {poll.status === pollPhases.voting && (
                             <EndVoteButton
                               pollId={pollId}
-                              isSubmitting={isSubmitting}
-                              setIsSubmitting={updateIsSubmitting}
                               updatePollResults={updatePollResults}
                             />
                           )}
@@ -248,11 +242,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                                 setIsTxUploading={updateIsTxUploading}
                               />
                             )}
-                          <DeletePollButton
-                            pollId={pollId}
-                            isSubmitting={isSubmitting}
-                            setIsSubmitting={updateIsSubmitting}
-                          />
+                          <DeletePollButton pollId={pollId} />
                         </Box>
                       </>
                     )}
@@ -278,8 +268,6 @@ export default function ViewPoll(props: Props): JSX.Element {
                       <VoteOnPollButtons
                         pollName={poll.name}
                         pollId={poll.id}
-                        disabled={isSubmitting}
-                        setDisabled={updateIsSubmitting}
                         isActiveVoter={
                           workshopActiveVoterId === session.data?.user.id
                         }
