@@ -112,7 +112,6 @@ test.describe('Vote', () => {
          * Acceptance Criteria: Given that I am a voter on the page of an open poll and I have already voted, when I vote again, then my vote is counted.
          */
         test(`${index + 2}-1C. Given active ${user}, and poll is open, can update casted vote`, async () => {
-          test.slow();
           //  yes vote
           await pollPage.voteYesBtn.click();
           await expect(userPage.getByTestId('poll-page-vote-count')).toHaveText(
@@ -138,7 +137,6 @@ test.describe('Vote', () => {
          */
 
         test(`${index + 2}-1D. Given active ${user}, can choose not to vote`, async () => {
-          test.slow();
           await pollPage.voteAbstainBtn.click();
 
           await expect(userPage.getByTestId('vote-status')).toHaveText(
@@ -159,7 +157,6 @@ test.describe('Vote', () => {
          */
 
         test(`${index + 2}-1E: Active ${user} should be able to vote Yes, No, or Abstain on a poll`, async () => {
-          test.slow();
 
           // yes vote
           await pollPage.voteYesBtn.click();
