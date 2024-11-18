@@ -1,5 +1,6 @@
 FROM node:20-alpine AS builder
 ARG NPM_AUTH_TOKEN
+ARG NEXT_PUBLIC_NETWORK
 WORKDIR /app
 RUN npm install -g prisma
 COPY ./package.json ./package-lock.json  ./
@@ -10,6 +11,7 @@ COPY --chown=node:node . .
 
 
 ENV NEXT_PUBLIC_NODE_ENV=production
+ENV NEXT_PUBLIC_NETWORK=${NEXT_PUBLIC_NETWORK}
 
 RUN  npm run build 
 RUN rm -rf ./.next/cache/* && mkdir moveTarget && mv public  ./moveTarget
@@ -21,6 +23,7 @@ WORKDIR /app
 USER node
 
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
+
 EXPOSE 3000
 
 
