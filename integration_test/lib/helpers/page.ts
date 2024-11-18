@@ -36,6 +36,27 @@ export async function createNewPageWithWallet(
   return newPage;
 }
 
+export async function newDelegatePage(browser: Browser, index: number) {
+  return await createNewPageWithWallet(browser, {
+    storageState: `.auth/delegate${index + 1}.json`,
+    wallet: delegateWallets[index],
+  });
+}
+
+export async function newAlternatePage(browser: Browser, index: number) {
+  return await createNewPageWithWallet(browser, {
+    storageState: `.auth/alternate${index + 1}.json`,
+    wallet: alternateWallets[index],
+  });
+}
+
+export async function newOrganizerPage(browser: Browser, index: number) {
+  return await createNewPageWithWallet(browser, {
+    storageState: `.auth/organizer${index + 1}.json`,
+    wallet: organizerWallets[index],
+  });
+}
+
 export async function newOrganizer1Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/organizer1.json',
