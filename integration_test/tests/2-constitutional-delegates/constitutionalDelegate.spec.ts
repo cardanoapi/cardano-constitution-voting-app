@@ -1,12 +1,12 @@
 import { setAllureEpic } from '@helpers/allure';
 import { test } from '@fixtures/poll';
 import PollPage from '@pages/pollPage';
-import { expect, Page } from '@playwright/test';
+import { Browser, expect, Page } from '@playwright/test';
 import RepresentativesPage from '@pages/representativesPage';
 import {
-  newAlternate1Page,
-  newDelegate1Page,
-  newOrganizer1Page,
+  newAlternatePage,
+  newDelegatePage,
+  newOrganizerPage,
 } from '@helpers/page';
 import { upperCaseFirstLetter } from '@helpers/string';
 
@@ -20,7 +20,7 @@ const switchVotingPowerAndBeginPoll = async (
   await representativePage.goto();
   const activeUser = await representativePage.getActiveVoterStatus();
   if (activeUser.toLowerCase() !== user) {
-    await representativePage.switchVotingPower(1);
+    await representativePage.switchVotingPower(5);
   }
 
   if (!isPendingPoll) {
@@ -43,8 +43,21 @@ const revertVotingPower = async (
   await representativePage.goto();
   const activeUser = await representativePage.getActiveVoterStatus();
   if (activeUser.toLowerCase() === 'alternate') {
-    await representativePage.switchVotingPower(1);
+    await representativePage.switchVotingPower(5);
   }
+};
+
+const userNavigateToPollPage = async (
+  user: string,
+  browser: Browser,
+  pollId: number
+) => {
+  const userPage =
+    user === 'delegate'
+      ? await newDelegatePage(browser, 3)
+      : await newAlternatePage(browser, 3);
+  const pollPage = new PollPage(userPage);
+  await pollPage.goto(pollId);
 };
 
 test.describe('Vote', () => {
@@ -70,15 +83,10 @@ test.describe('Vote', () => {
           );
 
           currentPollId = pollId;
-          organizerPage = await newOrganizer1Page(browser);
+          organizerPage = await newOrganizerPage(browser, 0);
           await switchVotingPowerAndBeginPoll(user, organizerPage, pollId);
 
-          userPage =
-            user === 'delegate'
-              ? await newDelegate1Page(browser)
-              : await newAlternate1Page(browser);
-          pollPage = new PollPage(userPage);
-          await pollPage.goto(pollId);
+          await userNavigateToPollPage(user, browser, pollId);
         });
 
         /**
@@ -188,7 +196,7 @@ test.describe('Vote', () => {
           );
 
           currentPollId = pollId;
-          organizerPage = await newOrganizer1Page(browser);
+          organizerPage = await newOrganizerPage(browser, 0);
           await switchVotingPowerAndBeginPoll(
             user,
             organizerPage,
@@ -196,12 +204,7 @@ test.describe('Vote', () => {
             true
           );
 
-          userPage =
-            user === 'delegate'
-              ? await newDelegate1Page(browser)
-              : await newAlternate1Page(browser);
-          pollPage = new PollPage(userPage);
-          await pollPage.goto(pollId);
+          await userNavigateToPollPage(user, browser, pollId);
         });
 
         /**
