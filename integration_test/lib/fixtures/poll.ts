@@ -1,4 +1,4 @@
-import { organizer1Wallet } from '@constants/staticWallets';
+import { organizerWallets } from '@constants/staticWallets';
 import { test as base } from '@fixtures/walletExtension';
 import {
   createNewPageWithWallet,
@@ -28,7 +28,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
     // setup
     const organizerPage = await createNewPageWithWallet(browser, {
       storageState: '.auth/organizer1.json',
-      wallet: organizer1Wallet,
+      wallet: organizerWallets[0],
     });
 
     let pages: Page[] = [];

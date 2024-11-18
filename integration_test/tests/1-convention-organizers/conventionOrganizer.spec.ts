@@ -6,6 +6,7 @@ import RepresentativesPage from '@pages/representativesPage';
 import HomePage from '@pages/homePage';
 import { faker } from '@faker-js/faker';
 import PollPage from '@pages/pollPage';
+import { newAlternate1Page, newDelegate1Page } from '@helpers/page';
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -41,30 +42,40 @@ test.describe('Delete Poll', async () => {
     const pollPage = new PollPage(page);
     await pollPage.goto(pollId);
 
+    // Check if poll is created
     await expect(pollPage.pollPageStatusChip).toHaveText('Pending', {
       timeout: 10_000,
     });
+
     await pollPage.deletePoll();
 
     await expect(page).toHaveURL('/');
   });
+
   test('1-1F-2. Given connected as CO, can delete a ongoing poll', async ({
     page,
   }) => {
     const pollPage = new PollPage(page);
     await pollPage.goto(pollId);
 
+    // Check if poll is created
     await expect(pollPage.pollPageStatusChip).toHaveText('Pending', {
       timeout: 10_000,
     });
+
+    // Start polling
     await pollPage.beginVoteBtn.click();
+
+    // Check if poll has started successfully
     await expect(pollPage.pollPageStatusChip).toHaveText('Voting', {
       timeout: 10_000,
     });
+
     await pollPage.deletePoll();
 
     await expect(page).toHaveURL('/');
   });
+
   test('1-1F-3. Given connected as CO, can delete a closed poll', async ({
     page,
   }) => {
@@ -72,17 +83,23 @@ test.describe('Delete Poll', async () => {
     const pollPage = new PollPage(page);
     await pollPage.goto(pollId);
 
+    // Check if poll has been created successfully
     await expect(pollPage.pollPageStatusChip).toHaveText('Pending', {
       timeout: 10_000,
     });
+
+    // Start Poll
     await pollPage.beginVoteBtn.click();
     await expect(pollPage.pollPageStatusChip).toHaveText('Voting', {
       timeout: 10_000,
     });
+
+    // Close Poll
     await pollPage.closeVoteBtn.click();
     await expect(pollPage.pollPageStatusChip).toHaveText('Concluded', {
       timeout: 10_000,
     });
+
     await pollPage.deletePoll();
 
     await expect(page).toHaveURL('/');
@@ -107,11 +124,13 @@ test.describe('Open Close Poll', () => {
     const pollPage = new PollPage(page);
     await pollPage.goto(pollId);
 
+    // Start(Open) Poll
     await pollPage.beginVoteBtn.click();
 
     await expect(page.getByText('Poll voting is open!')).toBeVisible();
     await expect(pollPage.closeVoteBtn).toBeVisible();
   });
+
   /**
    * Description: If a poll is open then a CO can close it
    *
@@ -127,16 +146,21 @@ test.describe('Open Close Poll', () => {
     const pollPage = new PollPage(page);
     await pollPage.goto(pollId);
 
+    // Start Poll
     await pollPage.beginVoteBtn.click();
     await expect(pollPage.pollPageStatusChip).toHaveText('Voting', {
       timeout: 10_000,
     });
+
+    // Close poll
     await pollPage.closeVoteBtn.click();
     await expect(pollPage.pollPageStatusChip).toHaveText('Concluded', {
       timeout: 10_000,
     });
+
     await expect(pollPage.downloadVotesBtn).toBeVisible();
   });
+
   /**
    * Description: Once a poll has been closed to voting it cannot be re-opened, and no further votes will be accepted.
    *
@@ -152,12 +176,14 @@ test.describe('Open Close Poll', () => {
     const pollPage = new PollPage(page);
     await pollPage.goto(pollId);
 
+    // Start poll
     await pollPage.beginVoteBtn.click();
     await expect(pollPage.pollPageStatusChip).toHaveText('Voting', {
       timeout: 10_000,
     });
-    await pollPage.closeVoteBtn.click();
 
+    // Close poll
+    await pollPage.closeVoteBtn.click();
     await expect(pollPage.downloadVotesBtn).toBeVisible({ timeout: 10_000 });
 
     expect(await page.locator('button').allInnerTexts()).not.toContain(
@@ -184,10 +210,13 @@ test.describe('Create Poll', () => {
     page,
   }) => {
     await page.goto('/');
+
     const CreatePollButton = page.getByTestId('create-poll-button').first();
+
     await expect(CreatePollButton).toBeVisible();
     await expect(CreatePollButton).toHaveText('Create Poll');
   });
+
   /**
    * Description
    * Convention Organisers can create a poll
@@ -202,10 +231,12 @@ test.describe('Create Poll', () => {
     page,
   }) => {
     await page.goto('/');
+
     const homePage = new HomePage(page);
     const pollName = faker.commerce.productName();
     const pollDescription = faker.commerce.productDescription();
     await homePage.deleteOpenPollCards();
+
     await homePage.createPoll(pollName, pollDescription);
 
     await expect(page.getByText(pollName)).toBeVisible();
@@ -259,9 +290,11 @@ test.describe('User Control', () => {
     const email = name.split(' ')[0] + '@email.com';
     const stake_address = faker.person.jobArea();
     const represntativePage = new RepresentativesPage(page);
+
     await represntativePage.updateUserProfile(name, email, stake_address);
+
     await represntativePage.isRepresentativeUpdated([
-      'Editable TestUser' + name,
+      name,
       email,
       stake_address,
     ]);
@@ -271,15 +304,20 @@ test.describe('User Control', () => {
     page,
   }) => {
     await page.goto('/');
+
+    // locate the delegate and alternate of same row
     await expect(page.getByRole('row').first()).toBeVisible();
     const delegate = await page.getByRole('gridcell').nth(1).innerText();
     const alternate = await page.getByRole('gridcell').nth(2).innerText();
+
+    // fetch the list of all alternates and delegates
     const delegatesList = await page
       .locator('[data-testid^="delegate-name-"]')
       .allInnerTexts();
     const alternateList = await page
       .locator('[data-testid^="alternate-name-"]')
       .allInnerTexts();
+
     expect(delegatesList).toContain(delegate);
     expect(alternateList).toContain(alternate);
   });
@@ -289,6 +327,8 @@ test.describe('User Control', () => {
   }) => {
     const workspaceNames = [];
     await page.goto('/');
+
+    // fetch all rows except table heading
     await expect(page.getByRole('row').first()).toBeVisible();
     const rows = await page.getByRole('row').all();
     rows.shift();
@@ -296,6 +336,8 @@ test.describe('User Control', () => {
       const workspace = (await row.allInnerTexts())[0].split('\n')[0];
       workspaceNames.push(workspace);
     }
+
+    // compare alphabetically sorting
     expect(
       workspaceNames.every(
         (word, i) => i === 0 || workspaceNames[i - 1].localeCompare(word) <= 0
@@ -324,10 +366,11 @@ test.describe('User Control', () => {
     await representativePage.switchVotingPower();
     await page.waitForTimeout(500);
 
-    // // after trying to switch power while poll is opened for voting
+    // after trying to switch power while poll is opened for voting
     await expect(page.getByRole('status')).toHaveText(
       'You cannot change the active voter while a Poll is actively voting.'
     );
+    await page.waitForTimeout(500);
     const currentActiveVoterId = await page
       .locator('[data-id="1"]')
       .locator('[data-field="active_voter_cell"]')
@@ -336,7 +379,7 @@ test.describe('User Control', () => {
     expect(previousActiveVoterId).toBe(currentActiveVoterId);
   });
 
-  test('1-2D. Should not be able to edit user profile when polling is open', async ({
+  test('1-2E. Should not be able to edit user profile when polling is open', async ({
     page,
     pollId,
   }) => {
@@ -352,9 +395,10 @@ test.describe('User Control', () => {
     const name = faker.person.fullName();
     const email = name.split(' ')[0] + '@email.com';
     const stake_address = faker.person.jobArea();
+
     await representativePage.updateUserProfile(name, email, stake_address);
 
-    // // after trying to switch power while poll is opened for voting
+    // after trying to switch power while poll is opened for voting
     await expect(page.getByRole('status')).toHaveText(
       'You cannot update user information while a Poll is actively voting.'
     );
@@ -372,27 +416,32 @@ test.describe('User Control', () => {
  */
 
 test.describe('Voting Power', () => {
-  test.beforeEach(async ({ page }) => {
-    const homePage = new HomePage(page);
-    await homePage.goto();
-    await homePage.deleteOpenPollCards();
-  });
+  test.use({ pollType: 'CreatePoll' });
   test('1-3A. Should be able to switch active voting power between delegate and alternate.', async ({
     page,
+    browser,
+    pollId,
   }) => {
+    test.slow();
     const representativePage = new RepresentativesPage(page);
     await representativePage.goto();
+
+    // fetch active voter id before switching active voting power
     const previousActiveVoterId = await page
       .locator('[data-id="1"]')
       .locator('[data-field="active_voter_cell"]')
       .getAttribute('data-testid');
-    await representativePage.switchVotingPower();
 
-    await expect(page.getByText('Active voter updated!')).toBeVisible();
+    // fetch delegate and alternate id of same row
     const representativesIds = await Promise.all([
       representativePage.getRepresentativeId(true),
       representativePage.getRepresentativeId(),
     ]);
+
+    await representativePage.switchVotingPower();
+
+    // fetch active voter id after switching active voting power
+    await expect(page.getByText('Active voter updated!')).toBeVisible();
     const currentActiveVoterId = await page
       .locator('[data-id="1"]')
       .locator('[data-field="active_voter_cell"]')
@@ -402,5 +451,52 @@ test.describe('Voting Power', () => {
       expect.arrayContaining([currentActiveVoterId, previousActiveVoterId])
     );
     expect(currentActiveVoterId).not.toBe(previousActiveVoterId);
+  });
+
+  test('1-3B. Only active voter should be able to vote.', async ({
+    page,
+    browser,
+    pollId,
+  }) => {
+    test.slow();
+
+    // Begin Polling
+    const pollPage = new PollPage(page);
+    await pollPage.goto(pollId);
+    await pollPage.beginVoteBtn.click();
+
+    // Get Active Voter Status
+    const representativePage = new RepresentativesPage(page);
+    await representativePage.goto();
+    const activeVoterRole = await representativePage.getActiveVoterStatus();
+
+    // Delegate and Alternate page
+    const delegatePage = await newDelegate1Page(browser);
+    const alternatePage = await newAlternate1Page(browser);
+
+    // Get Active voter
+    const activeVoter =
+      activeVoterRole === 'Delegate' ? delegatePage : alternatePage;
+    const inactiveVoter =
+      activeVoterRole != 'Delegate' ? delegatePage : alternatePage;
+
+    // Vote from activeVoterPage
+    const voterPage = new PollPage(activeVoter);
+    await voterPage.goto(pollId);
+    await voterPage.voteYesBtn.click();
+    await activeVoter.getByText('Vote recorded').isVisible();
+
+    // Assert vote
+    await expect(activeVoter.getByText('Vote recorded')).toBeVisible();
+
+    const inactiveVoterPage = new PollPage(inactiveVoter);
+    await inactiveVoterPage.goto(pollId);
+
+    // Assert not able to vote
+    await expect(
+      inactiveVoter.getByRole('heading', {
+        name: 'You are not the active voter for your workshop. Only the active voter can vote.',
+      })
+    ).toBeVisible({ timeout: 10_000 });
   });
 });

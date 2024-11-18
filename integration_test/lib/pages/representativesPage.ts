@@ -8,6 +8,12 @@ export default class RepresentativesPage {
   readonly saveUpdatedVotingPowerBtn = this.page.getByTestId(
     'save-active-voter-1'
   );
+  readonly editUserProfileBtn = this.page.getByTestId(
+    'edit-representative-info-138'
+  );
+  readonly saveUserProfileBtn = this.page.getByTestId(
+    'save-representative-info-138'
+  );
 
   constructor(private readonly page: Page) {}
 
@@ -21,31 +27,21 @@ export default class RepresentativesPage {
     stake_address: string
   ): Promise<void> {
     await this.goto();
-    await this.page
-      .getByRole('row')
-      .filter({
-        has: this.page.getByRole('gridcell', {
-          name: 'Editable TestUser',
-        }),
-      })
-      .locator('[data-testid^="edit-representative-info-"]')
-      .click();
-    await this.page
-      .getByRole('textbox')
-      .nth(0)
-      .fill('Editable TestUser' + name);
+    await this.editUserProfileBtn.isVisible();
+    await this.editUserProfileBtn.click();
+    await this.page.getByRole('textbox').nth(0).fill(name);
     await this.page.getByRole('textbox').nth(1).fill(email);
     await this.page.getByRole('textbox').nth(2).fill(stake_address);
-    await this.page
-      .locator('[data-testid^="save-representative-info-"]')
-      .click({ force: true });
+    await this.saveUserProfileBtn.click({ force: true });
   }
 
   async isRepresentativeUpdated(infos: Array<string>): Promise<void> {
     await expect(this.page.getByText(representativeUpdatedToast)).toBeVisible();
+    await this.editUserProfileBtn.isVisible();
     await Promise.all(
       infos.map(
-        async (info) => await expect(this.page.getByText(info)).toBeVisible()
+        async (info) =>
+          await expect(this.page.getByText(info, { exact: true })).toBeVisible()
       )
     );
   }
