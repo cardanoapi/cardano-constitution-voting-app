@@ -130,6 +130,16 @@ const users = [
     wallet_address:
       'stake_test1uz8nudr07gyltqapgzvx9avyxcwp3cxnnlmgfd35px5jfgcq2hezv',
   },
+  {
+    is_convention_organizer: false,
+    is_delegate: false,
+    is_alternate: true,
+    workshop_id: BigInt(6),
+    name: 'Editable TestUser',
+    email: 'editabletest@integration.test',
+    wallet_address:
+      'stake_test1uz8nudr07gyltqapgzvx9avyxcwp3cxnnlmgfd35px8jfgcq2hezp',
+  },
 ];
 
 const workshopInfo = [

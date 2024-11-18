@@ -2,18 +2,6 @@ import { Page, expect } from '@playwright/test';
 
 const representativeUpdatedToast = 'User info updated!';
 export default class RepresentativesPage {
-  readonly updateDelegateBtn = this.page.getByTestId(
-    'edit-representative-info-2'
-  );
-  readonly saveDelegateInfoBtn = this.page.getByTestId(
-    'save-representative-info-2'
-  );
-  readonly updateAlternateBtn = this.page.getByTestId(
-    'edit-representative-info-3'
-  );
-  readonly saveAlternateBtn = this.page.getByTestId(
-    'save-representative-info-3'
-  );
   readonly transferVotingPowerBtn = this.page.getByTestId(
     'edit-active-voter-1'
   );
@@ -32,23 +20,25 @@ export default class RepresentativesPage {
     email: string,
     stake_address: string
   ): Promise<void> {
-    // await this.goto();
-    // await this.page
-    //   .locator('[data-testid^="edit-representative-info-"]')
-    //   .first()
-    //   .click();
-    // await this.page.getByRole('textbox').nth(0).fill(name);
-    // await this.page.getByRole('textbox').nth(1).fill(email);
-    // await this.page
-    //   .locator('[data-testid^="save-representative-info-"]')
-    //   .first()
-    //   .click();
     await this.goto();
-    await this.updateDelegateBtn.click();
-    await this.page.getByRole('textbox').nth(0).fill(name);
+    await this.page
+      .getByRole('row')
+      .filter({
+        has: this.page.getByRole('gridcell', {
+          name: 'Editable TestUser',
+        }),
+      })
+      .locator('[data-testid^="edit-representative-info-"]')
+      .click();
+    await this.page
+      .getByRole('textbox')
+      .nth(0)
+      .fill('Editable TestUser' + name);
     await this.page.getByRole('textbox').nth(1).fill(email);
     await this.page.getByRole('textbox').nth(2).fill(stake_address);
-    await this.saveDelegateInfoBtn.click({ force: true });
+    await this.page
+      .locator('[data-testid^="save-representative-info-"]')
+      .click({ force: true });
   }
 
   async isRepresentativeUpdated(infos: Array<string>): Promise<void> {

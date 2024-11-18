@@ -224,13 +224,13 @@ test.describe('User Control', () => {
     page,
     pollId,
   }) => {
-    const name = faker.person.fullName();
+    const name = faker.person.lastName();
     const email = name.split(' ')[0] + '@email.com';
     const stake_address = faker.person.jobArea();
     const represntativePage = new RepresentativesPage(page);
     await represntativePage.updateUserProfile(name, email, stake_address);
     await represntativePage.isRepresentativeUpdated([
-      name,
+      'Editable TestUser' + name,
       email,
       stake_address,
     ]);
