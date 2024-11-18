@@ -1,15 +1,16 @@
 import { setAllureEpic } from '@helpers/allure';
 import LoginPage from '@pages/loginPage';
 import { test } from '@fixtures/walletExtension';
-import { organizer1Wallet } from '@constants/staticWallets';
+import { organizerWallets } from '@constants/staticWallets';
 import { expect } from '@playwright/test';
 
 test.beforeEach(async () => {
-  await setAllureEpic('5. Wallet connect');
+  await setAllureEpic('4. Wallet connect');
 });
-test.use({ wallet: organizer1Wallet });
 
-test('5-1A. Should connect wallet if stake key is registered', async ({
+test.use({ wallet: organizerWallets[0] });
+
+test('4-1A. Should connect wallet if stake key is registered', async ({
   page,
 }) => {
   const loginPage = new LoginPage(page);
@@ -17,7 +18,7 @@ test('5-1A. Should connect wallet if stake key is registered', async ({
   await loginPage.isLoggedIn();
 });
 
-test('5-1B. Should disconnect Wallet When connected', async ({ page }) => {
+test('4-1B. Should disconnect Wallet When connected', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.login();
 
