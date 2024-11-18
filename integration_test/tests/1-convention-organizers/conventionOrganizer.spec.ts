@@ -1,4 +1,4 @@
-import { organizer1Wallet } from '@constants/staticWallets';
+import { organizerWallets } from '@constants/staticWallets';
 import { setAllureEpic } from '@helpers/allure';
 import { expect } from '@playwright/test';
 import { test } from '@fixtures/poll';
@@ -11,7 +11,10 @@ test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
 });
 
-test.use({ storageState: '.auth/organizer1.json', wallet: organizer1Wallet });
+test.use({
+  storageState: '.auth/organizer1.json',
+  wallet: organizerWallets[0],
+});
 
 /**
  * Description: Convention Organisers can delete a poll, so that it no longer appears on the list of historical polls
@@ -164,6 +167,9 @@ test.describe('Open Close Poll', () => {
 });
 
 test.describe('Create Poll', () => {
+  test.use({
+    pollType: 'CreateAndBeginPoll',
+  });
   /**
    * Description
    * The Convention Voting Tool (CVT) recognises a Convention Organiser (CO)
@@ -206,6 +212,31 @@ test.describe('Create Poll', () => {
     await expect(
       page.getByTestId('poll-page-status-chip').getByText('Pending')
     ).toBeVisible();
+  });
+
+  /**
+   * Description 
+   * As a convention organiser I should not be allowed to open a poll if there is already one currently open. 
+
+   * User Story: 
+   * As a CO I want there to be only one poll open at any given time so as not to confuse the delegates 
+
+   * Acceptance Criteria: 
+   * Given that I am a CO, and there is already one poll open, when I attempt to open another poll I will be prevented from doing so.*
+    
+   * this should be obvious to the user insofar as the button bill be greyed out and unclickable.
+   */
+  test('1-1C. Given connected as CO can create only one poll', async ({
+    page,
+    // poll Id is called only to create poll
+    pollId,
+  }) => {
+    await page.goto('/polls/new');
+
+    await expect(page.getByTestId('create-poll-warning')).toHaveText(
+      /You cannot create a new poll while there are pending or voting polls/
+    );
+    await expect(page.getByTestId('create-poll-button')).toBeDisabled();
   });
 });
 
