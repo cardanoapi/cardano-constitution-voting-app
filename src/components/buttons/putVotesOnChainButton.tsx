@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
@@ -15,6 +14,7 @@ interface Props {
   pollId: string | string[] | undefined;
   isSubmitting: boolean;
   setIsSubmitting: (value: boolean) => void;
+  setIsTxUploading: (value: boolean) => void;
 }
 
 /**
@@ -22,11 +22,11 @@ interface Props {
  * @param pollId - The pollId of the poll to end voting for
  * @param isSubmitting - Whether the button is in a submitting state
  * @param setIsSubmitting - Function to set the submitting state
+ * @param setIsTxUploading - Function to set the transaction submitting state
  * @returns Put votes on-chain Button
  */
 export function PutVotesOnChainButton(props: Props): JSX.Element {
-  const { pollId, isSubmitting, setIsSubmitting } = props;
-  const [txSubmitting, setTxSubmitting] = useState(false);
+  const { pollId, isSubmitting, setIsSubmitting, setIsTxUploading } = props;
 
   const session = useSession();
 
@@ -46,7 +46,7 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
         while (!success) {
           // Post votes on chain
           const txResult = await postVotesOnChain(metadata.metadata);
-          setTxSubmitting(true);
+          setIsTxUploading(true);
           if (txResult) {
             // TODO: Figure out how to handle errors in addTxToPollTransactions and addTxToPollVotes since the data is already on-chain
             success = true;
@@ -70,7 +70,7 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
               break; // TODO: Do we really want to break here?
             }
             await awaitTxConfirm(txResult.submitTxId).then(() =>
-              setTxSubmitting(false),
+              setIsTxUploading(false),
             );
           } else {
             toast.error(
@@ -91,7 +91,7 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
       const response = await getSummaryTxMetadata(pollId);
       if (response.metadata) {
         const txResult = await postVotesOnChain(response.metadata);
-        setTxSubmitting(true);
+        setIsTxUploading(true);
         if (txResult) {
           // TODO: Figure out how to handle errors in addTxToPoll since the data is already on-chain
           summaryTxSuccess = true;
@@ -100,11 +100,9 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
           if (!addTxResponse.success) {
             toast.error(addTxResponse.message);
             break;
-          } else {
-            toast.success('Votes successfully uploaded on-chain');
           }
           await awaitTxConfirm(txResult.submitTxId).then(() =>
-            setTxSubmitting(false),
+            setIsTxUploading(false),
           );
         }
       } else {
@@ -113,13 +111,6 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
       }
     }
     setIsSubmitting(false);
-  }
-
-  let buttonText = 'Upload votes on-chain';
-  if (txSubmitting) {
-    buttonText = 'Submitting transaction...';
-  } else if (isSubmitting) {
-    buttonText = 'Preparing next transaction...';
   }
 
   if (session.data?.user.isCoordinator) {
@@ -131,7 +122,7 @@ export function PutVotesOnChainButton(props: Props): JSX.Element {
           disabled={isSubmitting}
           data-testid="put-votes-onchain-button"
         >
-          {buttonText}
+          Upload votes on-chain
         </Button>
       </>
     );

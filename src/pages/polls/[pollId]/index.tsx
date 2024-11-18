@@ -35,6 +35,7 @@ import { PollResults } from '@/components/polls/pollResults';
 import { PollStatusChip } from '@/components/polls/pollStatusChip';
 import { PollVoteCount } from '@/components/polls/pollVoteCount';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
+import { TxPopup } from '@/components/txPopups/txPopup';
 
 interface Props {
   poll: Poll | null;
@@ -69,6 +70,7 @@ export default function ViewPoll(props: Props): JSX.Element {
   let { poll } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pollResults, setPollResults] = useState(pollResultsSSR);
+  const [isTxUploading, setIsTxUploading] = useState(false);
 
   const session = useSession();
   const router = useRouter();
@@ -93,6 +95,10 @@ export default function ViewPoll(props: Props): JSX.Element {
 
   const updateIsSubmitting = useCallback((value: boolean) => {
     setIsSubmitting(value);
+  }, []);
+
+  const updateIsTxUploading = useCallback((value: boolean) => {
+    setIsTxUploading(value);
   }, []);
 
   const updatePollResults = useCallback(
@@ -169,9 +175,25 @@ export default function ViewPoll(props: Props): JSX.Element {
                 <Box display="flex" flexDirection="column" gap={3}>
                   <Typography variant="h6">{poll.description}</Typography>
                 </Box>
-                {poll.summary_tx_id && (
+                {poll.summary_tx_id && !isTxUploading && (
                   <Box marginTop={3} marginBottom={3}>
                     <ViewTxButton txId={poll.summary_tx_id} />
+                  </Box>
+                )}
+                {isSubmitting && !isTxUploading && (
+                  <Box marginTop={3} marginBottom={3}>
+                    <TxPopup
+                      title="Constructing Next Transaction"
+                      message="Preparing next TX for signing"
+                    />
+                  </Box>
+                )}
+                {isTxUploading && (
+                  <Box marginTop={3} marginBottom={3}>
+                    <TxPopup
+                      title="Transaction Submitting"
+                      message="The next TX will be prepared once this one is confirmed."
+                    />
                   </Box>
                 )}
               </Grid>
@@ -223,6 +245,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                                 pollId={pollId}
                                 isSubmitting={isSubmitting}
                                 setIsSubmitting={updateIsSubmitting}
+                                setIsTxUploading={updateIsTxUploading}
                               />
                             )}
                           <DeletePollButton
