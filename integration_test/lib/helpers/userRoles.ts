@@ -1,7 +1,8 @@
 import {
+  newAlternate1Page,
   newAlternate2Page,
-  newDelegatePage,
-  newOrganizerPage,
+  newDelegate1Page,
+  newOrganizer1Page,
 } from '@helpers/page';
 
 import { Page } from '@playwright/test';
@@ -18,16 +19,16 @@ export function getUserPages(browser, userRole?: UserRole): Promise<Page[]> {
   // setup
   let users: Promise<Page>[] = [];
   if (userRole == 'Delegate') {
-    users.push(newOrganizerPage(browser));
+    users.push(newDelegate1Page(browser));
   } else if (userRole == 'Alternate') {
-    users.push(newOrganizerPage(browser));
+    users.push(newAlternate1Page(browser));
   } else if (userRole == 'Organizer') {
-    users.push(newOrganizerPage(browser));
+    users.push(newOrganizer1Page(browser));
   } else if (userRole == 'All' || userRole == undefined) {
     users = [
-      newOrganizerPage(browser),
-      newAlternate2Page(browser),
-      newDelegatePage(browser),
+      newOrganizer1Page(browser),
+      newAlternate1Page(browser),
+      newDelegate1Page(browser),
       browser.newPage(),
     ];
   }

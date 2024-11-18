@@ -1,16 +1,12 @@
+import {
+  alternateWallets,
+  delegateWallets,
+  organizerWallets,
+} from '@constants/staticWallets';
 import { importWallet } from '@fixtures/importWallet';
 import loadDemosExtension from '@fixtures/loadExtension';
 import { Browser, Page } from '@playwright/test';
 import { StaticWallet } from '@types';
-import {
-  alternate2Wallet,
-  alternate3Wallet,
-  delegate2Wallet,
-  delegate3Wallet,
-  delegate1Wallet,
-  organizer1Wallet,
-  alternate1Wallet,
-} from '@constants/staticWallets';
 
 interface NewPageConfig {
   storageState?: string;
@@ -39,50 +35,51 @@ export async function createNewPageWithWallet(
 
   return newPage;
 }
+
 export async function newOrganizer1Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/organizer1.json',
-    wallet: organizer1Wallet,
+    wallet: organizerWallets[0],
   });
 }
 
 export async function newDelegate1Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/delegate1.json',
-    wallet: delegate1Wallet,
+    wallet: delegateWallets[0],
   });
 }
 
 export async function newAlternate1Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/alternate1.json',
-    wallet: alternate1Wallet,
+    wallet: alternateWallets[0],
   });
 }
 
 export async function newDelegate2Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/delegate2.json',
-    wallet: delegate2Wallet,
+    wallet: delegateWallets[1],
   });
 }
 export async function newAlternate2Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/alternate2.json',
-    wallet: alternate2Wallet,
+    wallet: alternateWallets[1],
   });
 }
 
 export async function newDelegate3Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/delegate3.json',
-    wallet: delegate3Wallet,
+    wallet: delegateWallets[2],
   });
 }
 
 export async function newAlternate3Page(browser) {
   return await createNewPageWithWallet(browser, {
     storageState: '.auth/alternate3.json',
-    wallet: alternate3Wallet,
+    wallet: alternateWallets[2],
   });
 }

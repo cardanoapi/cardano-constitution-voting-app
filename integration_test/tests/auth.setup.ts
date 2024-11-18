@@ -1,48 +1,47 @@
 import {
-  alternate1Wallet,
-  delegate1Wallet,
-  organizer1Wallet,
+  alternateWallets,
+  delegateWallets,
+  organizerWallets,
 } from '@constants/staticWallets';
-import * as wallets from '@constants/staticWallets';
 import { test as setup } from '@fixtures/walletExtension';
 import { setAllureEpic, setAllureStory } from '@helpers/allure';
 import { createAuth } from '@helpers/auth';
 
 const authConfigurations = [
   {
-    wallet: organizer1Wallet,
+    wallet: organizerWallets[0],
     authFile: '.auth/organizer1.json',
-    role: 'Organizer1',
+    name: 'Organizer1',
   },
   {
-    wallet: delegate1Wallet,
+    wallet: delegateWallets[0],
     authFile: '.auth/delegate1.json',
-    role: 'Delegate1',
+    name: 'Delegate1',
   },
   {
-    wallet: alternate1Wallet,
+    wallet: alternateWallets[0],
     authFile: '.auth/alternate1.json',
-    role: 'Alternate1',
+    name: 'Alternate1',
   },
   {
-    wallet: wallets.delegate2Wallet,
+    wallet: delegateWallets[1],
     authFile: '.auth/delegate2.json',
-    role: 'Delegate2',
+    name: 'Delegate2',
   },
   {
-    wallet: wallets.alternate2Wallet,
+    wallet: alternateWallets[1],
     authFile: '.auth/alternate2.json',
-    role: 'Alternate2',
+    name: 'Alternate2',
   },
   {
-    wallet: wallets.delegate3Wallet,
+    wallet: delegateWallets[2],
     authFile: '.auth/delegate3.json',
-    role: 'Delegate3',
+    name: 'Delegate3',
   },
   {
-    wallet: wallets.alternate3Wallet,
+    wallet: alternateWallets[2],
     authFile: '.auth/alternate3.json',
-    role: 'Alternate3',
+    name: 'Alternate3',
   },
 ];
 
@@ -51,8 +50,8 @@ setup.beforeEach(async () => {
   await setAllureStory('Authentication');
 });
 
-authConfigurations.forEach(({ wallet, authFile, role }) => {
-  setup(`Create ${role} auth`, async ({ page, context }) => {
+authConfigurations.forEach(({ wallet, authFile, name }) => {
+  setup(`Create ${name} auth`, async ({ page, context }) => {
     await createAuth({
       page,
       context,
