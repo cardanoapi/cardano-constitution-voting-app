@@ -18,9 +18,10 @@ const switchVotingPowerAndBeginPoll = async (
 ) => {
   const representativePage = new RepresentativesPage(organizerPage);
   await representativePage.goto();
-  const activeUser = await representativePage.getActiveVoterStatus();
+  const activeUser = await representativePage.getActiveVoterStatus(5);
   if (activeUser.toLowerCase() !== user) {
     await representativePage.switchVotingPower(5);
+    await organizerPage.waitForTimeout(10_000);
   }
 
   if (!isPendingPoll) {
@@ -41,23 +42,26 @@ const revertVotingPower = async (
 
   const representativePage = new RepresentativesPage(organizerPage);
   await representativePage.goto();
-  const activeUser = await representativePage.getActiveVoterStatus();
+  const activeUser = await representativePage.getActiveVoterStatus(5);
   if (activeUser.toLowerCase() === 'alternate') {
     await representativePage.switchVotingPower(5);
   }
 };
 
-const userNavigateToPollPage = async (
+const setupUserAndPollPage = async (
   user: string,
   browser: Browser,
   pollId: number
-) => {
+): Promise<{ pollPage: PollPage; userPage: Page }> => {
   const userPage =
     user === 'delegate'
       ? await newDelegatePage(browser, 3)
       : await newAlternatePage(browser, 3);
+
   const pollPage = new PollPage(userPage);
   await pollPage.goto(pollId);
+
+  return { pollPage, userPage };
 };
 
 test.describe('Vote', () => {
@@ -85,8 +89,11 @@ test.describe('Vote', () => {
           currentPollId = pollId;
           organizerPage = await newOrganizerPage(browser, 0);
           await switchVotingPowerAndBeginPoll(user, organizerPage, pollId);
-
-          await userNavigateToPollPage(user, browser, pollId);
+          ({ pollPage, userPage } = await setupUserAndPollPage(
+            user,
+            browser,
+            pollId
+          ));
         });
 
         /**
@@ -115,7 +122,8 @@ test.describe('Vote', () => {
           //  yes vote
           await pollPage.voteYesBtn.click();
           await expect(userPage.getByTestId('poll-page-vote-count')).toHaveText(
-            '1 vote'
+            '1 vote',
+            { timeout: 10_000 }
           );
 
           // change vote
@@ -201,7 +209,11 @@ test.describe('Vote', () => {
             true
           );
 
-          await userNavigateToPollPage(user, browser, pollId);
+          ({ pollPage, userPage } = await setupUserAndPollPage(
+            user,
+            browser,
+            pollId
+          ));
         });
 
         /**
@@ -217,7 +229,7 @@ test.describe('Vote', () => {
         test(`${index + 2}-1B. Given active ${user} and the poll is pending, voting should be disallowed`, async () => {
           await expect(
             userPage.getByTestId('poll-page-status-chip').getByText('Pending')
-          ).toBeVisible();
+          ).toBeVisible({ timeout: 10_000 });
           await expect(pollPage.voteYesBtn).not.toBeVisible();
           await expect(pollPage.voteNoBtn).not.toBeVisible();
           await expect(pollPage.voteAbstainBtn).not.toBeVisible();
