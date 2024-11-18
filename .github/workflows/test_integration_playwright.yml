@@ -5,6 +5,14 @@ on:
     branches:
       - test
   workflow_dispatch:
+    inputs:
+      deployment:
+        required: true
+        type: choice
+        default: "ccv.cardanoapi.io"
+        options:
+          - "ccv.cardanoapi.io"
+          
   workflow_run: 
     workflows: 
       - Build and deploy CCVA
