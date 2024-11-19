@@ -257,7 +257,7 @@ test.describe('Create Poll', () => {
     
    * this should be obvious to the user insofar as the button bill be greyed out and unclickable.
    */
-  test('1-1C. Given connected as CO can create only one poll', async ({
+  test('1-1G. Given connected as CO can create only one poll', async ({
     page,
     // poll Id is called only to create poll
     pollId,

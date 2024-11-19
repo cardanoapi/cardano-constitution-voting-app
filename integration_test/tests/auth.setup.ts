@@ -4,8 +4,9 @@ import {
   organizerWallets,
 } from '@constants/staticWallets';
 import { test as setup } from '@fixtures/walletExtension';
-import { setAllureEpic, setAllureStory } from '@helpers/allure';
+import { setAllureStory } from '@helpers/allure';
 import { createAuth } from '@helpers/auth';
+import { allure } from 'allure-playwright';
 
 const authConfigurations = [
   {
@@ -66,7 +67,7 @@ const authConfigurations = [
 ];
 
 setup.beforeEach(async () => {
-  await setAllureEpic('Setup');
+  await allure.epic('Setup');
   await setAllureStory('Authentication');
 });
 

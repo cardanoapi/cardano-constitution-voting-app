@@ -6,16 +6,13 @@ export const setAllureEpic = async (groupName: string): Promise<void> => {
   const browser = await chromium.launch();
   const page = await browser.newPage();
   if (isMobile(page)) {
-    await allure.epic('5. Miscellaneous');
-    await allure.feature('5A. Should be accessible from mobile');
-    await allure.story(groupName);
+    await allure.epic('Mobile (Pixel 5)');
   } else if (isTablet(page)) {
-    await allure.epic('5. Miscellaneous');
-    await allure.feature('5B. Should be accessible from tablet');
-    await allure.story(groupName);
+    await allure.epic('Tablet (Galaxy Tab S4)');
   } else {
-    await allure.epic(groupName);
+    await allure.epic('Desktop Chrome');
   }
+  await allure.feature(groupName);
 };
 
 export const setAllureStory = async (groupName: string): Promise<void> => {
