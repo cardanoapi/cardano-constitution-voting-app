@@ -14,8 +14,6 @@ import { getPollVote } from '@/lib/helpers/getPollVote';
 interface Props {
   pollName: string;
   pollId: string;
-  disabled: boolean;
-  setDisabled: (value: boolean) => void;
   isActiveVoter: boolean;
 }
 
@@ -23,14 +21,13 @@ interface Props {
  * Yes, No, Abstain buttons to vote on a poll
  * @param pollName - The name of the poll
  * @param pollId - The ID of the poll
- * @param disabled - Whether the buttons are disabled
- * @param setDisabled - Function to set the disabled state
  * @param isActiveVoter - Whether the user is the active voter
  * @returns Vote on Poll Buttons
  */
 export function VoteOnPollButtons(props: Props): JSX.Element {
-  const { pollName, pollId, disabled, setDisabled, isActiveVoter } = props;
+  const { pollName, pollId, isActiveVoter } = props;
   const [vote, setVote] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   const session = useSession();
   const theme = useTheme();

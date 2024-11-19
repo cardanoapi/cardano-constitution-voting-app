@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import toast from 'react-hot-toast';
 
@@ -5,8 +6,6 @@ import { startVoting } from '@/lib/helpers/startVoting';
 
 interface Props {
   pollId: string | string[] | undefined;
-  isSubmitting: boolean;
-  setIsSubmitting: (value: boolean) => void;
 }
 
 /**
@@ -14,7 +13,8 @@ interface Props {
  * @returns Begin Voting Button
  */
 export function BeginVoteButton(props: Props): JSX.Element {
-  const { pollId, isSubmitting, setIsSubmitting } = props;
+  const { pollId } = props;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleBeginVote(): Promise<void> {
     if (typeof pollId !== 'string') {
