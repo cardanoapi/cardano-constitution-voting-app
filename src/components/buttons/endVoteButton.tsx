@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
@@ -7,8 +8,6 @@ import { getPollResults } from '@/lib/helpers/getPollResults';
 
 interface Props {
   pollId: string | string[] | undefined;
-  isSubmitting: boolean;
-  setIsSubmitting: (value: boolean) => void;
   updatePollResults: (newPollResults: {
     yes: {
       name: string;
@@ -28,13 +27,12 @@ interface Props {
 /**
  * A button for workshop coordinators to end voting for a poll
  * @param pollId - The pollId of the poll to end voting for
- * @param isSubmitting - Whether the button is in a submitting state
- * @param setIsSubmitting - Function to set the submitting state
  * @param updatePollResults - Function to update the poll results after voting ends
  * @returns End Voting Button
  */
 export function EndVoteButton(props: Props): JSX.Element {
-  const { pollId, isSubmitting, setIsSubmitting, updatePollResults } = props;
+  const { pollId, updatePollResults } = props;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const session = useSession();
 

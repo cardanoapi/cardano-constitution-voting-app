@@ -36,6 +36,9 @@ export async function postVotesOnChain(
         },
       },
     );
+    // Logging the TX hash just in case there is an issue saving the TX hash to the DB.
+    // We can at least look it up in the logs and then manually add it.
+    console.log('txHash', txHash);
     return txHash;
   } catch (error) {
     Sentry.captureException(error);

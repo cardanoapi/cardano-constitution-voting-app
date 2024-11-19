@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { DeleteRounded } from '@mui/icons-material';
 import Button from '@mui/material/Button';
@@ -9,16 +10,16 @@ import { archivePoll } from '@/lib/helpers/archivePoll';
 
 interface Props {
   pollId: string | string[] | undefined;
-  isSubmitting: boolean;
-  setIsSubmitting: (value: boolean) => void;
 }
 
 /**
- * A button for workshop coordinators to open voting for a poll
- * @returns Begin Voting Button
+ * A button for workshop coordinators to delete a poll
+ * @param props - Poll ID
+ * @returns Delete poll Button
  */
 export function DeletePollButton(props: Props): JSX.Element {
-  const { pollId, isSubmitting, setIsSubmitting } = props;
+  const { pollId } = props;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const session = useSession();
   const router = useRouter();
