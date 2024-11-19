@@ -34,8 +34,6 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: environments.baseUrl,
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
 
@@ -66,6 +64,17 @@ export default defineConfig({
       name: 'mobile',
       testMatch: '**/*independent.spec.ts',
       use: { ...devices['Pixel 5'] },
+    },
+    {
+      name: 'loggedin (tablet)',
+      use: { ...devices['Galaxy Tab S4'] },
+      testIgnore: ['**/*.independent.spec.ts'],
+      dependencies: environments.ci ? ['auth setup'] : [],
+    },
+    {
+      name: 'tablet',
+      testMatch: '**/*independent.spec.ts',
+      use: { ...devices['Galaxy Tab S4'] },
     },
 
     /* Test against mobile viewports. */
