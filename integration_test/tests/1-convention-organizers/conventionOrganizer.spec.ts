@@ -6,12 +6,7 @@ import RepresentativesPage from '@pages/representativesPage';
 import HomePage from '@pages/homePage';
 import { faker } from '@faker-js/faker';
 import PollPage from '@pages/pollPage';
-import {
-  newAlternate1Page,
-  newAlternatePage,
-  newDelegate1Page,
-  newDelegatePage,
-} from '@helpers/page';
+import { newAlternatePage, newDelegatePage } from '@helpers/page';
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -309,7 +304,16 @@ test.describe('User Control', () => {
     ]);
   });
 
-  test('1-2B. Should have corresponding workspace delegate and alternate in a same row', async ({
+  /**
+   * Description: The table displaying delegates and workshops should follow a default sorting methodology so that it is easy for users to see what is included.
+   *
+   * User Story: As a CO, when I look at the table of delegates and alternates I will see that they are listed in a standardised way so that it is easy to navigate the information.
+   *
+   * Acceptance Criteria: Given that I am a CO, when I look at the list of delegates then I see that:
+   * - they are grouped by workshop with the delegates in the row above the alternate from the same workshop.
+   * - they are ordered in alphabetical order by country and city of workshop
+   */
+  test('1-2B-1. Should have corresponding workspace delegate and alternate in a same row', async ({
     page,
   }) => {
     await page.goto('/');
@@ -331,7 +335,7 @@ test.describe('User Control', () => {
     expect(alternateList).toContain(alternate);
   });
 
-  test('1-2C. Should have workspace_name ordered alphabetically', async ({
+  test('1-2B-2. Should have workspace_name ordered alphabetically', async ({
     page,
   }) => {
     const workspaceNames = [];
@@ -354,7 +358,15 @@ test.describe('User Control', () => {
     );
   });
 
-  test('1-2D. Should not be able to switch active voting power between delegate and alternate when polling is open', async ({
+  /**
+   *  Description: Convention Organisers should not be able to edit the information of users or switch who the eligible voter is whilst a poll is open.
+   *
+   * User Story: As a convention organiser I do not want to undermine the perceived legitimacy of the poll by altering the conditions of the vote midway through.
+   *
+   * Acceptance Criteria: Given that I am a CO on the user management page, when a poll is opened, then I can no longer edit any of the details or permissions for alternates or delegates.
+   */
+
+  test('1-2C-1. Should not be able to switch active voting power between delegate and alternate when polling is open', async ({
     page,
     pollId,
   }) => {
@@ -388,7 +400,7 @@ test.describe('User Control', () => {
     expect(previousActiveVoterId).toBe(currentActiveVoterId);
   });
 
-  test('1-2E. Should not be able to edit user profile when polling is open', async ({
+  test('1-2C-2. Should not be able to edit user profile when polling is open', async ({
     page,
     pollId,
   }) => {
@@ -416,6 +428,50 @@ test.describe('User Control', () => {
     ).toBeVisible();
     await expect(page.getByText(name)).not.toBeVisible();
   });
+
+  /**
+   * Description: COs can see who has voted in a poll and how they have voted.
+
+   * User Story: As a CO I want to be able to see who has voted and how they have voted so that I can check that the stated voting intention of the voter matches their actual vote.
+
+   * Acceptance Criteria: Given that I am on the page of a poll, when a voter votes in the poll, then I can see it.
+   */
+
+  test('1-2D. COs can see who has voted in a poll and how they have voted', async ({
+    page,
+    pollId,
+    browser,
+  }) => {
+    test.slow();
+
+    // Start Poll
+    const organizerPollPage = new PollPage(page);
+    await organizerPollPage.goto(pollId);
+    await organizerPollPage.beginVoteBtn.click();
+
+    // Delegate Page
+    const delegatePage = await newDelegatePage(browser, 0);
+    const delegatePollPage = new PollPage(delegatePage);
+    await delegatePollPage.goto(pollId);
+
+    // Vote from delegate
+    await delegatePollPage.voteYesBtn.click();
+    await delegatePage
+      .getByText('Vote recorded')
+      .isVisible({ timeout: 10_000 });
+
+    // Assert number of Yes Votes
+    await expect(page.getByText('YES')).toBeVisible({ timeout: 10_000 });
+    const votes = await page
+      .getByRole('row')
+      .filter({ has: page.locator('[data-field="vote"]') })
+      .locator('[data-field="vote"]')
+      .allInnerTexts();
+    const numOfYesVotes = votes.filter(
+      (v) => v === 'YES' || v === 'NO' || v === 'ABSTAIN'
+    ).length;
+    expect(numOfYesVotes).toBe(1);
+  });
 });
 
 /**
@@ -428,9 +484,8 @@ test.describe('User Control', () => {
 
 test.describe('Voting Power', () => {
   test.use({ pollType: 'CreatePoll' });
-  test('1-3A. Should be able to switch active voting power between delegate and alternate.', async ({
+  test('1-3A-1. Should be able to switch active voting power between delegate and alternate.', async ({
     page,
-    browser,
     pollId,
   }) => {
     test.slow();
@@ -452,7 +507,9 @@ test.describe('Voting Power', () => {
     await representativePage.switchVotingPower();
 
     // fetch active voter id after switching active voting power
-    await expect(page.getByText('Active voter updated!')).toBeVisible();
+    await expect(page.getByText('Active voter updated!')).toBeVisible({
+      timeout: 10_000,
+    });
     const currentActiveVoterId = await page
       .locator('[data-id="1"]')
       .locator('[data-field="active_voter_cell"]')
@@ -464,7 +521,7 @@ test.describe('Voting Power', () => {
     expect(currentActiveVoterId).not.toBe(previousActiveVoterId);
   });
 
-  test('1-3B. Only active voter should be able to vote.', async ({
+  test('1-3A-2. Only active voter should be able to vote.', async ({
     page,
     browser,
     pollId,
@@ -486,33 +543,33 @@ test.describe('Voting Power', () => {
     const alternatePage = await newAlternatePage(browser, 4);
 
     // Get Active voter
-    const activeVoter =
+    const activeVoterPage =
       activeVoterRole === 'Delegate' ? delegatePage : alternatePage;
-    const inactiveVoter =
+    const inactiveVoterPage =
       activeVoterRole != 'Delegate' ? delegatePage : alternatePage;
 
     // Vote from activeVoterPage
-    const voterPage = new PollPage(activeVoter);
-    await voterPage.goto(pollId);
-    await voterPage.voteYesBtn.click();
-    await activeVoter.getByText('Vote recorded').isVisible();
+    const voterPollPage = new PollPage(activeVoterPage);
+    await voterPollPage.goto(pollId);
+    await voterPollPage.voteYesBtn.click();
+    await activeVoterPage.getByText('Vote recorded').isVisible();
 
     // Assert vote
-    await expect(activeVoter.getByText('Vote recorded')).toBeVisible({
+    await expect(activeVoterPage.getByText('Vote recorded')).toBeVisible({
       timeout: 5_000,
     });
 
-    const inactiveVoterPage = new PollPage(inactiveVoter);
-    await inactiveVoterPage.goto(pollId);
+    const inactiveVoterPollPage = new PollPage(inactiveVoterPage);
+    await inactiveVoterPollPage.goto(pollId);
 
     // Assert not able to vote
-    await inactiveVoter
+    await inactiveVoterPage
       .getByRole('heading', {
         name: 'You are not the active voter for your workshop. Only the active voter can vote.',
       })
       .isVisible();
     await expect(
-      inactiveVoter.getByRole('heading', {
+      inactiveVoterPage.getByRole('heading', {
         name: 'You are not the active voter for your workshop. Only the active voter can vote.',
       })
     ).toBeVisible({ timeout: 10_000 });
