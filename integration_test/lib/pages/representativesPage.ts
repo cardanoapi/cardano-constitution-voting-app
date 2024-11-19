@@ -53,10 +53,13 @@ export default class RepresentativesPage {
     await this.goto();
     await this.page.getByTestId(`edit-active-voter-${workshopId}`).click();
     const currentActiveVoter = await this.page
+      .locator(`[data-id="${workshopId}"]`)
       .getByRole('combobox')
-      .nth(1)
       .innerText();
-    await this.page.getByRole('combobox').nth(1).click();
+    await this.page
+      .locator(`[data-id="${workshopId}"]`)
+      .getByRole('combobox')
+      .click();
     await this.page
       .getByRole('option', {
         name: currentActiveVoter === 'Delegate' ? 'Alternate' : 'Delegate',
@@ -69,7 +72,7 @@ export default class RepresentativesPage {
     await expect(this.page.getByRole('row').first()).toBeVisible();
     const activeVoterRole = await this.getActiveVoterStatus();
     await this.page
-      .locator('[data-id="${workshopId}"]')
+      .locator(`[data-id="${workshopId}"]`)
       .filter({ has: this.page.getByTestId(`edit-active-voter-${workshopId}`) })
       .locator(`[data-testid^="${activeVoterRole.toLowerCase()}-name-"]`)
       .click({ force: true });
