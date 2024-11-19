@@ -6,6 +6,7 @@
     "test": "npx playwright test",
     "format": "prettier . --write",
     "genwallet": "ts-node ./cli/gen-wallet.ts",
+    "verify:csv": "ts-node ./cli/validate-sig.ts",
     "allure:generate": "npx allure generate ./allure-results --clean",
     "allure:open": "npx allure open ./allure-report",
     "allure:serve": "npx allure serve"
@@ -24,7 +25,7 @@
   "dependencies": {
     "@cardanoapi/cardano-test-wallet": "^2.1.1",
     "@faker-js/faker": "^9.2.0",
-    "@noble/curves": "^1.6.0",
-    "libcardano": "^1.4.4"
+    "csv-parse": "^5.5.6",
+    "libcardano": "^1.4.6"
   }
 }
