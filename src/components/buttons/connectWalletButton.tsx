@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { walletOptions } from '@/constants/walletOptions';
+import { useWalletContext } from '@/context/WalletContext';
 import CircleRounded from '@mui/icons-material/CircleRounded';
 import PersonRounded from '@mui/icons-material/PersonRounded';
 import { useTheme } from '@mui/material';
@@ -28,6 +29,7 @@ export function ConnectWalletButton(): JSX.Element {
 
   const session = useSession();
   const theme = useTheme();
+  const { updateWallet } = useWalletContext();
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorEl(event.currentTarget);
@@ -43,7 +45,7 @@ export function ConnectWalletButton(): JSX.Element {
   const wallets = useMemo(() => {
     async function connect(walletName: string): Promise<void> {
       setConnecting(true);
-      await connectWallet(walletName);
+      await connectWallet(walletName, updateWallet);
       setConnecting(false);
       handleClose();
     }
@@ -146,7 +148,15 @@ export function ConnectWalletButton(): JSX.Element {
         )}
       </Menu>
     );
-  }, [anchorEl, open, connecting, session]);
+  }, [
+    anchorEl,
+    open,
+    connecting,
+    session,
+    theme.palette.success.main,
+    user,
+    updateWallet,
+  ]);
 
   // Lookup user information from session
   useEffect(() => {
@@ -163,7 +173,7 @@ export function ConnectWalletButton(): JSX.Element {
       }
     }
     fetchUserData();
-  }, [session.status]);
+  }, [session.status, session.data?.user.id]);
 
   return (
     <Box display="flex" flexDirection="row" gap={1} alignItems="center">
