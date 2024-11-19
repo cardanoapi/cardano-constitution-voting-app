@@ -1,9 +1,6 @@
 name: Integration Test [Playwright]
 
 on:
-  push:
-    branches:
-      - test
   workflow_dispatch:
     inputs:
       deployment:
