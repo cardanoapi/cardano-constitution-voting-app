@@ -462,15 +462,15 @@ test.describe('User Control', () => {
 
     // Assert number of Yes Votes
     await expect(page.getByText('YES')).toBeVisible({ timeout: 10_000 });
-    const votes = await page
+    const voterRow = await page
       .getByRole('row')
       .filter({ has: page.locator('[data-field="vote"]') })
-      .locator('[data-field="vote"]')
+      .filter({ has: page.getByText('YES', { exact: true }) })
       .allInnerTexts();
-    const numOfYesVotes = votes.filter(
-      (v) => v === 'YES' || v === 'NO' || v === 'ABSTAIN'
-    ).length;
-    expect(numOfYesVotes).toBe(1);
+    const [workshopName, voterName, voteType] = voterRow[0].split('\n\n');
+    expect(workshopName).toBe('Workshop 02');
+    expect(voterName).toBe('Test Delegate 02');
+    expect(voteType).toBe('YES');
   });
 });
 
