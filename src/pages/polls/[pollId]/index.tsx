@@ -23,6 +23,7 @@ import { representativesDto } from '@/data/representativesDto';
 import { workshopsDto } from '@/data/workshopsDto';
 import { getPoll } from '@/lib/helpers/getPoll';
 import { getPollResults } from '@/lib/helpers/getPollResults';
+import { useCheckAddressChange } from '@/hooks/useCheckAddressChange';
 import { BeginVoteButton } from '@/components/buttons/beginVoteButton';
 import { DeletePollButton } from '@/components/buttons/deletePollButton';
 import { EndVoteButton } from '@/components/buttons/endVoteButton';
@@ -72,6 +73,7 @@ export default function ViewPoll(props: Props): JSX.Element {
   const [pollResults, setPollResults] = useState(pollResultsSSR);
   const [isTxUploading, setIsTxUploading] = useState(false);
 
+  useCheckAddressChange();
   const session = useSession();
   const router = useRouter();
   const { pollId } = router.query;

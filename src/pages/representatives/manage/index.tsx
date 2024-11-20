@@ -6,10 +6,13 @@ import Box from '@mui/material/Box';
 import { getServerSession } from 'next-auth';
 
 import { checkIfCO } from '@/lib/checkIfCO';
+import { useCheckAddressChange } from '@/hooks/useCheckAddressChange';
 import { ManageActivePowerTable } from '@/components/coordinator/manageActivePowerTable';
 import { ManageRepresentativesTable } from '@/components/coordinator/manageRepresentativesTable';
 
 export default function ManageRepresentatives(): JSX.Element {
+  useCheckAddressChange();
+
   return (
     <>
       <Head>

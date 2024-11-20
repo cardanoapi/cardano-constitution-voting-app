@@ -9,6 +9,7 @@ import { paths } from '@/paths';
 import { pollsDto } from '@/data/pollsDto';
 import { representativesDto } from '@/data/representativesDto';
 import { workshopsDto } from '@/data/workshopsDto';
+import { useCheckAddressChange } from '@/hooks/useCheckAddressChange';
 import { ConnectWalletButton } from '@/components/buttons/connectWalletButton';
 import { PollList } from '@/components/polls/pollList';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
@@ -22,6 +23,7 @@ interface Props {
 export default function Home(props: Props): JSX.Element {
   const { polls, representatives, workshops } = props;
   const session = useSession();
+  useCheckAddressChange();
 
   return (
     <>

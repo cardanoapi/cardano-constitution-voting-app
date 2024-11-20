@@ -1,10 +1,13 @@
-import { connectWallet as connectWalletClarity } from '@claritydao/clarity-backend';
+import {
+  connectWallet as connectWalletClarity,
+  type Wallet,
+} from '@claritydao/clarity-backend';
 import { Typography } from '@mui/material';
 import * as Sentry from '@sentry/nextjs';
-import { bech32 } from 'bech32';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
+import { deriveStakeAddressFromRewardAddress } from '@/lib/deriveStakeAddressFromRewardAddress';
 import { getChallenge } from '@/lib/helpers/getChallenge';
 
 /**
@@ -13,15 +16,16 @@ import { getChallenge } from '@/lib/helpers/getChallenge';
  * calls the .enable() function on the wallet provider. Once the wallet is connected, it retrieves
  * the user's stake address and signs them in using the next-auth signIn function.
  * @param walletName - Name of the wallet to connect (ex: eternl, nami, etc)
+ * @param updateWallet - Function to update the wallet context
  * @returns boolean - True if the wallet was successfully signed-in, false otherwise
  */
-export async function connectWallet(walletName: string): Promise<boolean> {
+export async function connectWallet(
+  walletName: string,
+  updateWallet: (wallet: Wallet) => void,
+): Promise<boolean> {
   try {
     const wallet = await connectWalletClarity(walletName);
-    // @ts-expect-error getRewardAddresses is actually a proper function
-    const stakeAddressHex = (await wallet.getRewardAddresses())[0];
-    const bytes = Buffer.from(stakeAddressHex, 'hex');
-    const words = bech32.toWords(bytes);
+    updateWallet(wallet);
     const timestamp = new Date().toLocaleString();
     const message = `Sign this message to verify wallet ownership.\nTimestamp: ${timestamp}`;
     const messageHex = Buffer.from(message).toString('hex');
@@ -36,12 +40,8 @@ export async function connectWallet(walletName: string): Promise<boolean> {
       return false;
     }
 
-    let stakeAddress;
-    if (process.env.NEXT_PUBLIC_NETWORK === 'mainnet') {
-      stakeAddress = bech32.encode('stake', words);
-    } else {
-      stakeAddress = bech32.encode('stake_test', words);
-    }
+    const { stakeAddress, stakeAddressHex } =
+      await deriveStakeAddressFromRewardAddress(wallet);
 
     // @ts-expect-error getNetworkId is actually a proper function
     const signature = await wallet.signData(stakeAddressHex, messageHex);
