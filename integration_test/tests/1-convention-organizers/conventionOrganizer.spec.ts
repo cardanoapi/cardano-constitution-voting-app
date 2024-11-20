@@ -557,11 +557,6 @@ test.describe('Voting Power', () => {
     await inactiveVoterPollPage.goto(pollId);
 
     // Assert not able to vote
-    await inactiveVoterPage
-      .getByRole('heading', {
-        name: 'You are not the active voter for your workshop. Only the active voter can vote.',
-      })
-      .isVisible();
     await expect(
       inactiveVoterPage.getByRole('heading', {
         name: 'You are not the active voter for your workshop. Only the active voter can vote.',

@@ -5,6 +5,8 @@ import { forEachUser, getUserPages } from '@helpers/userRoles';
 import path = require('path');
 import fs = require('fs');
 import { getCSVResults } from '@helpers/file';
+import PollPage from '@pages/pollPage';
+import { newDelegatePage } from '@helpers/page';
 
 test.beforeEach(async () => {
   await setAllureEpic('0. All Users');
@@ -68,7 +70,51 @@ test.describe('Polls', () => {
       expect(['Concluded', 'Pending', 'Voting']).toContain(statusText);
     });
   });
+
+  /**
+   * Description: All user types can see how many votes a poll has
+   *
+   * User Story: As any user, I want to see how many people have voted in a poll, so that I know whether the poll is near its conclusion
+   *
+   * Acceptance Criteria: Given that I am on the page of an open poll, When a user votes, I can see the counter increase by 1
+   *
+   */
+
+  test('0-1C. All user types can see how many votes a poll has', async ({
+    pollId,
+    browser,
+  }) => {
+    test.slow();
+    const pages = await getUserPages(browser);
+    await Promise.all(
+      pages.map(async (userPage) => {
+        const pollPage = new PollPage(userPage);
+        await pollPage.goto(pollId);
+        const votes = await userPage
+          .getByTestId('poll-page-vote-count')
+          .innerText();
+        expect(votes).toEqual('0 votes');
+      })
+    );
+
+    const delegatePage = await newDelegatePage(browser, 2);
+    const delegatePollPage = new PollPage(delegatePage);
+    await delegatePollPage.goto(pollId);
+
+    await delegatePollPage.voteYesBtn.click();
+    await Promise.all(
+      pages.map(async (userPage) => {
+        const pollPage = new PollPage(userPage);
+        await pollPage.goto(pollId);
+        const votes = await userPage
+          .getByTestId('poll-page-vote-count')
+          .innerText();
+        expect(votes).toEqual('1 vote');
+      })
+    );
+  });
 });
+
 test.describe('Polls', () => {
   test.use({
     pollType: 'VotedPoll',
@@ -243,11 +289,7 @@ test.describe('User profile', () => {
 test.describe('CSV File', () => {
   test.use({ pollType: 'VotedPoll' });
 
-  test('0-3A. Can download CSV of voting history', async ({
-    page,
-    pollId,
-    browser,
-  }) => {
+  test('0-3A. Can download CSV of voting history', async ({ browser }) => {
     test.slow();
     const pages = await getUserPages(browser);
     await Promise.all(
