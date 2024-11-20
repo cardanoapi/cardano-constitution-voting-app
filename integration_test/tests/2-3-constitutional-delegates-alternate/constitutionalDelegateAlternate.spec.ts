@@ -165,7 +165,6 @@ test.describe('Vote', () => {
          */
 
         test(`${index + 2}-1E: Active ${user} should be able to vote Yes, No, or Abstain on a poll`, async () => {
-
           // yes vote
           await pollPage.voteYesBtn.click();
           await expect(userPage.getByTestId('vote-status')).toHaveText('YES');
@@ -234,6 +233,61 @@ test.describe('Vote', () => {
           await expect(pollPage.voteNoBtn).not.toBeVisible();
           await expect(pollPage.voteAbstainBtn).not.toBeVisible();
         });
+      });
+    });
+  });
+});
+test.describe('Representative Status', () => {
+  const users = ['delegate', 'alternate'];
+  users.forEach((user, index) => {
+    test.describe('Representative Status', () => {
+      test.beforeEach(async () => {
+        await setAllureEpic(
+          `${index + 2}. Constitutional ${upperCaseFirstLetter(user)}`
+        );
+      });
+
+      /**
+       * Description: Delegates and Voters can see whether or not they have been assigned voting rights
+       *
+       * User Story: As a delegate or alternate, I want to be able to see whether I am able to vote
+       *
+       * Acceptance Criteria:
+       *
+       */
+
+      test(`${index + 2}-1B. Once login ${user} should be able to know their voting right status`, async ({
+        browser,
+      }) => {
+        const delegatePage = await newDelegatePage(browser, 3);
+        const alternatePage = await newAlternatePage(browser, 3);
+        const pages = user === 'delegate' ? [delegatePage] : [alternatePage];
+        await Promise.all(
+          pages.map(async (page) => {
+            await page.goto('/');
+            await expect(
+              page.locator('[data-testid^="active-voter-name-"]').first()
+            ).toBeVisible();
+            const activeVoter = (
+              await page
+                .locator('[data-testid^="active-voter-name-"]')
+                .allInnerTexts()
+            )[4];
+            const delegateName = (
+              await page
+                .locator('[data-testid^="delegate-name-"]')
+                .allInnerTexts()
+            )[4];
+            const alternateName = (
+              await page
+                .locator('[data-testid^="alternate-name-"]')
+                .allInnerTexts()
+            )[4];
+            console.log(alternateName, delegateName, activeVoter);
+            expect(activeVoter).toEqual(delegateName);
+            expect(activeVoter).not.toEqual(alternateName);
+          })
+        );
       });
     });
   });
