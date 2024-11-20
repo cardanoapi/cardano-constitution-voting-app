@@ -9,6 +9,20 @@ export async function importWallet(
   await page.addInitScript((wallet) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
-    window.cardanoTestWallet.wallet = wallet;
+    window.cardanoTestWallet= {wallet: wallet}
+  }, wallet);
+}
+
+
+export async function injectWalletExtension(
+  page: Page,
+  wallet: StaticWallet | CardanoTestWalletJson
+): Promise<void> {
+  await page.addInitScript((wallet) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    window.cardanoTestWallet= {wallet: wallet}
+    //@ts-ignore
+
   }, wallet);
 }

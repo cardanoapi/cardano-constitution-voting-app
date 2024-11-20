@@ -15,7 +15,9 @@ export default class LoginPage {
     await this.goto();
 
     await this.connectWalletBtn.first().click();
-    await this.eternlWalletBtn.click({ force: true });
+    await this.eternlWalletBtn.click({ force: false });
+    await expect(this.page.getByText("Welcome")).toBeVisible()
+
   }
 
   async logout(): Promise<void> {

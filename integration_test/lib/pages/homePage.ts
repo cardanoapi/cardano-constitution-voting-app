@@ -61,11 +61,13 @@ export default class HomePage {
     }
   }
 
-  async deleteOpenPollCards(): Promise<void> {
+  async deleteOpenPollCards(): Promise<boolean> {
     const openPollCard = await this.getOpenPollCard();
     if (openPollCard) {
       await openPollCard.click();
       await this.page.getByTestId('delete-poll-button').click();
+      return true
     }
+    return false
   }
 }
