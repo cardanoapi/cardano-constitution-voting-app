@@ -2,6 +2,9 @@ import { setAllureEpic } from '@helpers/allure';
 import { expect, Locator, Page } from '@playwright/test';
 import { test } from '@fixtures/poll';
 import { forEachUser, getUserPages } from '@helpers/userRoles';
+import path = require('path');
+import fs = require('fs');
+import { getCSVResults } from '@helpers/file';
 
 test.beforeEach(async () => {
   await setAllureEpic('0. All Users');
@@ -183,7 +186,7 @@ test.describe('User profile', () => {
    * Acceptance Criteria 2: Given that I am on the results page of a closed poll, when I press on the tile of a given voter, then I am taken to their profile page and can see their voting record
    */
 
-  test('0-2A-1. Can navigate to user profile from delegate/alternate listing page', async ({
+  test('0-2A-2. Can navigate to user profile from delegate/alternate listing page', async ({
     page,
   }) => {
     await page.goto('/');
@@ -206,7 +209,7 @@ test.describe('User profile', () => {
     // should navigate to /representatives/xx
   });
 
-  test('0-2A-1. Can navigate to user profile from voter view in poll results page', async ({
+  test('0-2A-3. Can navigate to user profile from voter view in poll results page', async ({
     page,
     pollId,
   }) => {
@@ -225,5 +228,60 @@ test.describe('User profile', () => {
     await buttons[0].click();
 
     await page.waitForURL(/\/representatives\/\d+$/);
+  });
+});
+
+/**
+ * Description: All the results of voting, information about the voter, and how they voted should be downloadable in csv format at any time.
+ *
+ * User Story: As an Obsever I want to download the results in CSV format so that I can audit them
+ *
+ * Acceptance Criteria: Given that I am on the page of a delegate or alternate, when I click "Download Votes" button then a CSV of my voting history is downloaded to my device.
+ *
+ */
+
+test.describe('CSV File', () => {
+  test.use({ pollType: 'VotedPoll' });
+
+  test('0-3A. Can download CSV of voting history', async ({
+    page,
+    pollId,
+    browser,
+  }) => {
+    test.slow();
+    const pages = await getUserPages(browser);
+    await Promise.all(
+      pages.map(async (page, index) => {
+        await page.goto('/representatives/13');
+        // Trigger the download
+        const [download] = await Promise.all([
+          page.waitForEvent('download'), // Wait for the download event
+          await expect(page.getByTestId('download-user-votes-btn')).toBeVisible(
+            { timeout: 10_000 }
+          ),
+          await page.getByTestId('download-user-votes-btn').click(),
+        ]);
+
+        // Save the downloaded file
+        const filePath = path.join(
+          __dirname,
+          `convention_voting_app_${index}.csv`
+        );
+        await download.saveAs(filePath);
+
+        // Verify the file exists
+        expect(fs.existsSync(filePath)).toBeTruthy();
+
+        // fetch csv results
+        const pollResults = await getCSVResults(filePath);
+
+        // assert vote result
+        expect(pollResults[0].poll).toBeTruthy();
+        expect(pollResults[0].vote).toBe('yes');
+
+        // Clean up (optional)
+        fs.unlinkSync(filePath);
+      })
+    );
   });
 });

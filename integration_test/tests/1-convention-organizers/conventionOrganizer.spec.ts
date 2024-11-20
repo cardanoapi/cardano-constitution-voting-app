@@ -128,7 +128,7 @@ test.describe('Open Close Poll', () => {
     await pollPage.beginVoteBtn.click();
 
     await expect(page.getByText('Poll voting is open!')).toBeVisible();
-    await expect(pollPage.closeVoteBtn).toBeVisible();
+    await expect(pollPage.closeVoteBtn).toBeVisible({ timeout: 10_000 });
   });
 
   /**
@@ -493,10 +493,7 @@ test.describe('Voting Power', () => {
     await representativePage.goto();
 
     // fetch active voter id before switching active voting power
-    const previousActiveVoterId = await page
-      .locator('[data-id="1"]')
-      .locator('[data-field="active_voter_cell"]')
-      .getAttribute('data-testid');
+    const previousActiveVoterId = await representativePage.getActiveVoterId();
 
     // fetch delegate and alternate id of same row
     const representativesIds = await Promise.all([
@@ -510,10 +507,7 @@ test.describe('Voting Power', () => {
     await expect(page.getByText('Active voter updated!')).toBeVisible({
       timeout: 10_000,
     });
-    const currentActiveVoterId = await page
-      .locator('[data-id="1"]')
-      .locator('[data-field="active_voter_cell"]')
-      .getAttribute('data-testid');
+    const currentActiveVoterId = await representativePage.getActiveVoterId();
 
     expect(representativesIds).toEqual(
       expect.arrayContaining([currentActiveVoterId, previousActiveVoterId])

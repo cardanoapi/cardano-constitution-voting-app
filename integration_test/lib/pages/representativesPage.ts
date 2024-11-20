@@ -90,6 +90,14 @@ export default class RepresentativesPage {
 
   async getRepresentativeId(isDelegate: boolean = false): Promise<string> {
     await expect(this.page.getByRole('row').first()).toBeVisible();
+    await expect(
+      this.page
+        .locator('[data-id="1"]')
+        .filter({ has: this.page.getByTestId('edit-active-voter-1') })
+        .locator(
+          `[data-testid^="${isDelegate ? 'delegate' : 'alternate'}-name-"]`
+        )
+    ).toBeVisible();
     const representativeTestId = await this.page
       .locator('[data-id="1"]')
       .filter({ has: this.page.getByTestId('edit-active-voter-1') })
@@ -98,5 +106,17 @@ export default class RepresentativesPage {
       )
       .getAttribute('data-testid');
     return representativeTestId.split('-').pop();
+  }
+
+  async getActiveVoterId(workshopId = 1): Promise<string> {
+    await expect(
+      this.page
+        .locator(`[data-id="${workshopId}"]`)
+        .locator('[data-field="active_voter_cell"]')
+    ).toBeVisible();
+    return await this.page
+      .locator(`[data-id="${workshopId}"]`)
+      .locator('[data-field="active_voter_cell"]')
+      .getAttribute('data-testid');
   }
 }
