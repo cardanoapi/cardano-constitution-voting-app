@@ -37,6 +37,7 @@ model poll_vote {
   vote                String            @db.VarChar(100)
   signature           String            @unique @db.VarChar(1000)
   hashed_message      String            @db.VarChar(1000)
+  public_key          String            @db.VarChar(1000)
   poll_transaction_id BigInt?           
   poll                poll              @relation(fields: [poll_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   poll_transaction    poll_transaction? @relation(fields: [poll_transaction_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

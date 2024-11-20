@@ -24,6 +24,7 @@ export async function pollVotesDto(pollId: string): Promise<
     vote: string;
     signature: string;
     hashed_message: string;
+    public_key: string;
     poll_transaction_id: string | null;
   }[]
 > {
