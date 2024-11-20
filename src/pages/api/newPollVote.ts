@@ -163,11 +163,13 @@ export default async function newPollVote(
         vote: vote,
         signature: signature.signature.signedMessage.signature,
         hashed_message: signature.signature.payload,
+        public_key: signature.signature.signedMessage.key,
       },
       update: {
         vote: vote,
         signature: signature.signature.signedMessage.signature,
         hashed_message: signature.signature.payload,
+        public_key: signature.signature.signedMessage.key,
       },
     });
 
