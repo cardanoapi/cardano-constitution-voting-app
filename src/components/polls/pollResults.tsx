@@ -9,6 +9,7 @@ import {
   LinearProgress,
   linearProgressClasses,
   styled,
+  Tooltip,
   useTheme,
 } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -84,6 +85,7 @@ export function PollResults(props: Props): JSX.Element {
   const { votes, pollId } = props;
 
   const [percentage, setPercentage] = useState(-1);
+  const [activeVoterCount, setActiveVoterCount] = useState(-1);
 
   const theme = useTheme();
 
@@ -145,7 +147,8 @@ export function PollResults(props: Props): JSX.Element {
   useEffect(() => {
     async function determineWinner(): Promise<void> {
       const results = await calculateWinner(votes);
-      setPercentage(results);
+      setPercentage(results.percentage);
+      setActiveVoterCount(results.activeVoterCount);
     }
     if (votes) {
       determineWinner();
@@ -162,9 +165,37 @@ export function PollResults(props: Props): JSX.Element {
       </Box>
 
       {percentage !== -1 && (
-        <Typography variant="h3" fontWeight="bold">
-          {percentage}%
-        </Typography>
+        <Tooltip
+          title={
+            <Typography mb={0.5}>
+              {yesCount} of {activeVoterCount - abstainCount} Non-Abstaining
+              Active Voters voted Yes
+            </Typography>
+          }
+          placement="left"
+        >
+          <Box
+            sx={{
+              cursor: 'pointer',
+            }}
+          >
+            <Typography variant="h2" fontWeight="bold">
+              {percentage}%
+            </Typography>
+
+            <Box
+              display={{
+                xs: 'box',
+                sm: 'none',
+              }}
+            >
+              <Typography>
+                {yesCount} of {activeVoterCount - abstainCount} Non-Abstaining
+                Active Voters voted Yes
+              </Typography>
+            </Box>
+          </Box>
+        </Tooltip>
       )}
 
       <Box display="flex" flexDirection="column" gap={6} width="100%">
