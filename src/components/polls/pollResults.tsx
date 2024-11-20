@@ -83,7 +83,7 @@ const AbstainLinearProgress = styled(LinearProgress)(({ theme }) => ({
 export function PollResults(props: Props): JSX.Element {
   const { votes, pollId } = props;
 
-  const [winningOption, setWinningOption] = useState('');
+  const [percentage, setPercentage] = useState(-1);
 
   const theme = useTheme();
 
@@ -102,21 +102,21 @@ export function PollResults(props: Props): JSX.Element {
 
   const yesVoters = useMemo((): JSX.Element => {
     return (
-      <>
+      <Box display="flex" flexDirection="row" gap={1}>
         {votes?.yes?.map(({ name, id }) => {
           return (
-            <Box key={id} display="flex" flexDirection="row" gap={1}>
+            <Box key={id}>
               <PollResultsVoter name={name} id={id} vote="yes" />
             </Box>
           );
         })}
-      </>
+      </Box>
     );
   }, [votes]);
 
   const noVoters = useMemo((): JSX.Element => {
     return (
-      <>
+      <Box display="flex" flexDirection="row" gap={1}>
         {votes?.no?.map(({ name, id }) => {
           return (
             <Box key={id} display="flex" flexDirection="row" gap={1}>
@@ -124,28 +124,28 @@ export function PollResults(props: Props): JSX.Element {
             </Box>
           );
         })}
-      </>
+      </Box>
     );
   }, [votes]);
 
   const abstainVoters = useMemo((): JSX.Element => {
     return (
-      <>
+      <Box display="flex" flexDirection="row" gap={1}>
         {votes?.abstain?.map(({ name, id }) => {
           return (
-            <Box key={id} display="flex" flexDirection="row" gap={1}>
+            <Box key={id}>
               <PollResultsVoter name={name} id={id} vote="abstain" />
             </Box>
           );
         })}
-      </>
+      </Box>
     );
   }, [votes]);
 
   useEffect(() => {
     async function determineWinner(): Promise<void> {
-      const winningOption = await calculateWinner(votes);
-      setWinningOption(winningOption);
+      const results = await calculateWinner(votes);
+      setPercentage(results);
     }
     if (votes) {
       determineWinner();
@@ -161,13 +161,11 @@ export function PollResults(props: Props): JSX.Element {
         <DownloadPollVotesButton pollId={pollId} />
       </Box>
 
-      <Typography
-        variant="h3"
-        fontWeight="bold"
-        color={winningOption === 'yes' ? 'success' : 'warning'}
-      >
-        {winningOption === 'yes' ? 'Approved' : 'Not Approved'}
-      </Typography>
+      {percentage !== -1 && (
+        <Typography variant="h3" fontWeight="bold">
+          {percentage}%
+        </Typography>
+      )}
 
       <Box display="flex" flexDirection="column" gap={6} width="100%">
         <Box
