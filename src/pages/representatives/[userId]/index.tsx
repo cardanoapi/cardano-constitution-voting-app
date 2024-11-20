@@ -76,6 +76,18 @@ export default function Representative(props: Props): JSX.Element {
                   >
                     {user.name}
                   </Typography>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    data-testid="user-wallet-address"
+                    sx={{
+                      wordWrap: 'break-word', // Break long words
+                      overflowWrap: 'break-word', // Ensures wrapping works on all browsers
+                      whiteSpace: 'normal', // Allows text to wrap
+                    }}
+                  >
+                    {user.wallet_address}
+                  </Typography>
                   <Box display="flex" flexDirection="row" gap={1}>
                     <Box sx={{ color: theme.palette.text.disabled }}>
                       {isActiveVoter === true ? (
