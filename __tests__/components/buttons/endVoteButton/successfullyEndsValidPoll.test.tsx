@@ -12,8 +12,8 @@ test('alerts user when poll is not found', async () => {
       <Toaster />
       <EndVoteButton
         pollId="1"
-        isSubmitting={false}
-        setIsSubmitting={() => {}}
+        updatePollResults={() => {}}
+        onClick={() => {}}
       />
     </>,
   );
