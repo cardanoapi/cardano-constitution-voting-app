@@ -22,11 +22,11 @@ export function dismissToast(text: string): void {
         </div>
         <Button
           onClick={() => toast.dismiss(t.id)} // Close the toast programmatically
+          variant="contained"
+          color="error"
           style={{
             marginLeft: '10px',
-            background: 'red',
-            color: 'white',
-            border: 'none',
+            marginTop: '10px',
             cursor: 'pointer',
           }}
           data-testid="dismiss-toast"
