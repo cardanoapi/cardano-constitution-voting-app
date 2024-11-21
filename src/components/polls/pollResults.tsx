@@ -165,37 +165,25 @@ export function PollResults(props: Props): JSX.Element {
       </Box>
 
       {percentage !== -1 && (
-        <Tooltip
-          title={
-            <Typography mb={0.5}>
-              {yesCount} of {activeVoterCount - abstainCount} Non-Abstaining
-              Active Voters voted Yes
-            </Typography>
-          }
-          placement="left"
+        <Box
+          display="flex"
+          flexDirection={{ xs: 'column', sm: 'row' }}
+          gap={{ xs: 1, sm: 3 }}
+          alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
         >
-          <Box
+          <Typography variant="h2" fontWeight="bold">
+            {percentage}%
+          </Typography>
+
+          <Typography
             sx={{
-              cursor: 'pointer',
+              mb: 0.5,
             }}
           >
-            <Typography variant="h2" fontWeight="bold">
-              {percentage}%
-            </Typography>
-
-            <Box
-              display={{
-                xs: 'box',
-                sm: 'none',
-              }}
-            >
-              <Typography>
-                {yesCount} of {activeVoterCount - abstainCount} Non-Abstaining
-                Active Voters voted Yes
-              </Typography>
-            </Box>
-          </Box>
-        </Tooltip>
+            {yesCount} of {activeVoterCount - abstainCount} Non-Abstaining
+            Active Voters voted Yes
+          </Typography>
+        </Box>
       )}
 
       <Box display="flex" flexDirection="column" gap={6} width="100%">
