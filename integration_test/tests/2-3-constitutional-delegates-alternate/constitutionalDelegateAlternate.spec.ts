@@ -105,10 +105,14 @@ test.describe('Vote', () => {
          *
          * *conversely votes that are 'closed' or 'pending' do not give voters the option to vote.
          */
+
         test(`${index + 2}-1A. Given active ${user}, and poll is open, then vote option should be visible`, async () => {
-          await expect(pollPage.voteYesBtn).toBeVisible();
-          await expect(pollPage.voteNoBtn).toBeVisible();
-          await expect(pollPage.voteAbstainBtn).toBeVisible();
+          await expect(pollPage.voteYesBtn).toBeVisible({ timeout: 10_000 }),
+            await Promise.all([
+              await expect(pollPage.voteYesBtn).toBeVisible(),
+              await expect(pollPage.voteNoBtn).toBeVisible(),
+              await expect(pollPage.voteAbstainBtn).toBeVisible(),
+            ]);
         });
 
         /**
@@ -134,6 +138,18 @@ test.describe('Vote', () => {
             '1 vote',
             { timeout: 10_000 }
           );
+        });
+
+        /**
+         * Voters can see how they themselves have voted
+         */
+
+        test(`${index + 2}-1F. Given active ${user}, can see what they have voted`, async () => {
+          //  yes vote
+          await pollPage.voteYesBtn.click();
+          await expect(userPage.getByTestId('vote-status')).toHaveText('YES', {
+            timeout: 10_000,
+          });
         });
 
         /**
@@ -256,7 +272,7 @@ test.describe('Representative Status', () => {
        *
        */
 
-      test(`${index + 2}-1B. Once login ${user} should be able to know their voting right status`, async ({
+      test(`${index + 2}-1G. Once login ${user} should be able to know their voting right status`, async ({
         browser,
       }) => {
         const delegatePage = await newDelegatePage(browser, 3);
