@@ -29,6 +29,7 @@ export function dismissToast(text: string): void {
             border: 'none',
             cursor: 'pointer',
           }}
+          data-testid="dismiss-toast"
         >
           Dismiss
         </Button>
