@@ -117,6 +117,15 @@ export default async function newPoll(
         message: 'Link must be less than 1,000 characters.',
       });
     }
+    const urlPattern =
+      /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(:[0-9]+)?(\/[\w.-]*)*(\?.*)?(#.*)?$/i;
+    const urlValid = urlPattern.test(link);
+    if (!urlValid) {
+      return res.status(400).json({
+        pollId: BigInt(-1).toString(),
+        message: 'Link must be a valid URL. (https://...)',
+      });
+    }
 
     const createdPoll = await prisma.poll.create({
       data: {

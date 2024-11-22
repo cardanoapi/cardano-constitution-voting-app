@@ -67,7 +67,8 @@ export default function NewPoll(props: Props): JSX.Element {
             }}
             label="Link"
             value={link}
-            data-testid="poll-constitution-text-input"
+            data-testid="poll-link-input"
+            placeholder="https://"
           />
           <TextField
             variant="outlined"
