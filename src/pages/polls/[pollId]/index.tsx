@@ -279,6 +279,8 @@ export default function ViewPoll(props: Props): JSX.Element {
                         isActiveVoter={
                           workshopActiveVoterId === session.data?.user.id
                         }
+                        hashedText={poll.hashedText}
+                        link={poll.link}
                       />
                     </Box>
                   )}
