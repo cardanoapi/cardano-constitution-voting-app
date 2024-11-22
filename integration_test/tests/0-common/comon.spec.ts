@@ -288,8 +288,11 @@ test.describe('User profile', () => {
 
 test.describe('CSV File', () => {
   test.use({ pollType: 'VotedPoll' });
-
-  test('0-3A. Can download CSV of voting history', async ({ browser }) => {
+  // pollId is used only for creation of votedPolls
+  test('0-3A. Can download CSV of voting history', async ({
+    browser,
+    pollId,
+  }) => {
     test.slow();
     const pages = await getUserPages(browser);
     await Promise.all(
