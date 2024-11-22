@@ -49,6 +49,7 @@ const downloadUserVotes = async (
       signature: string;
       message: string;
       txId: string;
+      publicKey: string;
     }[] = [];
 
     for (const vote of userVotes) {
@@ -58,11 +59,12 @@ const downloadUserVotes = async (
         signature: vote.signature,
         message: vote.hashed_message,
         txId: vote.poll_transaction?.transaction_id || '',
+        publicKey: vote.public_key,
       });
     }
 
     const opts = {
-      fields: ['poll', 'vote', 'signature', 'message', 'txId'],
+      fields: ['poll', 'vote', 'signature', 'message', 'txId', 'publicKey'],
     };
     const parser = new Parser(opts);
     const csv = parser.parse(results);

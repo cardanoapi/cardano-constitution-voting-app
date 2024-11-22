@@ -52,6 +52,7 @@ const downloadPollVotes = async (
       signature: string;
       message: string;
       txId: string;
+      publicKey: string;
     }[] = [];
 
     for (const vote of pollVotes) {
@@ -68,6 +69,7 @@ const downloadPollVotes = async (
         signature: vote.signature,
         message: vote.hashed_message,
         txId: vote.poll_transaction?.transaction_id || '',
+        publicKey: vote.public_key,
       });
     }
 
@@ -81,6 +83,7 @@ const downloadPollVotes = async (
         'signature',
         'message',
         'txId',
+        'publicKey',
       ],
     };
     const parser = new Parser(opts);
