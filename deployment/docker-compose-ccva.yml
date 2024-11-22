@@ -22,6 +22,27 @@ services:
           - node.labels.ccva==true
       restart_policy:
         delay: 15s
+  webapp-mainnet:
+    image: ${REGISTRY_BASE}/webapp:${IMAGE_VERSION_TAG}
+    build: 
+      context: ../
+      args:
+        - NPM_AUTH_TOKEN=${NPM_AUTH_TOKEN}
+        - NEXT_PUBLIC_NETWORK=mainnet
+    networks:
+      - postgres
+      - frontend
+    environment:
+      NEXTAUTH_SECRET: ${NEXT_AUTH_SECRET}
+      VIRTUAL_HOST: https://mainnet-${DEPLOY_BASE_DOMAIN} 
+      DATABASE_URL: postgresql://ccva:${DATABASE_PASSWORD}@postgres:5432/ccva_mainnet
+      NEXTAUTH_URL: https://mainnet-${DEPLOY_BASE_DOMAIN} 
+    deploy:
+      placement:
+        constraints:
+          - node.labels.ccva==true
+      restart_policy:
+        delay: 15s
 networks:
   frontend:
     name: frontend
