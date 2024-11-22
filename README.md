@@ -88,6 +88,17 @@ This message and their signature will be saved to the voting app's database. At 
 5. Commit the new `schema.prisma` and generated `migration.sql` file
 6. The migration will propogate through all environments as Vercel creates the preview and production builds
 
+## License
+
+This project is licensed under the **GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later)**.
+
+This means:
+
+- You are free to view, use, modify, and distribute this software, but you must distribute your modifications under the same license.
+- If you run this application as part of a networked service, you must provide the source code to users of that service.
+
+For more details, see the [AGPL License](./AGPL_LICENSE.txt) file.
+
 ## Resources / Acknowledgements
 
 - [Clear Contracts](https://www.clearcontracts.io/)

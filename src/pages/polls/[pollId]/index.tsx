@@ -5,7 +5,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { CircularProgress } from '@mui/material';
+import LaunchRounded from '@mui/icons-material/LaunchRounded';
+import { Button, CircularProgress, Modal, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
@@ -72,10 +73,13 @@ export default function ViewPoll(props: Props): JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pollResults, setPollResults] = useState(pollResultsSSR);
   const [isTxUploading, setIsTxUploading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useCheckAddressChange();
   const session = useSession();
+  const theme = useTheme();
   const router = useRouter();
+
   const { pollId } = router.query;
 
   // Using react-query to fetch and refresh the vote count
@@ -131,6 +135,14 @@ export default function ViewPoll(props: Props): JSX.Element {
     toast.error(data?.message || error?.message || 'Error fetching poll');
   }
 
+  function handleModalClose(): void {
+    setModalOpen(false);
+  }
+
+  function openAreYouSure(): void {
+    setModalOpen(true);
+  }
+
   return (
     <>
       <Head>
@@ -171,12 +183,17 @@ export default function ViewPoll(props: Props): JSX.Element {
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
           <PollVoteCount pollId={poll?.id || ''} />
-          <Grid container data-testid="poll-description">
+          <Grid container data-testid="poll-transactions">
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>
-                <Box display="flex" flexDirection="column" gap={3}>
-                  <Typography variant="h6">{poll.description}</Typography>
-                </Box>
+                <Button
+                  variant="outlined"
+                  href={poll.link}
+                  target="_blank"
+                  startIcon={<LaunchRounded />}
+                >
+                  <Typography>View Constitution Text</Typography>
+                </Button>
                 {poll.summary_tx_id && !isTxUploading && (
                   <Box marginTop={3} marginBottom={3}>
                     <ViewTxButton txId={poll.summary_tx_id} />
@@ -230,10 +247,12 @@ export default function ViewPoll(props: Props): JSX.Element {
                             <BeginVoteButton pollId={pollId} />
                           )}
                           {poll.status === pollPhases.voting && (
-                            <EndVoteButton
-                              pollId={pollId}
-                              updatePollResults={updatePollResults}
-                            />
+                            <Button
+                              variant="contained"
+                              onClick={openAreYouSure}
+                            >
+                              End Vote
+                            </Button>
                           )}
                           {poll.status === pollPhases.concluded &&
                             !poll.summary_tx_id && (
@@ -273,6 +292,8 @@ export default function ViewPoll(props: Props): JSX.Element {
                         isActiveVoter={
                           workshopActiveVoterId === session.data?.user.id
                         }
+                        hashedText={poll.hashedText}
+                        link={poll.link}
                       />
                     </Box>
                   )}
@@ -294,6 +315,52 @@ export default function ViewPoll(props: Props): JSX.Element {
             />
           </Box>
         </Box>
+        <Modal open={modalOpen} onClose={handleModalClose}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap={3}
+            alignItems="center"
+            sx={{
+              position: 'absolute',
+              top: '20vh',
+              left: { xs: '10%', lg: '50%' },
+              transform: {
+                xs: 'translate(0%, -25%)',
+                sm: 'translate(0%, 0%)',
+                lg: 'translate(-50%, 0%)',
+              },
+              width: { xs: '80%', lg: '30%' },
+              maxHeight: { xs: '20%', sm: '20vh' },
+              overflowY: 'auto',
+              border: 'none',
+              boxShadow: 24,
+              bgcolor: theme.palette.background.paper,
+              borderRadius: `${theme.shape.borderRadius}px`,
+              color: theme.palette.text.primary,
+              p: { xs: 2, md: 4 },
+              zIndex: 500,
+            }}
+          >
+            <Typography variant="h4" fontWeight="bold">
+              Are you sure you want to end voting?
+            </Typography>
+            <Box display="flex" flexDirection="row" gap={4}>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleModalClose}
+              >
+                Cancel
+              </Button>
+              <EndVoteButton
+                pollId={pollId}
+                updatePollResults={updatePollResults}
+                onClick={handleModalClose}
+              />
+            </Box>
+          </Box>
+        </Modal>
       </main>
     </>
   );

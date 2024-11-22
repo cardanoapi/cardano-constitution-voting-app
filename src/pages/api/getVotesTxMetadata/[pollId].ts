@@ -103,7 +103,7 @@ export default async function getVotesTxMetadata(
       }
       // A given value in the metadata object can only be 64 bytes. If it is larger, it must be split into an array of strings.
       const value = splitStringByBytes(
-        `${vote.hashed_message}, Public Key: ${vote.public_key}, Signature: ${vote.signature}`,
+        `${vote.hashed_message}, Public Key: ${vote.public_key}, Hashed Constitution Text: ${poll.hashedText}, Link to Constitution Text: ${poll.link}, Signature: ${vote.signature}`,
         64,
       );
       // The key is the user's name. Their name will get cut off at 64 bytes to ensure the value is not too large.

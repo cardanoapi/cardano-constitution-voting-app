@@ -15,8 +15,8 @@ test('alerts user when poll is not voting', async () => {
       <Toaster />
       <EndVoteButton
         pollId="1"
-        isSubmitting={false}
-        setIsSubmitting={() => {}}
+        updatePollResults={() => {}}
+        onClick={() => {}}
       />
     </>,
   );
