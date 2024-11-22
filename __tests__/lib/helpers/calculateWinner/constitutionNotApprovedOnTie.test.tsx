@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { calculateWinner } from '@/lib/helpers/calculateWinner';
+import { calculateWinner } from '@/lib/calculateWinner';
 
 // scenario B in this document: https://docs.google.com/document/d/1C_CFtStp43ZPr_O13j-J34XtZvz8jXmj60IfdT3IUO8/edit?tab=t.0#heading=h.gjdgxs
 test('constitution not approved on tie', async () => {
