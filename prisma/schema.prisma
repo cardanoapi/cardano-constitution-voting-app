@@ -15,7 +15,8 @@ model challenge {
 model poll {
   id               BigInt             @id @default(autoincrement())
   name             String             @db.VarChar(255)
-  description      String             @db.VarChar(10000)
+  hashedText       String             @db.VarChar(10000)
+  link             String             @db.VarChar(1000) 
   status           String             @default("pending") @db.VarChar(100)
   summary_tx_id    String?            @unique @db.VarChar(255)
   is_archived      Boolean            @default(false)

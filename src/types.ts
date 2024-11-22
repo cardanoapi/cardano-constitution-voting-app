@@ -1,7 +1,8 @@
 export interface Poll {
   id: string;
   name: string;
-  description: string;
+  hashedText: string;
+  link: string;
   status: 'pending' | 'voting' | 'concluded';
   summary_tx_id: string | null;
   is_archived: boolean;

@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import LaunchRounded from '@mui/icons-material/LaunchRounded';
 import { Button, CircularProgress, Modal, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
@@ -182,12 +183,17 @@ export default function ViewPoll(props: Props): JSX.Element {
             {poll && <PollStatusChip status={poll.status} />}
           </Box>
           <PollVoteCount pollId={poll?.id || ''} />
-          <Grid container data-testid="poll-description">
+          <Grid container data-testid="poll-transactions">
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>
-                <Box display="flex" flexDirection="column" gap={3}>
-                  <Typography variant="h6">{poll.description}</Typography>
-                </Box>
+                <Button
+                  variant="outlined"
+                  href={poll.link}
+                  target="_blank"
+                  startIcon={<LaunchRounded />}
+                >
+                  <Typography>View Constitution Text</Typography>
+                </Button>
                 {poll.summary_tx_id && !isTxUploading && (
                   <Box marginTop={3} marginBottom={3}>
                     <ViewTxButton txId={poll.summary_tx_id} />
@@ -286,6 +292,8 @@ export default function ViewPoll(props: Props): JSX.Element {
                         isActiveVoter={
                           workshopActiveVoterId === session.data?.user.id
                         }
+                        hashedText={poll.hashedText}
+                        link={poll.link}
                       />
                     </Box>
                   )}
