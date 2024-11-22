@@ -15,6 +15,8 @@ import { signMessage } from '@/lib/signMessage';
 export async function castVote(
   pollName: string,
   pollId: string,
+  hashedText: string,
+  link: string,
   vote: string,
   stakeAddress: string | null | undefined,
   walletName: string | null | undefined,
@@ -27,7 +29,7 @@ export async function castVote(
       };
     }
     const timestamp = new Date().toLocaleString();
-    const message = `Wallet: ${stakeAddress}, Poll: ${pollName}, Vote: ${vote}, Timestamp: ${timestamp}`;
+    const message = `Wallet: ${stakeAddress}, Poll: ${pollName}, Hashed Constitution Text: ${hashedText}, Link to Constitution Text: ${link}, Vote: ${vote}, Timestamp: ${timestamp}`;
     const signature = await signMessage(walletName, message);
     const response = await axios.post(
       '/api/newPollVote',

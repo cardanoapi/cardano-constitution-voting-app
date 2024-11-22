@@ -11,7 +11,8 @@ export function isValidPollStatus(poll: {
   status: string;
   id: string;
   name: string;
-  description: string | null;
+  hashedText: string;
+  link: string;
   summary_tx_id: string | null;
 }): poll is Poll & { status: 'pending' | 'voting' | 'concluded' } {
   return Object.keys(pollPhases).includes(poll.status);

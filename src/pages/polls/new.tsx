@@ -15,16 +15,19 @@ export default function NewPoll(props: Props): JSX.Element {
   const { polls } = props;
   useCheckAddressChange();
   const [name, setName] = useState(`Poll #${polls.length + 1}`);
-  const [description, setDescription] = useState(
-    'Do you agree to ratify the Constitution in its current form?',
-  );
+  const [constitutionText, setConstitutionText] = useState('');
+  const [link, setLink] = useState('');
 
   const isPendingOrVotingPoll = polls.some(
     (poll) => poll.status === 'pending' || poll.status === 'voting',
   );
 
   const shouldDisableCreateButton =
-    !name || !description || isPendingOrVotingPoll;
+    !name || !constitutionText || !link || isPendingOrVotingPoll;
+
+  // const hashedText = useMemo(() => {
+  //   return blake.blake2bHex(constitutionText, undefined, 32);
+  // }, [constitutionText]);
 
   return (
     <>
@@ -58,14 +61,25 @@ export default function NewPoll(props: Props): JSX.Element {
           <TextField
             variant="outlined"
             type="text"
+            autoComplete="off"
             onChange={(event: ChangeEvent<HTMLInputElement>): void => {
-              setDescription(event.target.value);
+              setLink(event.target.value);
             }}
-            label="Description"
-            value={description}
-            multiline={true}
-            rows={4}
-            data-testid="poll-description-input"
+            label="Link"
+            value={link}
+            data-testid="poll-link-input"
+            placeholder="https://"
+          />
+          <TextField
+            variant="outlined"
+            type="text"
+            autoComplete="off"
+            onChange={(event: ChangeEvent<HTMLInputElement>): void => {
+              setConstitutionText(event.target.value);
+            }}
+            label="Constitution Text Hash"
+            value={constitutionText}
+            data-testid="poll-constitution-text-input"
           />
           {isPendingOrVotingPoll && (
             <Alert severity="warning" variant="outlined">
@@ -78,9 +92,11 @@ export default function NewPoll(props: Props): JSX.Element {
           )}
           <CreatePollButton
             name={name}
-            description={description}
+            hashedText={constitutionText}
+            link={link}
             setName={setName}
-            setDescription={setDescription}
+            setConstitutionText={setConstitutionText}
+            setLink={setLink}
             disabled={shouldDisableCreateButton}
           />
         </Box>

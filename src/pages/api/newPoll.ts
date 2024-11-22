@@ -74,7 +74,7 @@ export default async function newPoll(
       });
     }
 
-    const { name, description } = req.body;
+    const { name, hashedText, link } = req.body;
     // TODO: Additional security step of verifying coordinator's signature before creating poll?
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
     // validate name
@@ -91,23 +91,46 @@ export default async function newPoll(
       });
     }
     // validate description
-    if (!description) {
+    if (!hashedText) {
       return res.status(400).json({
         pollId: BigInt(-1).toString(),
-        message: 'Description must be provided.',
+        message: 'Hashed Constitution Text must be provided.',
       });
     }
-    if (description.length > 255) {
+    if (hashedText.length > 100) {
       return res.status(400).json({
         pollId: BigInt(-1).toString(),
-        message: 'Description must be less than 10,000 characters.',
+        message: 'Hashed Constitution Text should be a 64 byte string.',
+      });
+    }
+    // validate link
+    if (!link) {
+      return res.status(400).json({
+        pollId: BigInt(-1).toString(),
+        message: 'Link must be provided.',
+      });
+    }
+    if (link.length > 1000) {
+      return res.status(400).json({
+        pollId: BigInt(-1).toString(),
+        message: 'Link must be less than 1000 characters.',
+      });
+    }
+    const urlPattern =
+      /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(:[0-9]+)?(\/[\w.-]*)*(\?.*)?(#.*)?$/i;
+    const urlValid = urlPattern.test(link);
+    if (!urlValid) {
+      return res.status(400).json({
+        pollId: BigInt(-1).toString(),
+        message: 'Link must be a valid URL. (https://...)',
       });
     }
 
     const createdPoll = await prisma.poll.create({
       data: {
         name: name,
-        description: description,
+        hashedText: hashedText,
+        link: link,
         status: 'pending',
       },
     });

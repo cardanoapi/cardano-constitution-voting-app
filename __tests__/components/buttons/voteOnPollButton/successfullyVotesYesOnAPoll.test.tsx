@@ -21,14 +21,11 @@ test.skip('successfully votes yes on a poll', async () => {
     >
       <Toaster />
       <VoteOnPollButtons
-        poll={{
-          id: '1',
-          name: 'testPoll',
-          description: 'this is a test poll',
-          status: 'voting',
-        }}
-        disabled={false}
-        setDisabled={() => {}}
+        pollName="Test Poll"
+        pollId="1"
+        isActiveVoter={true}
+        hashedText="1dda86a28da3715e618a1605f81c7a3121ce767cdc9bd0d46beec0bef40e8125"
+        link="https://www.intersectmbo.org/constitution/constitution.html"
       />
     </SessionProvider>,
   );

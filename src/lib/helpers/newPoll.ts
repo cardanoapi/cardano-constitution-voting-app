@@ -9,14 +9,16 @@ import axios from 'axios';
  */
 export async function newPoll(
   name: string,
-  description: string,
+  hashedText: string,
+  link: string,
 ): Promise<{ pollId: string; message: string }> {
   try {
     const response = await axios.post(
       '/api/newPoll',
       {
         name: name,
-        description: description,
+        hashedText: hashedText,
+        link: link,
       },
       {
         headers: {
