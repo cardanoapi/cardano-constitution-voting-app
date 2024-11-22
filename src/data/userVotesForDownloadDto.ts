@@ -22,6 +22,7 @@ export async function userVotesForDownloadDto(userId: string): Promise<
     signature: string;
     hashed_message: string;
     poll_transaction_id: string | null;
+    public_key: string;
   }[]
 > {
   const votes = await prisma.poll_vote.findMany({
