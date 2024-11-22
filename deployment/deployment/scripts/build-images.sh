@@ -25,6 +25,8 @@ then
   echo "Pushing the images..."
 
   docker push  $REGISTRY_BASE/webapp:${IMAGE_VERSION_TAG}
+  docker push  $REGISTRY_BASE/webapp:mainnet-${IMAGE_VERSION_TAG}
+
 else
   docker_ compose -f ./docker-compose-ccva.yml build
 fi
