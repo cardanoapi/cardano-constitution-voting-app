@@ -4,6 +4,7 @@ import { Alert, Box, TextField, Typography } from '@mui/material';
 
 import type { Poll } from '@/types';
 import { pollsDto } from '@/data/pollsDto';
+import { useCheckAddressChange } from '@/hooks/useCheckAddressChange';
 import { CreatePollButton } from '@/components/buttons/createPollButton';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 
 export default function NewPoll(props: Props): JSX.Element {
   const { polls } = props;
+  useCheckAddressChange();
   const [name, setName] = useState(`Poll #${polls.length + 1}`);
   const [description, setDescription] = useState(
     'Do you agree to ratify the Constitution in its current form?',

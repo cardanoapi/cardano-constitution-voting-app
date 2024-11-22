@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { calculateWinner } from '@/lib/helpers/calculateWinner';
+import { calculateWinner } from '@/lib/calculateWinner';
 
 test('majority vote no not approved', async () => {
   const votes = {

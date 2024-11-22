@@ -17,6 +17,7 @@ import { userDto } from '@/data/userDto';
 import { userVotesDto } from '@/data/userVotesDto';
 import { workshopNameDto } from '@/data/workshopNameDto';
 import { workshopsDto } from '@/data/workshopsDto';
+import { useCheckAddressChange } from '@/hooks/useCheckAddressChange';
 import { PollCarrousel } from '@/components/polls/pollCarrousel';
 import { RepresentativesTable } from '@/components/representatives/representativesTable';
 import { VotingHistoryTable } from '@/components/representatives/votingHistoryTable';
@@ -42,6 +43,7 @@ export default function Representative(props: Props): JSX.Element {
     isActiveVoter,
   } = props;
 
+  useCheckAddressChange();
   const theme = useTheme();
 
   return (
@@ -75,6 +77,18 @@ export default function Representative(props: Props): JSX.Element {
                     data-testid="user-name"
                   >
                     {user.name}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    data-testid="user-wallet-address"
+                    sx={{
+                      wordWrap: 'break-word', // Break long words
+                      overflowWrap: 'break-word', // Ensures wrapping works on all browsers
+                      whiteSpace: 'normal', // Allows text to wrap
+                    }}
+                  >
+                    {user.wallet_address}
                   </Typography>
                   <Box display="flex" flexDirection="row" gap={1}>
                     <Box sx={{ color: theme.palette.text.disabled }}>

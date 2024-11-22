@@ -16,8 +16,8 @@ export function deriveStakeAddressFromPublicKey(publicKey: PublicKey): string {
   // Create a StakeCredential using the stake key hash
   const stakeCredential = Credential.from_keyhash(stakeKeyHash);
 
-  // Generate the stake address (e.g., for mainnet)
-  const networkId = process.env.NEXT_PUBLIC_NETWORK?.toLowerCase() =='testnet'? 0 : 1; // 1 for mainnet, 0 for testnet
+  // Generate the stake address
+  const networkId = process.env.NEXT_PUBLIC_NETWORK === 'mainnet' ? 1 : 0; // 1 for mainnet, 0 for testnet
   const stakeAddress = RewardAddress.new(
     networkId,
     stakeCredential,

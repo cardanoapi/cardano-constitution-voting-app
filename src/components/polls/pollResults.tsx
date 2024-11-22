@@ -9,12 +9,13 @@ import {
   LinearProgress,
   linearProgressClasses,
   styled,
+  Tooltip,
   useTheme,
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { calculateWinner } from '@/lib/helpers/calculateWinner';
+import { calculateWinner } from '@/lib/calculateWinner';
 import { DownloadPollVotesButton } from '@/components/buttons/downloadPollVotesButton';
 import { PollResultsVoter } from '@/components/polls/pollResultsVoter';
 
@@ -83,7 +84,8 @@ const AbstainLinearProgress = styled(LinearProgress)(({ theme }) => ({
 export function PollResults(props: Props): JSX.Element {
   const { votes, pollId } = props;
 
-  const [winningOption, setWinningOption] = useState('');
+  const [percentage, setPercentage] = useState(-1);
+  const [activeVoterCount, setActiveVoterCount] = useState(-1);
 
   const theme = useTheme();
 
@@ -102,21 +104,21 @@ export function PollResults(props: Props): JSX.Element {
 
   const yesVoters = useMemo((): JSX.Element => {
     return (
-      <>
+      <Box display="flex" flexDirection="row" gap={1}>
         {votes?.yes?.map(({ name, id }) => {
           return (
-            <Box key={id} display="flex" flexDirection="row" gap={1}>
+            <Box key={id}>
               <PollResultsVoter name={name} id={id} vote="yes" />
             </Box>
           );
         })}
-      </>
+      </Box>
     );
   }, [votes]);
 
   const noVoters = useMemo((): JSX.Element => {
     return (
-      <>
+      <Box display="flex" flexDirection="row" gap={1}>
         {votes?.no?.map(({ name, id }) => {
           return (
             <Box key={id} display="flex" flexDirection="row" gap={1}>
@@ -124,28 +126,29 @@ export function PollResults(props: Props): JSX.Element {
             </Box>
           );
         })}
-      </>
+      </Box>
     );
   }, [votes]);
 
   const abstainVoters = useMemo((): JSX.Element => {
     return (
-      <>
+      <Box display="flex" flexDirection="row" gap={1}>
         {votes?.abstain?.map(({ name, id }) => {
           return (
-            <Box key={id} display="flex" flexDirection="row" gap={1}>
+            <Box key={id}>
               <PollResultsVoter name={name} id={id} vote="abstain" />
             </Box>
           );
         })}
-      </>
+      </Box>
     );
   }, [votes]);
 
   useEffect(() => {
     async function determineWinner(): Promise<void> {
-      const winningOption = await calculateWinner(votes);
-      setWinningOption(winningOption);
+      const results = await calculateWinner(votes);
+      setPercentage(results.percentage);
+      setActiveVoterCount(results.activeVoterCount);
     }
     if (votes) {
       determineWinner();
@@ -161,13 +164,27 @@ export function PollResults(props: Props): JSX.Element {
         <DownloadPollVotesButton pollId={pollId} />
       </Box>
 
-      <Typography
-        variant="h3"
-        fontWeight="bold"
-        color={winningOption === 'yes' ? 'success' : 'warning'}
-      >
-        {winningOption === 'yes' ? 'Approved' : 'Not Approved'}
-      </Typography>
+      {percentage !== -1 && (
+        <Box
+          display="flex"
+          flexDirection={{ xs: 'column', sm: 'row' }}
+          gap={{ xs: 1, sm: 3 }}
+          alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
+        >
+          <Typography variant="h2" fontWeight="bold">
+            {percentage}%
+          </Typography>
+
+          <Typography
+            sx={{
+              mb: 0.5,
+            }}
+          >
+            {yesCount} of {activeVoterCount - abstainCount} Non-Abstaining
+            Active Voters voted Yes
+          </Typography>
+        </Box>
+      )}
 
       <Box display="flex" flexDirection="column" gap={6} width="100%">
         <Box

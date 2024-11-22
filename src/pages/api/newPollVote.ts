@@ -163,11 +163,13 @@ export default async function newPollVote(
         vote: vote,
         signature: signature.signature.signedMessage.signature,
         hashed_message: signature.signature.payload,
+        public_key: signature.signature.signedMessage.key,
       },
       update: {
         vote: vote,
         signature: signature.signature.signedMessage.signature,
         hashed_message: signature.signature.payload,
+        public_key: signature.signature.signedMessage.key,
       },
     });
 
@@ -176,7 +178,7 @@ export default async function newPollVote(
     Sentry.captureException(error);
     return res.status(500).json({
       success: false,
-      message: 'Error voting on Poll.',
+      message: `Error voting on Poll., ${error}`,
     });
   }
 }
