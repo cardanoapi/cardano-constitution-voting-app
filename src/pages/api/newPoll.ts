@@ -74,7 +74,7 @@ export default async function newPoll(
       });
     }
 
-    const { name, description } = req.body;
+    const { name, hashedText, link } = req.body;
     // TODO: Additional security step of verifying coordinator's signature before creating poll?
     // TODO: Add data sanitization check. If fails sanitization return a message to the user.
     // validate name
@@ -91,23 +91,38 @@ export default async function newPoll(
       });
     }
     // validate description
-    if (!description) {
+    if (!hashedText) {
       return res.status(400).json({
         pollId: BigInt(-1).toString(),
         message: 'Description must be provided.',
       });
     }
-    if (description.length > 255) {
+    if (hashedText.length > 10000) {
       return res.status(400).json({
         pollId: BigInt(-1).toString(),
-        message: 'Description must be less than 10,000 characters.',
+        message:
+          'Hashed Constitution Text must be less than 10,000 characters.',
+      });
+    }
+    // validate link
+    if (!link) {
+      return res.status(400).json({
+        pollId: BigInt(-1).toString(),
+        message: 'Link must be provided.',
+      });
+    }
+    if (link.length > 1000) {
+      return res.status(400).json({
+        pollId: BigInt(-1).toString(),
+        message: 'Link must be less than 1,000 characters.',
       });
     }
 
     const createdPoll = await prisma.poll.create({
       data: {
         name: name,
-        description: description,
+        hashedText: hashedText,
+        link: link,
         status: 'pending',
       },
     });

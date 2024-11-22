@@ -8,9 +8,11 @@ import { newPoll } from '@/lib/helpers/newPoll';
 
 interface Props {
   name: string;
-  description: string;
+  hashedText: string;
+  link: string;
   setName: React.Dispatch<React.SetStateAction<string>>;
-  setDescription: React.Dispatch<React.SetStateAction<string>>;
+  setConstitutionText: React.Dispatch<React.SetStateAction<string>>;
+  setLink: React.Dispatch<React.SetStateAction<string>>;
   disabled: boolean;
 }
 
@@ -19,13 +21,21 @@ interface Props {
  * @returns Create Poll Button
  */
 export function CreatePollButton(props: Props): JSX.Element {
-  const { name, description, setName, setDescription, disabled } = props;
+  const {
+    name,
+    hashedText,
+    link,
+    setName,
+    setConstitutionText,
+    setLink,
+    disabled,
+  } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   // call new poll api with this name & description
   async function handleCreatePoll(): Promise<void> {
     setIsSubmitting(true);
-    const createdPoll = await newPoll(name, description);
+    const createdPoll = await newPoll(name, hashedText, link);
     setIsSubmitting(false);
 
     const newPollId = createdPoll.pollId;
@@ -33,7 +43,8 @@ export function CreatePollButton(props: Props): JSX.Element {
     if (newPollId !== '-1') {
       // successful creation, clear form & redirect to poll
       setName('');
-      setDescription('');
+      setConstitutionText('');
+      setLink('');
       router.push(paths.polls.poll + newPollId);
     } else {
       toast.error(createdPoll.message);
