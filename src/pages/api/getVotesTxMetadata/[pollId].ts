@@ -92,7 +92,7 @@ export default async function getVotesTxMetadata(
       const bytes = getBytesOfArray(temporaryMetadataArray);
       // Limit is set to 10 KB right now. Cardano TX limit is 16KB. This is to be safe. If the limit is reached, create a new entry in the metadata object.
       // Not entirely sure what the limit should be. However, I would rather the CO have to sign multiple transactions than have the TX building fail.
-      if (bytes > 10000) {
+      if (bytes > 13000) {
         metadata[i] = {
           metadata: temporaryMetadataArray,
           userIds: temporaryUserArray,
