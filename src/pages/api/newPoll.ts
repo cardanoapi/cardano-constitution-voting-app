@@ -113,7 +113,7 @@ export default async function newPoll(
     if (link.length > 1000) {
       return res.status(400).json({
         pollId: BigInt(-1).toString(),
-        message: 'Link must be less than 1,000 characters.',
+        message: 'Link must be less than 1000 characters.',
       });
     }
     const urlPattern =
