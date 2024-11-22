@@ -1,7 +1,7 @@
 import { prisma } from '../src/db';
-import {HdKey,HdWallet} from "libcardano";
+import {Ed25519Key, HdKey,HdWallet,ShelleyAddress,bech32} from "libcardano";
 
-
+const NETWORK:number=1
 
 function createRange(start: number, end: number) {
   return Array.from({ length: end - start }, (_, i) => start + i);
@@ -23,15 +23,17 @@ const seedDB = async (): Promise<void> => {
   const getAccount = async (index:number)=>{
     const nthWallet=await wallet.getAccount(index)
     const singleAddrWallet = await nthWallet.singleAddressWallet()
-    return singleAddrWallet.rewardAddressBech32(0)!
+    return singleAddrWallet.rewardAddressBech32(NETWORK)!
   }
   
-
- 
+  const toBech32=(hex:string)=>{
+    return bech32.encode((NETWORK===0?'stake':'stake_test'),Buffer.from((NETWORK===0?'e0':'e1')+hex,'hex'));
+  }
+  
   // make first 3 wallets for manual testing
-  const organizerWallet='stake_test1urrfysygca8m9x0qypxrutl5j2n9c252mev4qmwdtzwqr6g6dj7kn'
-  const delegateWAllet='stake_test1upzv3vmy37a0zk743vjfaexrxvnnv7fyhrdg5ncla6dknksjfxrpy'
-  const alternateWallet='stake_test1up646zdqul0wud00ss0vszpf9g22uqc0r4k4tv7gtv8edqs5nrfs7'
+  const organizerWallet= toBech32('c6924088c74fb299e0204c3e2ff492a65c2a8ade59506dcd589c01e9')
+  const delegateWAllet=toBech32('44c8b3648fbaf15bd58b249ee4c33327367924b8da8a4f1fee9b69da')
+  const alternateWallet=toBech32('755d09a0e7deee35ef841ec808292a14ae030f1d6d55b3c85b0f9682')
 
   // other walelts for automated testing
   // 10 organizers

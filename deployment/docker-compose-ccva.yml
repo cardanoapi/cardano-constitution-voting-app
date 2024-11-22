@@ -23,7 +23,7 @@ services:
       restart_policy:
         delay: 15s
   webapp-mainnet:
-    image: ${REGISTRY_BASE}/webapp:${IMAGE_VERSION_TAG}
+    image: ${REGISTRY_BASE}/webapp:mainnet-${IMAGE_VERSION_TAG}
     build: 
       context: ../
       args:
