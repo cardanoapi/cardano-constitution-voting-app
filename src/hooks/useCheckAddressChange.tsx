@@ -5,6 +5,8 @@ import { signOut, useSession } from 'next-auth/react';
 
 import { checkAddressChange } from '@/lib/checkAddressChange';
 
+let globalIntervalRef: NodeJS.Timeout | null = null;
+
 /**
  * This hook checks if the user has changed their wallet since connecting.
  * If the user has changed their wallet, it will sign them out.
@@ -34,11 +36,20 @@ export function useCheckAddressChange(): void {
         }
       }
 
-      // Run the function every second
-      const intervalId = setInterval(handler, 1000);
+      if (globalIntervalRef) {
+        // Clear existing interval if one exists
+        clearInterval(globalIntervalRef);
+      }
+      // Run the function every 3 seconds
+      globalIntervalRef = setInterval(handler, 3000);
 
-      // Cleanup interval on unmount
-      return (): void => clearInterval(intervalId);
+      // Cleanup the interval when the component unmounts
+      return (): void => {
+        if (globalIntervalRef) {
+          clearInterval(globalIntervalRef);
+          globalIntervalRef = null;
+        }
+      };
     }
   }, [session, wallet, updateWallet]);
 }
