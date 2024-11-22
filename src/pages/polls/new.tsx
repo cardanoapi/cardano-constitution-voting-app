@@ -1,7 +1,6 @@
-import { ChangeEvent, useMemo, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Head from 'next/head';
 import { Alert, Box, TextField, Typography } from '@mui/material';
-import blake from 'blakejs';
 
 import type { Poll } from '@/types';
 import { pollsDto } from '@/data/pollsDto';
@@ -26,9 +25,9 @@ export default function NewPoll(props: Props): JSX.Element {
   const shouldDisableCreateButton =
     !name || !constitutionText || !link || isPendingOrVotingPoll;
 
-  const hashedText = useMemo(() => {
-    return blake.blake2bHex(constitutionText, undefined, 32);
-  }, [constitutionText]);
+  // const hashedText = useMemo(() => {
+  //   return blake.blake2bHex(constitutionText, undefined, 32);
+  // }, [constitutionText]);
 
   return (
     <>
@@ -76,10 +75,8 @@ export default function NewPoll(props: Props): JSX.Element {
             onChange={(event: ChangeEvent<HTMLInputElement>): void => {
               setConstitutionText(event.target.value);
             }}
-            label="Constitution Text"
+            label="Constitution Text Hash"
             value={constitutionText}
-            multiline={true}
-            rows={40}
             data-testid="poll-constitution-text-input"
           />
           {isPendingOrVotingPoll && (
@@ -93,7 +90,7 @@ export default function NewPoll(props: Props): JSX.Element {
           )}
           <CreatePollButton
             name={name}
-            hashedText={hashedText}
+            hashedText={constitutionText}
             link={link}
             setName={setName}
             setConstitutionText={setConstitutionText}

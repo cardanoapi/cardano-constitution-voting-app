@@ -94,14 +94,13 @@ export default async function newPoll(
     if (!hashedText) {
       return res.status(400).json({
         pollId: BigInt(-1).toString(),
-        message: 'Description must be provided.',
+        message: 'Hashed Constitution Text must be provided.',
       });
     }
-    if (hashedText.length > 10000) {
+    if (hashedText.length > 100) {
       return res.status(400).json({
         pollId: BigInt(-1).toString(),
-        message:
-          'Hashed Constitution Text must be less than 10,000 characters.',
+        message: 'Hashed Constitution Text should be a 64 byte string.',
       });
     }
     // validate link
