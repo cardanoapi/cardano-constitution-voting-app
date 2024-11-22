@@ -41,6 +41,7 @@ export function CreatePollButton(props: Props): JSX.Element {
     const newPollId = createdPoll.pollId;
 
     if (newPollId !== '-1') {
+      toast.success('Poll created! You will be redirected.');
       // successful creation, clear form & redirect to poll
       setName('');
       setConstitutionText('');

@@ -61,6 +61,7 @@ export default function NewPoll(props: Props): JSX.Element {
           <TextField
             variant="outlined"
             type="text"
+            autoComplete="off"
             onChange={(event: ChangeEvent<HTMLInputElement>): void => {
               setLink(event.target.value);
             }}
@@ -72,6 +73,7 @@ export default function NewPoll(props: Props): JSX.Element {
           <TextField
             variant="outlined"
             type="text"
+            autoComplete="off"
             onChange={(event: ChangeEvent<HTMLInputElement>): void => {
               setConstitutionText(event.target.value);
             }}
