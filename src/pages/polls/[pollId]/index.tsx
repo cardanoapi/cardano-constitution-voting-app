@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { pollPhases } from '@/constants/pollPhases';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import LaunchRounded from '@mui/icons-material/LaunchRounded';
 import { Button, CircularProgress, Modal, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
