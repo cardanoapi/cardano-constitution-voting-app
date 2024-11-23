@@ -104,7 +104,7 @@ export function PollResults(props: Props): JSX.Element {
 
   const yesVoters = useMemo((): JSX.Element => {
     return (
-      <Box display="flex" flexDirection="row" gap={1}>
+      <Box display="flex" flexDirection="row" gap={1} flexWrap="wrap">
         {votes?.yes?.map(({ name, id }) => {
           return (
             <Box key={id}>
@@ -118,10 +118,10 @@ export function PollResults(props: Props): JSX.Element {
 
   const noVoters = useMemo((): JSX.Element => {
     return (
-      <Box display="flex" flexDirection="row" gap={1}>
+      <Box display="flex" flexDirection="row" gap={1} flexWrap="wrap">
         {votes?.no?.map(({ name, id }) => {
           return (
-            <Box key={id} display="flex" flexDirection="row" gap={1}>
+            <Box key={id}>
               <PollResultsVoter name={name} id={id} vote="no" />
             </Box>
           );
@@ -132,7 +132,7 @@ export function PollResults(props: Props): JSX.Element {
 
   const abstainVoters = useMemo((): JSX.Element => {
     return (
-      <Box display="flex" flexDirection="row" gap={1}>
+      <Box display="flex" flexDirection="row" gap={1} flexWrap="wrap">
         {votes?.abstain?.map(({ name, id }) => {
           return (
             <Box key={id}>
