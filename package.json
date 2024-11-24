@@ -1,7 +1,32 @@
 {
   "name": "cardano-constitution-voting-app",
   "version": "0.1.0",
-  "private": true,
+  "description": "Voting app to be used by delegates at the Cardano Consitutional Convention in Buenos Aires to ratify the initial constitution. This voting app was commissioned by Intersect.",
+  "keywords": [
+    "Cardano",
+    "blockchain",
+    "voting",
+    "governance",
+    "DAO",
+    "web3",
+    "Clarity"
+  ],
+  "homepage": "https://poll.cardanoconvention.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ClearContracts/cardano-constitution-voting-app"
+  },
+  "bugs": {
+    "url": "https://github.com/ClearContracts/cardano-constitution-voting-app/issues",
+    "email": "contact@clearcontracts.io"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": {
+    "name": "Clear Contracts",
+    "email": "contact@clearcontracts.io",
+    "url": "https://www.clearcontracts.io/"
+  },
+  "private": false,
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },

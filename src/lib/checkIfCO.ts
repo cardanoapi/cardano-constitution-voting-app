@@ -1,4 +1,4 @@
-import { userDto } from '@/data/userDto';
+import { prisma } from '@/db';
 
 /**
  * Checks if a user is a convention organizer
@@ -7,7 +7,11 @@ import { userDto } from '@/data/userDto';
  * @returns Boolean - True if user is a convention organizer, false otherwise
  */
 export async function checkIfCO(stakeAddress: string): Promise<boolean> {
-  const user = await userDto(stakeAddress);
+  const user = await prisma.user.findUnique({
+    where: {
+      wallet_address: stakeAddress,
+    },
+  });
   if (!user || !user.is_convention_organizer) {
     return false;
   } else {

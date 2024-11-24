@@ -45,7 +45,6 @@ export function PollCard(props: Props): JSX.Element {
           {poll.status !== pollPhases.pending && (
             <PollVoteCount pollId={poll.id} />
           )}
-          <Typography variant="body1" data-test-id={'poll-description-'+poll.id}  >{poll.description}</Typography>
           <Box flexGrow={1} />
           <Box
             display="flex"

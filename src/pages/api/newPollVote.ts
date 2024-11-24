@@ -178,7 +178,7 @@ export default async function newPollVote(
     Sentry.captureException(error);
     return res.status(500).json({
       success: false,
-      message: `Error voting on Poll., ${error}`,
+      message: 'Error voting on Poll.',
     });
   }
 }

@@ -22,6 +22,7 @@ interface Props {
       id: string;
     }[];
   }) => void;
+  onClick: () => void;
 }
 
 /**
@@ -31,7 +32,7 @@ interface Props {
  * @returns End Voting Button
  */
 export function EndVoteButton(props: Props): JSX.Element {
-  const { pollId, updatePollResults } = props;
+  const { pollId, updatePollResults, onClick } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const session = useSession();
@@ -56,6 +57,7 @@ export function EndVoteButton(props: Props): JSX.Element {
       toast.success('Voting ended!');
     }
     setIsSubmitting(false);
+    onClick();
   }
 
   if (session.data?.user.isCoordinator) {

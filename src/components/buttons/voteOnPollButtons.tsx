@@ -15,6 +15,8 @@ interface Props {
   pollName: string;
   pollId: string;
   isActiveVoter: boolean;
+  hashedText: string;
+  link: string;
 }
 
 /**
@@ -25,7 +27,7 @@ interface Props {
  * @returns Vote on Poll Buttons
  */
 export function VoteOnPollButtons(props: Props): JSX.Element {
-  const { pollName, pollId, isActiveVoter } = props;
+  const { pollName, pollId, isActiveVoter, hashedText, link } = props;
   const [vote, setVote] = useState('');
   const [disabled, setDisabled] = useState(false);
 
@@ -37,6 +39,8 @@ export function VoteOnPollButtons(props: Props): JSX.Element {
     const result = await castVote(
       pollName,
       pollId,
+      hashedText,
+      link,
       vote,
       session.data?.user.stakeAddress,
       session.data?.user.walletName,
