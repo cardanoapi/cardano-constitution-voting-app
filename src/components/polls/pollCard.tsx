@@ -37,7 +37,7 @@ export function PollCard(props: Props): JSX.Element {
     >
       <WidgetContainer>
         <Box display="flex" flexDirection="column" gap={1} height="100%">
-          <Typography variant="h5" fontWeight="bold" data-test-id={'poll-name-'+poll.id} >
+          <Typography variant="h5" fontWeight="bold" data-testid={'poll-name-'+poll.id} >
             {poll.name}
           </Typography>
 
@@ -53,7 +53,7 @@ export function PollCard(props: Props): JSX.Element {
             alignItems="center"
             mt={2}
           >
-            <Typography data-test-id={'btn-poll-view-'+poll.id}>View</Typography>
+            <Typography data-testid={'btn-poll-view-'+poll.id}>View</Typography>
             <LaunchRounded fontSize="small" />
           </Box>
         </Box>

@@ -250,6 +250,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                             <Button
                               variant="contained"
                               onClick={openAreYouSure}
+                              data-testid='end-vote-button'
                             >
                               End Vote
                             </Button>
