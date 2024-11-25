@@ -27,9 +27,9 @@ const seedDB = async (): Promise<void> => {
   }
   
   const toBech32=(hex:string)=>{
-    return bech32.encode((NETWORK===0?'stake':'stake_test'),Buffer.from((NETWORK===0?'e0':'e1')+hex,'hex'));
+    return bech32.encode((NETWORK===0?'stake_test': 'stake'),Buffer.from((NETWORK===0?'e0':'e1')+hex,'hex'));
   }
-  
+
   // make first 3 wallets for manual testing
   const organizerWallet= toBech32('c6924088c74fb299e0204c3e2ff492a65c2a8ade59506dcd589c01e9')
   const delegateWAllet=toBech32('44c8b3648fbaf15bd58b249ee4c33327367924b8da8a4f1fee9b69da')
