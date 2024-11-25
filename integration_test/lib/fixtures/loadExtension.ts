@@ -21,6 +21,7 @@ export default async function loadEternlExtension(
     enableStakeSigning,
     kuberApiUrl: environments.kuber.apiUrl,
     kuberApiKey: environments.kuber.apiKey,
+    networkId: parseInt(environments.networkId),
   };
   await page.addInitScript(
     ({ walletConfig, supportedExtensions }) => {

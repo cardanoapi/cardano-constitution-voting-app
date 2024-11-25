@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { extractPollIdFromUrl } from '@helpers/string';
+import { blake } from 'libcardano';
 
 export default class HomePage {
   readonly heading = this.page.getByText(
@@ -14,7 +15,7 @@ export default class HomePage {
   // input
   readonly pollNameInput = this.page.locator(
     '[data-testid="poll-name-input"] input'
-  ); //BUG incorrect position of testid
+  );
 
   readonly constitutionLinkInput = this.page.locator('[data-testid="poll-link-input"] input').first()
 
@@ -35,8 +36,9 @@ export default class HomePage {
   ): Promise<number> {
     await this.createPollBtn.click();
     await this.pollNameInput.fill(pollName);
-    await this.constitutionLinkInput.fill('https://google.com');
-    await this.constutionHashInput.fill('aaaa');
+    await this.constitutionLinkInput.fill(faker.internet.url());
+    const randomHash = blake.hash32(Buffer.from(faker.animal.bear()))
+    await this.constutionHashInput.fill(randomHash.toString('hex'));
 
     await this.submitPollBtn.click();
 

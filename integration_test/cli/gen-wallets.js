@@ -3,6 +3,7 @@ const fs = require('fs');
 function createRange(start, end) {
   return Array.from({ length: end - start }, (_, i) => start + i);
 }
+NETWORK_ID=1
 
 async function genWallet() {
   // create workshops first
@@ -14,8 +15,8 @@ async function genWallet() {
     const nthWallet = await wallet.getAccount(index);
     let singleAddress = await nthWallet.singleAddressWallet();
     walletJson = singleAddress.toJSON();
-    walletJson.address = singleAddress.addressBech32(0);
-    walletJson.stakeAddress = singleAddress.rewardAddressBech32(0);
+    walletJson.address = singleAddress.addressBech32(NETWORK_ID);
+    walletJson.stakeAddress = singleAddress.rewardAddressBech32(NETWORK_ID);
     return walletJson;
   };
   // make first 3 wallets for manual testing

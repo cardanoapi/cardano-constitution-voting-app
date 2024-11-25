@@ -7,7 +7,7 @@ const environments = {
       process.env.KUBER_API_URL || 'https://sanchonet.kuber.cardanoapi.io',
     apiKey: process.env.KUBER_API_KEY || '',
   },
-  networkId: process.env.NETWORK_ID || 0,
+  networkId: process.env.NETWORK_ID || '0',
   ci: process.env.CI,
 };
 
