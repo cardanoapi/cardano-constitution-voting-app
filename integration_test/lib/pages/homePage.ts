@@ -10,15 +10,15 @@ export default class HomePage {
   readonly createPollBtn = this.page.getByTestId('create-poll-button').first();
   readonly submitPollBtn = this.page.getByTestId('create-poll-button'); //BUG incorrect testid
   readonly beginVoteBtn = this.page.getByTestId('begin-vote-button');
-
+   
   // input
   readonly pollNameInput = this.page.locator(
     '[data-testid="poll-name-input"] input'
   ); //BUG incorrect position of testid
 
-  readonly pollDescriptionInput = this.page
-    .locator('[data-testid="poll-description-input"] textarea')
-    .first();
+  readonly constitutionLinkInput = this.page.locator('[data-testid="poll-link-input"] input').first()
+
+  readonly constutionHashInput = this.page.locator('[data-testid="poll-constitution-text-input"] input').first()
 
   readonly pollCard = this.page.locator('[data-testid^="poll-card-"]');
 
@@ -31,10 +31,13 @@ export default class HomePage {
   async createPoll(
     pollName = faker.commerce.productName() || 'default',
     pollDescription = faker.commerce.productDescription()
+    
   ): Promise<number> {
     await this.createPollBtn.click();
     await this.pollNameInput.fill(pollName);
-    await this.pollDescriptionInput.fill(pollDescription);
+    await this.constitutionLinkInput.fill('https://google.com');
+    await this.constutionHashInput.fill('aaaa');
+
     await this.submitPollBtn.click();
 
     await expect(this.page.getByText(pollName)).toBeVisible({
