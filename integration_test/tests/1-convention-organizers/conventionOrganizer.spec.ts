@@ -95,7 +95,7 @@ test.describe('Delete Poll', async () => {
     });
 
     // Close Poll
-    await pollPage.closeVoteBtn.click();
+    await pollPage.endVoting();
     await expect(pollPage.pollPageStatusChip).toHaveText('Concluded', {
       timeout: 10_000,
     });
@@ -128,7 +128,7 @@ test.describe('Open Close Poll', () => {
     await pollPage.beginVoteBtn.click();
 
     await expect(page.getByText('Poll voting is open!')).toBeVisible();
-    await expect(pollPage.closeVoteBtn).toBeVisible({ timeout: 10_000 });
+    await expect(pollPage.endVotingBtn).toBeVisible({ timeout: 10_000 });
   });
 
   /**
@@ -153,7 +153,7 @@ test.describe('Open Close Poll', () => {
     });
 
     // Close poll
-    await pollPage.closeVoteBtn.click();
+    await pollPage.endVoting();
     await expect(pollPage.pollPageStatusChip).toHaveText('Concluded', {
       timeout: 10_000,
     });
@@ -183,7 +183,7 @@ test.describe('Open Close Poll', () => {
     });
 
     // Close poll
-    await pollPage.closeVoteBtn.click();
+    await pollPage.endVoting();
     await expect(pollPage.downloadVotesBtn).toBeVisible({ timeout: 10_000 });
 
     expect(await page.locator('button').allInnerTexts()).not.toContain(
@@ -385,13 +385,16 @@ test.describe('User Control', () => {
       .getAttribute('data-testid');
 
     await representativePage.switchVotingPower();
-    await page.waitForTimeout(500);
 
     // after trying to switch power while poll is opened for voting
     await expect(page.getByRole('status')).toHaveText(
       'You cannot change the active voter while a Poll is actively voting.'
     );
     await expect(page.getByRole('row').first()).toBeVisible();
+
+    // Add timeout for stability in changes
+    await page.waitForTimeout(2_000);
+
     const currentActiveVoterId = await page
       .locator('[data-id="1"]')
       .locator('[data-field="active_voter_cell"]')

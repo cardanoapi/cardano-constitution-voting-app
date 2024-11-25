@@ -1,15 +1,16 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 export default class PollPage {
   //btn
   readonly createPollBtn = this.page.getByTestId('create-poll-button');
   readonly beginVoteBtn = this.page.getByTestId('begin-vote-button');
-  readonly closeVoteBtn = this.page.getByTestId('end-vote-button');
   readonly deletePollBtn = this.page.getByTestId('DeleteRoundedIcon');
   readonly voteYesBtn = this.page.getByTestId('vote-yes-button');
   readonly voteNoBtn = this.page.getByTestId('vote-no-button');
   readonly voteAbstainBtn = this.page.getByTestId('vote-abstain-button');
   readonly endVotingBtn = this.page.getByTestId('end-vote-button');
+  readonly endVoteConfirmBtn = this.page.getByTestId('confirm-end-vote-button');
+  readonly endVoteCancelBtn = this.page.getByTestId('cancel-end-vote-button');
   readonly downloadVotesBtn = this.page.getByTestId('download-poll-votes-btn');
 
   //chip or icon
@@ -27,5 +28,7 @@ export default class PollPage {
   }
   async endVoting() {
     await this.endVotingBtn.click();
+    await expect(this.endVoteConfirmBtn).toBeVisible({ timeout: 10_000 });
+    await this.endVoteConfirmBtn.click();
   }
 }

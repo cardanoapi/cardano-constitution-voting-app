@@ -180,9 +180,17 @@ export default function ViewPoll(props: Props): JSX.Element {
                 'View Poll'
               )}
             </Typography>
-            {poll && <PollStatusChip status={poll.status} testId='poll-page-status-chip' />}
+            {poll && (
+              <PollStatusChip
+                status={poll.status}
+                testId="poll-page-status-chip"
+              />
+            )}
           </Box>
-          <PollVoteCount pollId={poll?.id || ''} testId='poll-page-vote-count' />
+          <PollVoteCount
+            pollId={poll?.id || ''}
+            testId="poll-page-vote-count"
+          />
           <Grid container data-testid="poll-transactions">
             {poll ? (
               <Grid size={{ xs: 12, lg: 6 }}>
@@ -250,6 +258,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                             <Button
                               variant="contained"
                               onClick={openAreYouSure}
+                              data-testid="end-vote-button"
                             >
                               End Vote
                             </Button>
@@ -350,6 +359,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                 variant="outlined"
                 color="error"
                 onClick={handleModalClose}
+                data-testid="cancel-end-vote-button"
               >
                 Cancel
               </Button>
