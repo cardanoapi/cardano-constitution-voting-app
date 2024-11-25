@@ -16,7 +16,7 @@ on:
 
 jobs:
   unit-tests:
-    runs-on: self-hosted
+    runs-on: ubuntu
     defaults:
       run:
         working-directory: .
@@ -48,7 +48,7 @@ jobs:
           path: allure-results
 
   publish-report:
-    runs-on: self-hosted
+    runs-on: ubuntu
     if: always()
     needs: unit-tests
     steps:

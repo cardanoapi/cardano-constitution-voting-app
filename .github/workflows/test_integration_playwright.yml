@@ -18,7 +18,7 @@ on:
 
 jobs:
   integration-tests:
-    runs-on: self-hosted
+    runs-on: ubuntu
     defaults:
       run:
         working-directory: integration_test
@@ -63,7 +63,7 @@ jobs:
           path: integration_test/allure-results
 
   publish-report:
-    runs-on: self-hosted
+    runs-on: ubuntu
     if: always()
     needs: integration-tests
     steps:
