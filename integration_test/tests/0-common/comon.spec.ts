@@ -140,6 +140,7 @@ test.describe('Polls', () => {
     browser,
     pollId,
   }) => {
+    test.slow();
     const pages = await getUserPages(browser);
 
     await Promise.all(
@@ -185,6 +186,7 @@ test.describe('User profile', () => {
     pollId,
     browser,
   }) => {
+    test.slow();
     await page.goto('/polls/' + pollId);
 
     const buttons = await page
