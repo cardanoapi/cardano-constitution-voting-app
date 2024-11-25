@@ -234,10 +234,9 @@ test.describe('Create Poll', () => {
 
     const homePage = new HomePage(page);
     const pollName = faker.commerce.productName();
-    const pollDescription = faker.commerce.productDescription();
     await homePage.deleteOpenPollCards();
 
-    await homePage.createPoll(pollName, pollDescription);
+    await homePage.createPoll(pollName);
 
     await expect(page.getByText(pollName)).toBeVisible();
     await expect(
@@ -271,6 +270,27 @@ test.describe('Create Poll', () => {
   });
 });
 
+
+test.describe('Onchain Poll',()=>{
+  test.use({
+    pollType: 'VotedPoll',
+  }); //
+  /**
+   * Description: The transaction that contains the aggregated results on-chain must also contain all of the transaction IDs of the vote transactions.
+
+      User story: As an Observer I want to have access to all the vote transaction IDs in one transaction, so that I only need to be given the reference to one transaction ID to adit the vote on-chain.
+
+      Acceptance Criteria: Given that I am an observer, when I look up the transaction ID of the results summary transaction on-chain, then I will see all the transaction IDs of the votes for this poll.
+   */2
+
+    test ('1-1H . Given CO, can submit poll results onchain',async ({page,pollId})=>{
+      const pollPage=new PollPage(page);
+      pollPage.goto(pollId);
+      await pollPage.uploadVoteOnchainBtn.click();
+      await expect(page.getByAltText("submitted")).toBeVisible();
+      
+    })
+})
 test.describe('User Control', () => {
   test.use({ pollType: 'CreatePoll' });
 

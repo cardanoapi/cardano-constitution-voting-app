@@ -5,10 +5,12 @@ import {
   newDelegate2Page,
   newDelegate3Page,
   newDelegate1Page,
+  newOrganizerPage,
+  newOrganizer1Page,
 } from '@helpers/page';
 import HomePage from '@pages/homePage';
 import PollPage from '@pages/pollPage';
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 
 type pollEnableType =
   | 'CreatePoll'
@@ -26,10 +28,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
 
   pollId: async ({ browser, pollType }, use) => {
     // setup
-    const organizerPage = await createNewPageWithWallet(browser, {
-      storageState: '.auth/organizer1.json',
-      wallet: organizerWallets[0],
-    });
+    const organizerPage = await newOrganizer1Page(browser);
 
     let pages: Page[] = [];
     const homePage = new HomePage(organizerPage);
@@ -65,8 +64,8 @@ export const test = base.extend<TestOptions & { pollId: number }>({
             await userPollPage.goto(pollId);
             // cast vote
             await userPage.getByTestId(votes[index]).click();
-            await userPage.getByText('Vote recorded').isVisible();
-            // await userPage.close();
+            await expect(userPage.getByText('Vote recorded')).toBeVisible()
+            await userPage.close();
           })
         );
         await organizerPollPage.goto(pollId);

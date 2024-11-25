@@ -31,7 +31,6 @@ export default class HomePage {
 
   async createPoll(
     pollName = faker.commerce.productName() || 'default',
-    pollDescription = faker.commerce.productDescription()
     
   ): Promise<number> {
     await this.createPollBtn.click();
