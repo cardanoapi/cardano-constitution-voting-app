@@ -13,6 +13,9 @@ export default class PollPage {
   readonly endVoteConfirmBtn = this.page.getByTestId('confirm-end-vote-button');
   readonly endVoteCancelBtn = this.page.getByTestId('cancel-end-vote-button');
   readonly downloadVotesBtn = this.page.getByTestId('download-poll-votes-btn');
+  readonly uploadVoteOnchainBtn = this.page.getByTestId(
+    'put-votes-onchain-btn'
+  );
 
   //chip or icon
   readonly pollPageStatusChip = this.page.getByTestId('poll-page-status-chip');

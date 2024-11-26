@@ -17,7 +17,10 @@ type pollEnableType =
   | 'CreateAndBeginPoll'
   | 'NoAction'
   | 'VotedPoll'
-  | 'CreatePollWithoutTeardown';
+  | 'CreatePollWithoutTeardown'
+  | 'CreatePollWithCustomHash'
+  | 'CreateAndBeginPollWithCustomHash'
+  | 'VotedPollWithCustomHash';
 
 type TestOptions = {
   pollType: pollEnableType;
@@ -39,12 +42,28 @@ export const test = base.extend<TestOptions & { pollId: number }>({
 
     if (pollType !== 'NoAction') {
       await homePage.deleteOpenPollCards();
-      pollId = await homePage.createPoll();
+      if (
+        [
+          'VotedPollWithCustomHash',
+          'CreateAndBeginPollWithCustomHash',
+          'CreatePollWithCustomHash',
+        ].includes(pollType)
+      ) {
+        pollId = await homePage.createPoll(
+          'Testing Poll',
+          '1111111111111111111111111111111111111111111111111111111111111112'
+        );
+      } else {
+        pollId = await homePage.createPoll();
+      }
 
-      if (pollType === 'CreateAndBeginPoll') {
+      if (
+        pollType === 'CreateAndBeginPoll' ||
+        pollType === 'CreateAndBeginPollWithCustomHash'
+      ) {
         await homePage.beginVoteBtn.click();
       }
-      if (pollType === 'VotedPoll') {
+      if (pollType === 'VotedPoll' || pollType === 'VotedPollWithCustomHash') {
         await homePage.beginVoteBtn.click();
 
         const delegatePage = await newDelegate1Page(browser);
@@ -64,7 +83,7 @@ export const test = base.extend<TestOptions & { pollId: number }>({
             await userPollPage.goto(pollId);
             // cast vote
             await userPage.getByTestId(votes[index]).click();
-            await expect(userPage.getByText('Vote recorded')).toBeVisible()
+            await expect(userPage.getByText('Vote recorded')).toBeVisible();
             await userPage.close();
           })
         );

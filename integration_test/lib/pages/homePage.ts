@@ -11,15 +11,19 @@ export default class HomePage {
   readonly createPollBtn = this.page.getByTestId('create-poll-button').first();
   readonly submitPollBtn = this.page.getByTestId('create-poll-button'); //BUG incorrect testid
   readonly beginVoteBtn = this.page.getByTestId('begin-vote-button');
-   
+
   // input
   readonly pollNameInput = this.page.locator(
     '[data-testid="poll-name-input"] input'
   );
 
-  readonly constitutionLinkInput = this.page.locator('[data-testid="poll-link-input"] input').first()
+  readonly constitutionLinkInput = this.page
+    .locator('[data-testid="poll-link-input"] input')
+    .first();
 
-  readonly constutionHashInput = this.page.locator('[data-testid="poll-constitution-text-input"] input').first()
+  readonly constutionHashInput = this.page
+    .locator('[data-testid="poll-constitution-text-input"] input')
+    .first();
 
   readonly pollCard = this.page.locator('[data-testid^="poll-card-"]');
 
@@ -31,13 +35,15 @@ export default class HomePage {
 
   async createPoll(
     pollName = faker.commerce.productName() || 'default',
-    
+    pollHash: string = ''
   ): Promise<number> {
     await this.createPollBtn.click();
     await this.pollNameInput.fill(pollName);
     await this.constitutionLinkInput.fill(faker.internet.url());
-    const randomHash = blake.hash32(Buffer.from(faker.animal.bear()))
-    await this.constutionHashInput.fill(randomHash.toString('hex'));
+    const randomHash = blake.hash32(Buffer.from(faker.animal.bear()));
+    await this.constutionHashInput.fill(
+      pollHash ? pollHash : randomHash.toString('hex')
+    );
 
     await this.submitPollBtn.click();
 
@@ -70,8 +76,8 @@ export default class HomePage {
     if (openPollCard) {
       await openPollCard.click();
       await this.page.getByTestId('delete-poll-button').click();
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 }
