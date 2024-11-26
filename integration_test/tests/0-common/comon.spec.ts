@@ -14,6 +14,8 @@ import {
   newOrganizerPage,
 } from '@helpers/page';
 import HomePage from '@pages/homePage';
+import { delegateWallets, organizerWallets } from '@constants/staticWallets';
+import { importWallet } from '@fixtures/importWallet';
 
 test.beforeEach(async () => {
   await setAllureEpic('0. All Users');
@@ -448,6 +450,50 @@ test.describe('Constitution Poll Hash', () => {
           );
         })
       );
+    });
+  });
+});
+
+test.describe('Wallet switching', () => {
+  test.use({
+    storageState: '.auth/organizer1.json',
+    wallet: organizerWallets[0],
+  });
+  test('0-5A Update Wallet and Role After Switching Wallets in Extension', async ({
+    page,
+  }) => {
+    await page.goto('/');
+
+    //click connect wallet button to view representative name
+    const connectWalletButton = page
+      .getByTestId('connect-wallet-button')
+      .first();
+    await connectWalletButton.click();
+
+    // Assert representative name
+    await expect(page.getByTestId('disconnect-wallet')).toBeVisible();
+    const user = await page.getByTestId('representative-name').innerText();
+    expect(user).toEqual('Test organizer 02');
+
+    // Change wallet
+    const wallet = delegateWallets[0];
+    await importWallet(page, wallet);
+
+    // Assert disconnection
+    await page.goto('/');
+
+    await expect(page.getByTestId('connect-wallet-button').first()).toBeVisible(
+      { timeout: 10_000 }
+    );
+    await page.getByTestId('connect-wallet-button').first().click();
+    await page.waitForLoadState('load');
+
+    await expect(page.getByTestId('connect-wallet-button').first()).toBeVisible(
+      { timeout: 10_000 }
+    );
+    await page.getByTestId('connect-wallet-button').first().click();
+    await expect(page.getByTestId('connect-wallet-Eternl')).toBeVisible({
+      timeout: 10_000,
     });
   });
 });

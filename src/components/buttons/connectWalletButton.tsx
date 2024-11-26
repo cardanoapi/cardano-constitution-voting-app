@@ -120,7 +120,10 @@ export function ConnectWalletButton(): JSX.Element {
                 alignItems="center"
               >
                 <PersonRounded color="success"></PersonRounded>
-                <Typography color={theme.palette.success.main}>
+                <Typography
+                  data-testid="representative-name"
+                  color={theme.palette.success.main}
+                >
                   {user?.name}
                 </Typography>
               </Box>

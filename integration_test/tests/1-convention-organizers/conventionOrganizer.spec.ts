@@ -1,4 +1,4 @@
-import { organizerWallets } from '@constants/staticWallets';
+import { delegateWallets, organizerWallets } from '@constants/staticWallets';
 import { setAllureEpic } from '@helpers/allure';
 import { expect } from '@playwright/test';
 import { test } from '@fixtures/poll';
@@ -7,11 +7,13 @@ import HomePage from '@pages/homePage';
 import { faker } from '@faker-js/faker';
 import PollPage from '@pages/pollPage';
 import {
+  createNewPageWithWallet,
   newAlternatePage,
   newDelegate1Page,
   newDelegate2Page,
   newDelegatePage,
 } from '@helpers/page';
+import { importWallet } from '@fixtures/importWallet';
 
 test.beforeEach(async () => {
   await setAllureEpic('1. Convention Organizers');
@@ -625,6 +627,33 @@ test.describe('Voting Power', () => {
   });
 });
 
-test.describe('Horizantal Vote Results', () => {
-  test.use({ pollType: 'CreateAndBeginPoll' });
+test.describe('Create Poll', () => {
+  /**
+   * Description
+   * There are 3 input fields for the creation of a poll:
+   * 1- Question - The question that is being asked
+   * 2- Constitution text location - The url location of a file containing a .txt file
+   * 3- Blake2b-256 hash of the constitution text
+   *
+   * User Story: As a CO I want to be able to specify which constitutional document my question refers to, and to prove that I have not tampered with it,
+   * so that users can be sure of what they are voting on
+   *
+   * Acceptance Criteria: Given that I am a CO, when I go to the Create Poll page, then there are 3 input fields for me to enter information into.
+   *
+   */
+  test('1-1J Given connected as a CO on Create Poll page there are 3 input fields to enter information', async ({
+    page,
+  }) => {
+    const homePage = new HomePage(page);
+    await homePage.goto();
+
+    // create Poll Page
+    await homePage.createPollBtn.click();
+
+    await expect(page.getByLabel('Constitution Text Hash')).toBeVisible();
+    const inputFields = page.locator('input');
+    const inputFieldCounts = await inputFields.count();
+
+    expect(inputFieldCounts).toEqual(3);
+  });
 });
