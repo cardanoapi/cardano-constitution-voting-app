@@ -206,6 +206,7 @@ export default function ViewPoll(props: Props): JSX.Element {
                     overflowWrap: 'break-word', // Ensures wrapping works on all browsers
                     whiteSpace: 'normal', // Allows text to wrap
                   }}
+                  data-testid="constitution-poll-hash"
                 >
                   The linked text document has the Blake2b-256 hash of:{' '}
                   {poll.hashedText}

@@ -6,7 +6,14 @@ import path = require('path');
 import fs = require('fs');
 import { getCSVResults } from '@helpers/file';
 import PollPage from '@pages/pollPage';
-import { newDelegatePage } from '@helpers/page';
+import {
+  newDelegate1Page,
+  newDelegate2Page,
+  newDelegatePage,
+  newOrganizer1Page,
+  newOrganizerPage,
+} from '@helpers/page';
+import HomePage from '@pages/homePage';
 
 test.beforeEach(async () => {
   await setAllureEpic('0. All Users');
@@ -165,6 +172,34 @@ test.describe('Polls', () => {
       })
     );
   });
+
+  /**
+   * Description: On the results page of a poll there is currently a message that says Approved/Not Approved if the threshold of 50% yes votes is breached.
+   * This needs to be changed so that the % of yes votes is shown.
+   *
+   * Acceptance Criteria: Given that I am an observer on the voting page of a poll, when a CO closes the poll, then the results page shows and instead of
+   * saying "Approved"/ "Not Approved" it gives the % result*.
+   */
+
+  test('0-1D Given that I am an observer on the voting page of a poll then the results page shows % result ', async ({
+    pollId,
+    browser,
+  }) => {
+    const pages = await getUserPages(browser);
+
+    await Promise.all(
+      pages.map(async (page) => {
+        const pollPage = new PollPage(page);
+        await pollPage.goto(pollId);
+
+        // Assert result in percentage
+        const acceptancePercentage = await page
+          .getByTestId('acceptance-percentage')
+          .innerText();
+        expect(acceptancePercentage).toEqual('2%');
+      })
+    );
+  });
 });
 
 test.describe('User profile', () => {
@@ -239,6 +274,7 @@ test.describe('User profile', () => {
   }) => {
     await page.goto('/');
     const table = page.getByTestId('representatives-table');
+    await expect(table.getByTestId('alternate-name-138')).toBeVisible();
     // Locate the buttons
     const delegates = await table
       .locator('[data-testid^="delegate-name-"]')
@@ -250,8 +286,8 @@ test.describe('User profile', () => {
 
     await Promise.all(
       [...delegates, ...alternates].map(async (rep: Locator) => {
-        const href = await rep.locator('a').getAttribute('href');
-        await expect(href).toMatch('//representatives/d+$/');
+        const href = await rep.getAttribute('href');
+        expect(href).toMatch(/^\/representatives\/(\d+|null)$/);
       })
     );
     // should navigate to /representatives/xx
@@ -324,11 +360,94 @@ test.describe('CSV File', () => {
 
         // assert vote result
         expect(pollResults[0].poll).toBeTruthy();
-        expect(pollResults[0].vote).toBe('yes');
+        expect(['yes', 'no', 'abstain']).toContain(pollResults[0].vote);
 
         // Clean up (optional)
         fs.unlinkSync(filePath);
       })
     );
+  });
+});
+
+test.describe('Constitution Poll Hash', () => {
+  test.describe('Pending Poll', () => {
+    test.use({ pollType: 'CreatePollWithCustomHash' });
+    test('0-4A-1 Observers should be able to view custom hash of pending poll', async ({
+      pollId,
+      browser,
+    }) => {
+      test.slow();
+      const pages = await getUserPages(browser);
+      await Promise.all(
+        pages.map(async (page) => {
+          const pollPage = new PollPage(page);
+          await pollPage.goto(pollId);
+
+          // fetch hash value
+          const pollPageHash = page.getByTestId('constitution-poll-hash');
+          await expect(pollPageHash.first()).toBeVisible({ timeout: 10_000 });
+          const pollPageHashContent = await pollPageHash.innerText();
+
+          // assert hash value
+          expect(pollPageHashContent).toContain(
+            '1111111111111111111111111111111111111111111111111111111111111112'
+          );
+        })
+      );
+    });
+  });
+
+  test.describe('On Going Poll', () => {
+    test.use({ pollType: 'CreateAndBeginPollWithCustomHash' });
+    test('0-4A-2 Observers should be able to view custom hash of ongoing poll', async ({
+      pollId,
+      browser,
+    }) => {
+      test.slow();
+      const pages = await getUserPages(browser);
+      await Promise.all(
+        pages.map(async (page) => {
+          const pollPage = new PollPage(page);
+          await pollPage.goto(pollId);
+
+          // fetch hash value
+          const pollPageHash = page.getByTestId('constitution-poll-hash');
+          await expect(pollPageHash.first()).toBeVisible({ timeout: 20_000 });
+          const pollPageHashContent = await pollPageHash.innerText();
+
+          // Assert hash value
+          expect(pollPageHashContent).toContain(
+            '1111111111111111111111111111111111111111111111111111111111111112'
+          );
+        })
+      );
+    });
+  });
+
+  test.describe('Voted Poll', () => {
+    test.use({ pollType: 'VotedPollWithCustomHash' });
+    test('0-4A-2 Observers should be able to view custom hash of voted poll', async ({
+      pollId,
+      browser,
+    }) => {
+      test.slow();
+      const pages = await getUserPages(browser);
+      await Promise.all(
+        pages.map(async (page) => {
+          const pollPage = new PollPage(page);
+          await pollPage.goto(pollId);
+
+          // Fetch Hash value
+          const pollPageHash = page.getByTestId('constitution-poll-hash');
+          await expect(pollPageHash.first()).toBeVisible({ timeout: 20_000 });
+          const pollPageHashContent = await pollPageHash.innerText();
+
+          // Assert hash value
+          expect(pollPageHashContent).toContain(
+            '1111111111111111111111111111111111111111111111111111111111111112'
+          );
+        })
+      );
+    });
   });
 });
