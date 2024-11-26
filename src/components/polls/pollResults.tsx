@@ -104,7 +104,13 @@ export function PollResults(props: Props): JSX.Element {
 
   const yesVoters = useMemo((): JSX.Element => {
     return (
-      <Box display="flex" flexDirection="row" gap={1} flexWrap="wrap">
+      <Box
+        data-testid="yes-vote-results"
+        display="flex"
+        flexDirection="row"
+        gap={1}
+        flexWrap="wrap"
+      >
         {votes?.yes?.map(({ name, id }) => {
           return (
             <Box key={id}>
@@ -118,7 +124,13 @@ export function PollResults(props: Props): JSX.Element {
 
   const noVoters = useMemo((): JSX.Element => {
     return (
-      <Box display="flex" flexDirection="row" gap={1} flexWrap="wrap">
+      <Box
+        data-testid="no-vote-results"
+        display="flex"
+        flexDirection="row"
+        gap={1}
+        flexWrap="wrap"
+      >
         {votes?.no?.map(({ name, id }) => {
           return (
             <Box key={id}>
@@ -171,7 +183,11 @@ export function PollResults(props: Props): JSX.Element {
           gap={{ xs: 1, sm: 3 }}
           alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
         >
-          <Typography variant="h2" fontWeight="bold">
+          <Typography
+            variant="h2"
+            fontWeight="bold"
+            data-testid="acceptance-percentage"
+          >
             {percentage}%
           </Typography>
 
