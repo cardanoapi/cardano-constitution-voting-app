@@ -202,7 +202,13 @@ export default function ViewPoll(props: Props): JSX.Element {
                   </Button>
                 </Box>
 
-                <Typography>
+                <Typography
+                  sx={{
+                    wordWrap: 'break-word', // Break long words
+                    overflowWrap: 'break-word', // Ensures wrapping works on all browsers
+                    whiteSpace: 'normal', // Allows text to wrap
+                  }}
+                >
                   The linked text document has the Blake2b-256 hash of:{' '}
                   {poll.hashedText}
                 </Typography>
