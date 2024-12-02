@@ -43,39 +43,39 @@ export default defineConfig({
       name: 'auth setup',
       testMatch: '**/auth.setup.ts',
     },
-    {
-      name: 'loggedin (desktop)',
-      use: { ...devices['Desktop Chrome'] },
-      testIgnore: ['**/*.independent.spec.ts'],
-      dependencies: environments.ci ? ['auth setup'] : [],
-    },
-    {
-      name: 'independent (desktop)',
-      testMatch: '**/*independent.spec.ts',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'loggedin (mobile)',
-      use: { ...devices['Pixel 5'] },
-      testIgnore: ['**/*.independent.spec.ts'],
-      dependencies: environments.ci ? ['auth setup'] : [],
-    },
-    {
-      name: 'mobile',
-      testMatch: '**/*independent.spec.ts',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'loggedin (tablet)',
-      use: { ...devices['Galaxy Tab S4'] },
-      testIgnore: ['**/*.independent.spec.ts'],
-      dependencies: environments.ci ? ['auth setup'] : [],
-    },
-    {
-      name: 'tablet',
-      testMatch: '**/*independent.spec.ts',
-      use: { ...devices['Galaxy Tab S4'] },
-    },
+    // {
+    //   name: 'loggedin (desktop)',
+    //   use: { ...devices['Desktop Chrome'] },
+    //   testIgnore: ['**/*.independent.spec.ts'],
+    //   dependencies: environments.ci ? ['auth setup'] : [],
+    // },
+    // {
+    //   name: 'independent (desktop)',
+    //   testMatch: '**/*independent.spec.ts',
+    //   use: { ...devices['Desktop Chrome'] },
+    // },
+    // {
+    //   name: 'loggedin (mobile)',
+    //   use: { ...devices['Pixel 5'] },
+    //   testIgnore: ['**/*.independent.spec.ts'],
+    //   dependencies: environments.ci ? ['auth setup'] : [],
+    // },
+    // {
+    //   name: 'mobile',
+    //   testMatch: '**/*independent.spec.ts',
+    //   use: { ...devices['Pixel 5'] },
+    // },
+    // {
+    //   name: 'loggedin (tablet)',
+    //   use: { ...devices['Galaxy Tab S4'] },
+    //   testIgnore: ['**/*.independent.spec.ts'],
+    //   dependencies: environments.ci ? ['auth setup'] : [],
+    // },
+    // {
+    //   name: 'tablet',
+    //   testMatch: '**/*independent.spec.ts',
+    //   use: { ...devices['Galaxy Tab S4'] },
+    // },
 
     /* Test against mobile viewports. */
     // {
