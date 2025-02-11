@@ -81,7 +81,7 @@
     "@vitest/runner": "^2.1.4",
     "allure-commandline": "^2.27.0",
     "allure-vitest": "^3.0.6",
-    "eslint": "^9.16.0",
+    "eslint": "^9.20.1",
     "eslint-config-next": "15.0.3",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.13.0",
